@@ -6,3 +6,8 @@ install:
   - mvn clean install
 script:
   - mvn test jacoco:report
+notifications:
+ slack: uncvstu:rIa9LJi4cA5UIQUQDRm4slAz
+ template:
+  - "%{repository} (%{commit}) : %{message} %{foo} "
+  - "Build details: %{build_url}"

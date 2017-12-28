@@ -86,7 +86,7 @@
     <repositories>
         <repository>
             <id>vaadin-addons</id>
-            <url>https://mvnrepository.com/artifact/com.jarektoro/responsive-layout</url>
+            <url>http://maven.vaadin.com/vaadin-addons</url>
         </repository>
     </repositories>
     <build>
