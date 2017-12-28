@@ -9,9 +9,12 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -22,17 +25,21 @@ import com.vaadin.ui.VerticalLayout;
 @Theme("mytheme")
 @SpringUI
 public class UiServiceMainUI extends UI {
-
+ 
+    
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        final VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
-        setContent(layout);
-        //setContent(new Label("Hello! I'm the root UI!"));
-        Button sample = new Button("Click");
-        //setContent(sample);
-        sample.addClickListener(event -> Notification.show("The button was clicked", Type.TRAY_NOTIFICATION));
-        layout.addComponent(new Label("Hello! I'm the root UI!"));
-        layout.addComponent(sample);
+
+      final RegistrationForm form = new RegistrationForm();      
+      
+      form.setMargin(true);
+      //setContent(form); 
+      HorizontalLayout layout1 = new HorizontalLayout ();
+      HorizontalLayout layout2 = new HorizontalLayout (form);
+      setContent(layout2);
+      form.register.addClickListener(event -> Notification.show("Вы успешно зарегистрированы", Type.TRAY_NOTIFICATION));
+        
+       
+        
     }
 }
