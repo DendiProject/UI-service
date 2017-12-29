@@ -5,8 +5,5 @@
     @include valo;
 
     /* An actual theme rule */
-    .v-app {
-        background: yellow;
-    }
 }
 @include mytheme;
