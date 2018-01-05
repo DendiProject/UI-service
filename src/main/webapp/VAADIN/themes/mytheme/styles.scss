@@ -1,5 +1,5 @@
 @import "../valo/valo.scss";
-
+@import "vaadinwindow.scss";
 @mixin mytheme 
 {
     @include valo;
@@ -8,10 +8,8 @@
     .v-app {
         background: seashell;
     }
-    button
-    {
-        border-radius: 70px;
-    }
+
 
 }
 @include mytheme;
+@include vaadinwindow;

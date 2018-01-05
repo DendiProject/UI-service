@@ -9,6 +9,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -23,6 +24,7 @@ import com.vaadin.ui.VerticalLayout;
  * @author ivan
  */
 @Theme("mytheme")
+
 @SpringUI
 public class UiServiceMainUI extends UI {
  
@@ -30,16 +32,18 @@ public class UiServiceMainUI extends UI {
     @Override
     protected void init(VaadinRequest vaadinRequest) {
 
-      final RegistrationForm form = new RegistrationForm();      
-      
-      form.setMargin(true);
-      //setContent(form); 
-      HorizontalLayout layout1 = new HorizontalLayout ();
-      HorizontalLayout layout2 = new HorizontalLayout (form);
-      setContent(layout2);
-      form.register.addClickListener(event -> Notification.show("Вы успешно зарегистрированы", Type.TRAY_NOTIFICATION));
-        
-       
-        
+      final HorizontalLayout layout = new HorizontalLayout();      
+      layout.setMargin(true);
+      layout.setSpacing(true);
+      setContent(layout);
+
+    Button bModalWindow = new Button("Регистрация");
+    bModalWindow.addClickListener(new Button.ClickListener() {
+        public void buttonClick(ClickEvent event) {
+            RegistrationForm modalWindow = new RegistrationForm();
+            addWindow(modalWindow);
+      }
+    });
+    layout.addComponent(bModalWindow);        
     }
 }

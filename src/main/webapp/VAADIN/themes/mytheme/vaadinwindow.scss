@@ -1,0 +1,30 @@
+@import "../valo/valo.scss";
+
+@mixin vaadinwindow {
+  @include valo;
+  
+    .v-window .v-window-contents {
+        background: #EDEC76;
+    }
+
+    .v-window .v-window-outerheader {
+        background: black;
+    }
+
+    .v-window .v-window-header {
+        color: white;
+    }
+
+    .v-window .v-window-closebox {
+        background: black;
+    }
+
+    .v-window .v-window-maximizebox {
+        background: black;
+    }
+
+    .v-window .v-window-restorebox{
+        background: black;
+    }
+}
+
