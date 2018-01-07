@@ -27,9 +27,9 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author ivan
+ * @author Artem
  */
-@Theme("mytheme")
+@Theme("centralViewTheme")
 @SpringUI
 public class UiServiceMainUI extends UI {
 
