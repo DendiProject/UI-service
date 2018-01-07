@@ -37,90 +37,27 @@ public class UiServiceMainUI extends UI {
     protected void init(VaadinRequest vaadinRequest) 
     {
         setSizeFull();//Пользовательский интерфейс на весь экран
-        /*try {
-            
-            CustomLayout cl = new CustomLayout(new ByteArrayInputStream("<div /><script>alert('Hi again!');</script>".getBytes()));
-        setContent(cl);
-        } catch (IOException ex) {
-            Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-        //Создание объектов 1 уровня
-        ResponsiveLayout main_layout = new ResponsiveLayout();
+        //Базового макета
+        BasicLayoutCreator main_layer = new BasicLayoutCreator();
+        ResponsiveLayout main_layout = main_layer.main_layout;
         main_layout.setSizeFull();
-        main_layout.setHeight("250%");
+        main_layout.setHeight("300%");
         setContent(main_layout);
+        //Создание строки, для добавления конкретного контента на даную страницу
+        ResponsiveRow slider_row = main_layer.content_row_layout.addRow();
         
         
-        ResponsiveRow navigate_row = main_layout.addRow();
-        ResponsiveRow offset_contents_from_the_cap = main_layout.addRow();
-        ResponsiveRow content_row = main_layout.addRow();
-        offset_contents_from_the_cap.setHeight("6%");//Отступ контента от шапки
-        navigate_row.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
-        content_row.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-
-        //Создание объектов 2 уровня
-
-        /*CustomLayout  menu_layout1 = new CustomLayout("menulayout1");
-        navigate_row.addColumn().withDisplayRules(1, 1, 1, 1).withComponent(menu_layout1);
-        navigate_row.addColumn().withDisplayRules(1, 1, 1, 1);
-        
-        CustomLayout  menu_layout2 = new CustomLayout("menulayout2");
-        navigate_row.addColumn().withDisplayRules(1, 1, 1, 1).withComponent(menu_layout2);
-        navigate_row.addColumn().withDisplayRules(3, 3, 3, 3);
-        
-        CustomLayout  menu_layout3 = new CustomLayout("menulayout3");
-        navigate_row.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(menu_layout3);
-        navigate_row.addColumn().withDisplayRules(1, 1, 1, 1);
-        
-        CustomLayout  menu_layout4 = new CustomLayout("menulayout4");
-        navigate_row.addColumn().withDisplayRules(1, 1, 1, 1).withComponent(menu_layout4);*/
-        
-        CustomLayout navigate_row_layout = new CustomLayout("NavigateRowLayout");
-        navigate_row.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(navigate_row_layout);
-        ResponsiveLayout navigate_row_layout2 = new ResponsiveLayout();
-        navigate_row_layout.addComponent(navigate_row_layout2,"password");
-        ResponsiveRow menus_row = navigate_row_layout2.addRow();
-        menus_row.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-        
-        CustomLayout  menu_layout1 = new CustomLayout("menulayout1");
-        menus_row.addColumn().withDisplayRules(1, 1, 1, 1).withComponent(menu_layout1);
-        menus_row.addColumn().withDisplayRules(1, 1, 1, 1);
-        
-        CustomLayout  menu_layout2 = new CustomLayout("menulayout2");
-        menus_row.addColumn().withDisplayRules(1, 1, 1, 1).withComponent(menu_layout2);
-        menus_row.addColumn().withDisplayRules(3, 3, 3, 3);
-        
-        CustomLayout  menu_layout3 = new CustomLayout("menulayout3");
-        menus_row.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(menu_layout3);
-        menus_row.addColumn().withDisplayRules(1, 1, 1, 1);
-        
-        CustomLayout  menu_layout4 = new CustomLayout("menulayout4");
-        menus_row.addColumn().withDisplayRules(1, 1, 1, 1).withComponent(menu_layout4);
-        
-      
-        
-        //Объекты content_row
-        ResponsiveLayout content_layout = new ResponsiveLayout();
-        content_row.addColumn().withDisplayRules(10, 10, 10, 10).withComponent(content_layout);
-        ResponsiveRow slider_row = content_layout.addRow();
-        CustomLayout  slider_layout = new CustomLayout("sliderlayout");
-        //Image sliders_image = new Image();
-        //sliders_image.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/slide1.png")));
-        //sliders_image.setHeight("70%");
-        //sliders_image.setWidth("100%");
-        //slider_row.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(sliders_image);
+        //Сосзадние custom слоя для добавления слайдера
+        CustomLayout  slider_layout = new CustomLayout("SliderLayout");
         slider_row.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(slider_layout);
     
-        
-        
-        
-        
         //Здесь можно разместить добавление рецептов либо фиксированно, например, топ 5, или
         //Задать количество по какому-либо другому параметру, например, по нажатию кнопки добавлять
         //еще несколько к имеющемуся списку
         for(int i=0;i<8;i++)
         {
-            ResponsiveRow recipe_row = content_layout.addRow();
+            //Эту часть кода доделаю позже
+            ResponsiveRow recipe_row = main_layer.content_row_layout.addRow();
             Image top_image = new Image();
             top_image.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/top1.png")));
             top_image.setHeight("70%");
@@ -129,10 +66,19 @@ public class UiServiceMainUI extends UI {
             recipe_row.addColumn().setWidth("3%");
             ResponsiveLayout recipe_content_layout = new ResponsiveLayout();
             recipe_row.addColumn().withDisplayRules(5, 5, 5, 5).withComponent(recipe_content_layout);
-            recipe_content_layout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Recipes name"));
-            recipe_content_layout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Author"));
-            recipe_content_layout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Recipes parts    Numbers    Job time"));
-            recipe_content_layout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Add to my list"));
+            recipe_content_layout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Название блюда"));
+            recipe_content_layout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Автор: <Автор>"));
+            ResponsiveLayout layout_with_informmation_of_recipes = new ResponsiveLayout();
+            recipe_content_layout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(layout_with_informmation_of_recipes);
+            ResponsiveRow information_row_about_recipes = layout_with_informmation_of_recipes.addRow();
+            Button recepies_parts = new Button("Ингридиенты");
+            information_row_about_recipes.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(recepies_parts);
+            information_row_about_recipes.addColumn().withDisplayRules(2, 2, 2, 2);
+            information_row_about_recipes.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(new Label("H 2"));
+            information_row_about_recipes.addColumn().withDisplayRules(1, 1, 1, 1);
+            information_row_about_recipes.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(new Label("T 25"));
+            Button add_to_my_list = new Button("Добавить в избранное");
+            recipe_content_layout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(add_to_my_list);
         }
     }
 }
