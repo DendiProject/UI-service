@@ -13374,6 +13374,57 @@ button:before {
 	left: -40px;
 }
 
+@media (min-width: 992px) and (max-width: 1200px) {
+	input {
+		width: 150px;
+	}
+	input:focus {
+		width: 180px;
+	}
+	#colorNav > ul > li > a {
+		padding: 15px;
+	}
+	.fixingMenuAtTheTop {
+		width: 81.9%;
+	}
+}
+
+@media (min-width: 1200px) and (max-width: 1400px) {
+	input {
+		width: 190px;
+	}
+	input:focus {
+		width: 220px;
+	}
+	.fixingMenuAtTheTop {
+		width: 82.3%;
+	}
+}
+
+@media (min-width: 1400px)  and (max-width: 1600px) {
+	input {
+		width: 220px;
+	}
+	input:focus {
+		width: 260px;
+	}
+	.fixingMenuAtTheTop {
+		width: 82.35%;
+	}
+}
+
+@media (min-width: 1600px) and (max-width: 1900px) {
+	.fixingMenuAtTheTop {
+		width: 82.5%;
+	}
+}
+
+@media (min-width: 1900px) {
+	.fixingMenuAtTheTop {
+		width: 82.6%;
+	}
+}
+
 .v-app, .v-app-loading {
 	font: 300 16px/1.55 "Open Sans", sans-serif;
 	color: #464646;
@@ -24978,4 +25029,64 @@ html, body {
 	top: 0px;
 	height: 100%;
 	width: 40%;
+}
+
+@media (min-width: 992px) and (max-width: 1200px) {
+	input {
+		width: 150px;
+	}
+	input:focus {
+		width: 180px;
+	}
+	#colorNav > ul > li > a {
+		padding: 15px;
+	}
+	.top_recipe {
+		width: 20%;
+	}
+}
+
+@media (min-width: 1200px) and (max-width: 1400px) {
+	input {
+		width: 190px;
+	}
+	input:focus {
+		width: 220px;
+	}
+	.top_recipe {
+		width: 17%;
+	}
+}
+
+@media (min-width: 1400px)  and (max-width: 1600px) {
+	input {
+		width: 220px;
+	}
+	input:focus {
+		width: 260px;
+	}
+}
+
+@media (min-width: 1600px) and (max-width: 1900px) {
+	.top_recipe {
+		width: 13%;
+	}
+}
+
+@media (min-width: 1900px) {
+	.top_recipe {
+		width: 11%;
+	}
+}
+
+@media (min-height: 601px) {
+	.top_recipe {
+		height: 5%;
+	}
+}
+
+@media (min-height: 700px) {
+	.top_recipe {
+		height: 5.5%;
+	}
 }
