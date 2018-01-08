@@ -23,7 +23,7 @@ import com.vaadin.ui.VerticalLayout;
  *
  * @author ivan
  */
-@Theme("mytheme")
+@Theme("vaadinwindow")
 
 @SpringUI
 public class UiServiceMainUI extends UI {

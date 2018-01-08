@@ -1,0 +1,40 @@
+@import "../valo/valo.scss";
+@import "../mytheme/styles.scss";
+@mixin vaadinwindow 
+{
+    @include valo;
+
+    /* An actual theme rule */
+    
+
+ .v-window .v-window-contents {
+          background: white;
+          
+      }
+  
+      .v-window .v-window-outerheader {
+          background: black;
+      }
+  
+      .v-window .v-window-header {
+          color: white;
+      }
+  
+      .v-window .v-window-closebox {
+          background: black;
+      }
+  
+      .v-window .v-window-maximizebox {
+          background: black;
+      }
+  
+      .v-window .v-window-restorebox{
+          background: black;
+      }
+       .v-button {
+        border-radius: 70px;          
+	
+      }
+}
+
+@include vaadinwindow;

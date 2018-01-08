@@ -1,5 +1,5 @@
 @import "../valo/valo.scss";
-@import "vaadinwindow.scss";
+
 @mixin mytheme 
 {
     @include valo;
@@ -9,7 +9,7 @@
         background: seashell;
     }
 
-
+    
 }
+
 @include mytheme;
-@include vaadinwindow;
