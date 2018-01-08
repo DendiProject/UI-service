@@ -41,44 +41,59 @@ public class UiServiceMainUI extends UI {
         BasicLayoutCreator main_layer = new BasicLayoutCreator();
         ResponsiveLayout main_layout = main_layer.main_layout;
         main_layout.setSizeFull();
-        main_layout.setHeight("300%");
+        main_layout.setHeight("330%");
         setContent(main_layout);
         //Создание строки, для добавления конкретного контента на даную страницу
         ResponsiveRow slider_row = main_layer.content_row_layout.addRow();
-        
-        
-        //Сосзадние custom слоя для добавления слайдера
+        //Создание custom слоя для добавления слайдера
         CustomLayout  slider_layout = new CustomLayout("SliderLayout");
         slider_row.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(slider_layout);
-    
+        
+        //Отрисовка заголовка топа рицептов
+        ResponsiveRow recipe_title = main_layer.content_row_layout.addRow();
+        CustomLayout  top_recipe_title_layout = new CustomLayout("TopRecipeTitle");
+        recipe_title.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(top_recipe_title_layout);
+        //Добавление кнопки в заголовок
+        Button search_recipes_button = new Button("Найти нужный рецепт");
+        top_recipe_title_layout.addComponent(search_recipes_button,"search_recipes_button");
         //Здесь можно разместить добавление рецептов либо фиксированно, например, топ 5, или
         //Задать количество по какому-либо другому параметру, например, по нажатию кнопки добавлять
         //еще несколько к имеющемуся списку
         for(int i=0;i<8;i++)
         {
-            //Эту часть кода доделаю позже
+            //Задание отступа между рецептами
+            ResponsiveRow the_distance_between_recipe = main_layer.content_row_layout.addRow();
+            the_distance_between_recipe.setHeight("30px");
+            the_distance_between_recipe.addColumn().withDisplayRules(12, 12, 12, 12);
+            //Отрисовка изображения рецепта
             ResponsiveRow recipe_row = main_layer.content_row_layout.addRow();
             Image top_image = new Image();
             top_image.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/top1.png")));
             top_image.setHeight("70%");
             top_image.setWidth("100%");
             recipe_row.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(top_image);
-            recipe_row.addColumn().setWidth("3%");
-            ResponsiveLayout recipe_content_layout = new ResponsiveLayout();
-            recipe_row.addColumn().withDisplayRules(5, 5, 5, 5).withComponent(recipe_content_layout);
-            recipe_content_layout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Название блюда"));
-            recipe_content_layout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Автор: <Автор>"));
-            ResponsiveLayout layout_with_informmation_of_recipes = new ResponsiveLayout();
-            recipe_content_layout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(layout_with_informmation_of_recipes);
-            ResponsiveRow information_row_about_recipes = layout_with_informmation_of_recipes.addRow();
-            Button recepies_parts = new Button("Ингридиенты");
-            information_row_about_recipes.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(recepies_parts);
-            information_row_about_recipes.addColumn().withDisplayRules(2, 2, 2, 2);
-            information_row_about_recipes.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(new Label("H 2"));
-            information_row_about_recipes.addColumn().withDisplayRules(1, 1, 1, 1);
-            information_row_about_recipes.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(new Label("T 25"));
-            Button add_to_my_list = new Button("Добавить в избранное");
-            recipe_content_layout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(add_to_my_list);
+            //Создание custom макета с поддержкой flexbox
+            CustomLayout  top_recipe_layout = new CustomLayout("TopRecipeLayout");
+            recipe_row.addColumn().withDisplayRules(8, 8, 8, 8).withComponent(top_recipe_layout);
+            
+            //Задание информации по каждому из рецептов
+            Label recipes_name = new Label("Название");
+            top_recipe_layout.addComponent(recipes_name,"recipes_name");
+            Label recipes_author = new Label("Автор");
+            top_recipe_layout.addComponent(recipes_author,"recipes_author");
+            Button recepies_parts_button = new Button("Ингридиенты");
+            top_recipe_layout.addComponent(recepies_parts_button,"parts_recipe_button");
+            Label number_of_servings_lable = new Label(String.valueOf(i));//просто для примера
+            top_recipe_layout.addComponent(number_of_servings_lable,"number_of_servings_lable");
+            Label working_times_lable = new Label(String.valueOf(i));//просто для примера
+            top_recipe_layout.addComponent(working_times_lable,"working_times_lable");
+            Button add_recipe_to_favorites_button = new Button("Добавить в избранное");
+            top_recipe_layout.addComponent(add_recipe_to_favorites_button,"add_recipe_to_favorites_button");
         }
+        
+        //Задание отступа до коцна страницы
+        ResponsiveRow the_distance_between_bottom_and_recipes = main_layer.content_row_layout.addRow();
+        the_distance_between_bottom_and_recipes.setHeight("60px");
+        the_distance_between_bottom_and_recipes.addColumn().withDisplayRules(12, 12, 12, 12);
     }
 }

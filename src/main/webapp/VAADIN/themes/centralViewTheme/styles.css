@@ -24925,3 +24925,57 @@ html, body {
 		opacity: 0;
 	}
 	}
+
+.top_recipe {
+	display: -webkit-flex;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
+	align-items: flex-start;
+	position: absolute;
+	margin-top: -25px;
+	height: 7%;
+	width: 15%;
+}
+
+.top_recipe_information {
+	display: -webkit-flex;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
+}
+
+.top_recipe_human_icon:before {
+	font-family: FontAwesome;
+	content: "\f007     ";
+}
+
+.top_recipe_time_icon:before {
+	font-family: FontAwesome;
+	content: "\f017     ";
+}
+
+.title_of_the_top_recipes {
+	display: -webkit-flex;
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+	align-items: center;
+	position: absolute;
+	width: 83.3%;
+}
+
+.search_recipes_button_div {
+	display: -webkit-flex;
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+	align-items: center;
+	position: absolute;
+	right: 0%;
+	top: 0px;
+	height: 100%;
+	width: 40%;
+}

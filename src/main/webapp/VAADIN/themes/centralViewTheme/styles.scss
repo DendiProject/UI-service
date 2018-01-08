@@ -316,5 +316,79 @@
        17%, 37%, 57%, 77%, 97% { width:100%; opacity:0.3; }
        18%, 38%, 58%, 78%, 98% { width:100%; opacity:0; }	
     }
+    
+    
+    /*Стили топа рецептов*/
+    .top_recipe
+    {
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        align-items: flex-start;
+        
+        
+        
+        //border: 1px solid black; 
+        position: absolute;
+        margin-top: -25px;
+        height:7%;
+        width:15%;
+    }
+    .top_recipe_information
+    {
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        align-items: center;
+        
+        
+        
+        //border: 1px solid red;
+        width: 100%;
+    }
+    .top_recipe_human_icon:before
+    {
+        font-family: FontAwesome;
+        content: "\f007     ";
+    }
+    .top_recipe_time_icon:before
+    {
+        font-family: FontAwesome;
+        content: "\f017     ";
+    }
+    
+    
+    /*Стили для заголовка топа рецептов*/
+    .title_of_the_top_recipes
+    {
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        align-items: center;
+
+
+        //border: 1px solid black;
+        position: absolute;
+        width:83.3%;
+    }
+    .search_recipes_button_div
+    {
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        align-items: center;
+
+
+        //border: 1px solid red;
+        position: absolute;
+        right:0%;
+        top: 0px;
+        height:100%;
+        width:40%;
+    }
 }
 @include centralViewTheme;
