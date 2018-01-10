@@ -24210,17 +24210,18 @@ h1.no-margin, .v-label-h1.no-margin, h2.no-margin, .v-label-h2.no-margin, h3.no-
 }
 
 .v-window .v-window-closebox {
-	background: black;
-}
-
-.v-window .v-window-maximizebox {
-	background: black;
+	background: white;
 }
 
 .v-window .v-window-restorebox {
-	background: black;
+	background: white;
 }
 
 .v-button {
 	border-radius: 70px;
+}
+
+.v-window {
+	height: 460px;
+	width: 680px;
 }

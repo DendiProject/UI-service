@@ -26,15 +26,11 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 //import com.vaadin.data.validator.IntegerRangeValidator;
 //import com.vaadin.data.validator.NullValidator;
 
-
-
-
-
 /**
  *
  * @author eliza
  */
-//@Theme("vaadinwindow")
+
 public class RegistrationForm extends BasicForm{    
     
     TextField firstName = new TextField ("Имя");

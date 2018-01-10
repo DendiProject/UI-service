@@ -8,8 +8,7 @@
     
 
  .v-window .v-window-contents {
-          background: white;
-          
+          background: white;          
       }
   
       .v-window .v-window-outerheader {
@@ -21,20 +20,20 @@
       }
   
       .v-window .v-window-closebox {
-          background: black;
+          background: white;
       }
-  
-      .v-window .v-window-maximizebox {
-          background: black;
-      }
-  
+
       .v-window .v-window-restorebox{
-          background: black;
+          background: white;
       }
        .v-button {
-        border-radius: 70px;          
-	
+        border-radius: 70px;          	
       }
+      .v-window {
+          height : 460px;
+          width  : 680px;
+      }
+      
 }
 
 @include vaadinwindow;

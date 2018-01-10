@@ -41,6 +41,7 @@ public class UiServiceMainUI extends UI {
     bModalWindow.addClickListener(new Button.ClickListener() {
         public void buttonClick(ClickEvent event) {
             RegistrationForm modalWindow = new RegistrationForm();
+           
             addWindow(modalWindow);
       }
     });

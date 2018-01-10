@@ -23,7 +23,7 @@ import javax.swing.ImageIcon;
  *
  * @author eliza
  */
-//@Theme("vaadinwindow")
+
 public class BasicForm extends Window {
 
     Button vk_integration = new Button(" ");
@@ -33,22 +33,25 @@ public class BasicForm extends Window {
     Image img = new Image();
     VerticalLayout image = new VerticalLayout(img);
     VerticalLayout information = new VerticalLayout(buttons);
+     
 
-    public BasicForm() {  
+    public BasicForm() {         
         
-        
-        img.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/Images/1.png")));        
-        img.setWidth("350px");   
+       img.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/Images/1.png")));      
         img.setHeight("400px");
-        HorizontalLayout windowContent = new HorizontalLayout(image, information);
-       // CustomLayout content = new CustomLayout ("windowLayout");
-       // content.addComponent(windowContent);
+        image.setWidth("400px");
+        //image.setHeight("480px");
+        image.setMargin(false);
+        information.setMargin(true);
+       // information.setWidth("280px");
+       // information.setHeight("480px");
+        HorizontalLayout windowContent = new HorizontalLayout(image, information);       
         setContent(windowContent);
-        setWidth("700px");
-        setHeight("500px");
         setPosition(20, 150);
         windowContent.setMargin(false);
+        setResizable(false);
         setModal(true);
+       
     }
     
 
