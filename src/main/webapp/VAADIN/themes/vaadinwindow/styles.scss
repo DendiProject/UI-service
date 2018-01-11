@@ -1,0 +1,41 @@
+@import "../valo/valo.scss";
+@import "../basicLayoutTheme/styles.scss";
+
+@mixin vaadinwindow 
+{
+    @include valo;
+    .v-window .v-window-contents 
+    {
+          background: white;          
+    }
+  
+    .v-window .v-window-outerheader 
+    {
+        background: black;
+    }
+  
+    .v-window .v-window-header 
+    {
+        color: white;
+    }
+
+    .v-window .v-window-closebox 
+    {
+        background: white;
+    }
+
+    .v-window .v-window-restorebox
+    {
+        background: white;
+    }
+    .v-button 
+    {
+      border-radius: 70px;          	
+    }
+    .v-window 
+    {
+        height : 460px;
+        width  : 680px;
+    }
+}
+@include vaadinwindow;

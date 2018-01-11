@@ -55,6 +55,23 @@ public class UiServiceMainUI extends UI {
         recipe_title.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(top_recipe_title_layout);
         //Добавление кнопки в заголовок
         Button search_recipes_button = new Button("Найти нужный рецепт");
+        
+        
+        //ПРОСТО ДЛЯ ТЕСТА ОТКРЫТИЯ ОКНА
+        search_recipes_button.addClickListener(new Button.ClickListener() 
+        {
+            public void buttonClick(Button.ClickEvent event) 
+            {
+                RegistrationForm modalWindow = new RegistrationForm();
+                addWindow(modalWindow);
+            }
+        });
+        
+        
+        
+        
+        
+        
         top_recipe_title_layout.addComponent(search_recipes_button,"search_recipes_button");
         //Здесь можно разместить добавление рецептов либо фиксированно, например, топ 5, или
         //Задать количество по какому-либо другому параметру, например, по нажатию кнопки добавлять
