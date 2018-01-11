@@ -45,6 +45,7 @@ public class RegistrationForm extends BasicForm
     public RegistrationForm() 
     {          
         super();
+        super.setCaption("Регистрация");
         super.information.addComponent(firstName);
         super.information.addComponent(lastName);
         super.information.addComponent(email);
