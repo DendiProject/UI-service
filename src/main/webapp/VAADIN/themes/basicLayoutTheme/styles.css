@@ -12511,18 +12511,49 @@ h1.no-margin, .v-label-h1.no-margin, h2.no-margin, .v-label-h2.no-margin, h3.no-
 	background-repeat: no-repeat;
 }
 
-.fixingMenuAtTheTop {
-	position: fixed;
-	width: 82.4%;
-	left: 8.2%;
-	top: 0px;
-	z-index: 9999;
-	background-color: white;
-}
-
 .backgroundContentRow {
 	background-color: white;
 	width: 100%;
+}
+
+.main_layout {
+	margin: 0px auto 90px auto;
+	width: 1200px;
+}
+
+.navigate_row {
+	width: inherit;
+	background-color: white;
+	position: fixed;
+	z-index: 9999;
+	height: 100px;
+	top: 0px;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.content_row {
+	width: 100%;
+	margin-top: 91px;
+	background-color: white;
+}
+
+.left_allign_navigate_row_components {
+	width: 40%;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.right_allign_navigate_row_components {
+	width: 37%;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
 }
 
 * {
@@ -12545,7 +12576,7 @@ input {
 	outline: none;
 	position: relative;
 	transition: 0.3s linear;
-	top: -8px;
+	top: 6px;
 }
 
 input:focus {
@@ -12558,7 +12589,7 @@ button {
 	background: none;
 	border: none;
 	position: absolute;
-	top: -10px;
+	top: 4px;
 	right: 25px;
 }
 

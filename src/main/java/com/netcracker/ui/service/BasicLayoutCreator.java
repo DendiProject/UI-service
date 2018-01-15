@@ -6,32 +6,24 @@
 package com.netcracker.ui.service;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
-import com.jarektoro.responsivelayout.ResponsiveRow;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CustomLayout;
 
 /**
  *
  * @author Artem
  */
-public class BasicLayoutCreator extends BasicLayout
+public class BasicLayoutCreator
 {
     public ResponsiveLayout main_layout;
     public ResponsiveLayout content_row_layout;
     
     public BasicLayoutCreator()
     {
-        main_layout = create_basic_layout();
-        //Создание строки для добавления контента
-        ResponsiveRow content_row = main_layout.addRow();
-        content_row.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-        //Создание промежуточного custom макета для создания фона у контента
-        CustomLayout intermediate_content_row_layout = new CustomLayout("ContentRowLayout");
-        content_row.addColumn().withDisplayRules(1, 1, 10, 10).withComponent(intermediate_content_row_layout);
-        //Создание адаптивного макета, для поддержки функционала Responsitive
         content_row_layout = new ResponsiveLayout();
-        //Добавление адаптивного макета на промежуточный в блок content
-        intermediate_content_row_layout.addComponent(content_row_layout,"content");
+        main_layout = new ResponsiveLayout();
+        CustomLayout main_custom_layout = new CustomLayout("MainLayout");
+        main_layout.addComponent(main_custom_layout);
+        main_custom_layout.addComponent(content_row_layout,"content_row");  
     }
 }
 /*Реализация BasicLayout, создает main_layout  и добавляет в него
