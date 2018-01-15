@@ -17,6 +17,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Image;
+import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import java.io.ByteArrayInputStream;
@@ -56,6 +57,8 @@ public class UiServiceMainUI extends UI {
         //Добавление кнопки в заголовок
         Button search_recipes_button = new Button("Найти нужный рецепт");
         
+        
+        //JavaScript.getCurrent().execute("alert('Hello')");
         
         //ПРОСТО ДЛЯ ТЕСТА ОТКРЫТИЯ ОКНА
         search_recipes_button.addClickListener(new Button.ClickListener() 
