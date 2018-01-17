@@ -48,6 +48,8 @@ public class BasicForm extends Window
         setContent(windowContent);
         setPosition(20, 150);
         windowContent.setMargin(false);
+         setResizeLazy(false);
+        setDraggable(false);
         setResizable(false);
         setModal(true);   
     }
