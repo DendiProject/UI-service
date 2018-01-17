@@ -36,7 +36,7 @@ public class BasicForm extends Window
 
     public BasicForm() 
     {         
-        img.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/Images/1.png")));      
+        img.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/1.png")));      
         img.setHeight("400px");
         image.setWidth("400px");
         //image.setHeight("480px");

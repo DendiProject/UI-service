@@ -6,6 +6,15 @@ install:
   - mvn clean install
 script:
   - mvn test jacoco:report
+after_success:
+  - cd $TRAVIS_BUILD_DIR/target/generated-docs; ls ; mv README.html index.html
+- git init
+  - git config --global  user.name "${GH_USER_NAME}"
+  - git config --global  user.email "{GH_USER_EMAIL}"
+  - git status
+  - git add . ; git commit -m "Deploy to GitHub Pages"
+  - git checkout -b gh-pages
+  - git push --force  "https://${GH_TOKEN}@${GH_REF}" gh-pages
 notifications:
  slack: uncvstu:rIa9LJi4cA5UIQUQDRm4slAz
  template:
