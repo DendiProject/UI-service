@@ -35,8 +35,7 @@ import java.util.logging.Logger;
 public class UiServiceMainUI extends UI {
 
     @Override
-    protected void init(VaadinRequest vaadinRequest) 
-    {
+    protected void init(VaadinRequest vaadinRequest) {
         setSizeFull();//Пользовательский интерфейс на весь экран
         //Базового макета
         BasicLayoutCreator main_layer = new BasicLayoutCreator();
@@ -47,40 +46,33 @@ public class UiServiceMainUI extends UI {
         //Создание строки, для добавления конкретного контента на даную страницу
         ResponsiveRow slider_row = main_layer.content_row_layout.addRow();
         //Создание custom слоя для добавления слайдера
-        CustomLayout  slider_layout = new CustomLayout("SliderLayout");
+        CustomLayout slider_layout = new CustomLayout("SliderLayout");
         slider_row.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(slider_layout);
-        
+
         //Отрисовка заголовка топа рицептов
         ResponsiveRow recipe_title = main_layer.content_row_layout.addRow();
-        CustomLayout  top_recipe_title_layout = new CustomLayout("TopRecipeTitle");
+        CustomLayout top_recipe_title_layout = new CustomLayout("TopRecipeTitle");
         recipe_title.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(top_recipe_title_layout);
         //Добавление кнопки в заголовок
         Button search_recipes_button = new Button("Найти нужный рецепт");
-        
-        
+
+        ResponsiveRow rowForView = main_layer.content_row_layout.addRow();
+        rowForView.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new ShortViewOfReceipe());
+
         //JavaScript.getCurrent().execute("alert('Hello')");
-        
         //ПРОСТО ДЛЯ ТЕСТА ОТКРЫТИЯ ОКНА
-        search_recipes_button.addClickListener(new Button.ClickListener() 
-        {
-            public void buttonClick(Button.ClickEvent event) 
-            {
+        search_recipes_button.addClickListener(new Button.ClickListener() {
+            public void buttonClick(Button.ClickEvent event) {
                 RegistrationForm modalWindow = new RegistrationForm();
                 addWindow(modalWindow);
             }
         });
-        
-        
-        
-        
-        
-        
-        top_recipe_title_layout.addComponent(search_recipes_button,"search_recipes_button");
+
+        top_recipe_title_layout.addComponent(search_recipes_button, "search_recipes_button");
         //Здесь можно разместить добавление рецептов либо фиксированно, например, топ 5, или
         //Задать количество по какому-либо другому параметру, например, по нажатию кнопки добавлять
         //еще несколько к имеющемуся списку
-        for(int i=0;i<8;i++)
-        {
+        for (int i = 0; i < 8; i++) {
             //Задание отступа между рецептами
             ResponsiveRow the_distance_between_recipe = main_layer.content_row_layout.addRow();
             the_distance_between_recipe.setHeight("30px");
@@ -93,24 +85,24 @@ public class UiServiceMainUI extends UI {
             top_image.setWidth("100%");
             recipe_row.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(top_image);
             //Создание custom макета с поддержкой flexbox
-            CustomLayout  top_recipe_layout = new CustomLayout("TopRecipeLayout");
+            CustomLayout top_recipe_layout = new CustomLayout("TopRecipeLayout");
             recipe_row.addColumn().withDisplayRules(8, 8, 8, 8).withComponent(top_recipe_layout);
-            
+
             //Задание информации по каждому из рецептов
             Label recipes_name = new Label("Название");
-            top_recipe_layout.addComponent(recipes_name,"recipes_name");
+            top_recipe_layout.addComponent(recipes_name, "recipes_name");
             Label recipes_author = new Label("Автор");
-            top_recipe_layout.addComponent(recipes_author,"recipes_author");
+            top_recipe_layout.addComponent(recipes_author, "recipes_author");
             Button recepies_parts_button = new Button("Ингридиенты");
-            top_recipe_layout.addComponent(recepies_parts_button,"parts_recipe_button");
+            top_recipe_layout.addComponent(recepies_parts_button, "parts_recipe_button");
             Label number_of_servings_lable = new Label(String.valueOf(i));//просто для примера
-            top_recipe_layout.addComponent(number_of_servings_lable,"number_of_servings_lable");
+            top_recipe_layout.addComponent(number_of_servings_lable, "number_of_servings_lable");
             Label working_times_lable = new Label(String.valueOf(i));//просто для примера
-            top_recipe_layout.addComponent(working_times_lable,"working_times_lable");
+            top_recipe_layout.addComponent(working_times_lable, "working_times_lable");
             Button add_recipe_to_favorites_button = new Button("Добавить в избранное");
-            top_recipe_layout.addComponent(add_recipe_to_favorites_button,"add_recipe_to_favorites_button");
+            top_recipe_layout.addComponent(add_recipe_to_favorites_button, "add_recipe_to_favorites_button");
         }
-        
+
         //Задание отступа до коцна страницы
         ResponsiveRow the_distance_between_bottom_and_recipes = main_layer.content_row_layout.addRow();
         the_distance_between_bottom_and_recipes.setHeight("60px");
