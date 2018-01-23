@@ -1,0 +1,109 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is an example of a data model for displaying a short recipe view.",
+        "version": "1.0.0",
+        "title": "ShortViewOfReceipe",
+        "contact": {
+            "email": "liza.gorovets@uandex.ru"
+        }
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/v1",
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/shortViewOfReceipe": {
+            "get": {
+                "description": "Display shortViewOfReceipe of the recipe with all parameters",
+                "parameters": [
+                    {
+                        "name": "receipeId",
+                        "in": "query",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "tags": [
+                    "Receipe"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Name and steps of receipe",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Receipe"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Step": {
+            "type": "object",
+            "properties": {
+                "step_number": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Number os step."
+                },
+                "destription": {
+                    "type": "string",
+                    "description": "Recipe step description."
+                },
+                "image": {
+                    "type": "string",
+                    "description": "Image URL of step."
+                }
+            }
+        },
+        "Receipe": {
+            "type": "object",
+            "properties": {
+                "receipe_id": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Unique identifier representing a specific receipe."
+                },
+                "receipe_name": {
+                    "type": "string",
+                    "description": "The name of receipe."
+                },
+                "steps": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Step"
+                    }
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "fields": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
