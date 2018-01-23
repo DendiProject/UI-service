@@ -57,7 +57,7 @@ public class UiServiceMainUI extends UI {
         Button search_recipes_button = new Button("Найти нужный рецепт");
 
         ResponsiveRow rowForView = main_layer.content_row_layout.addRow();
-        rowForView.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new ShortViewOfReceipe());
+        rowForView.addColumn().withDisplayRules(12, 12, 12,12).withComponent(new ShortViewOfReceipe());
 
         //JavaScript.getCurrent().execute("alert('Hello')");
         //ПРОСТО ДЛЯ ТЕСТА ОТКРЫТИЯ ОКНА
