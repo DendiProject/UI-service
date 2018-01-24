@@ -12,7 +12,6 @@ import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Notification;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -30,6 +29,7 @@ public class BasicLayoutCreator
         content_row_layout = new ResponsiveLayout();
         main_layout = new ResponsiveLayout();
         CustomLayout main_custom_layout = new CustomLayout("MainLayout");
+        
         
         
         
@@ -67,10 +67,23 @@ public class BasicLayoutCreator
         });
         
         
-        //Добавляем макет разметки на главный макет
-        main_layout.addComponent(main_custom_layout);
         
-        //Добавление макета для остального контента
+        
+        
+        
+        
+        
+        
+        main_layout.addComponent(main_custom_layout);
         main_custom_layout.addComponent(content_row_layout,"content_row");  
     }
 }
+/*Реализация BasicLayout, создает main_layout  и добавляет в него
+content_row, далее используется именно content_row для добавления контента
+Пример использования:
+    BasicLayoutCreator main_layer = new BasicLayoutCreator();
+    ResponsiveLayout main_layout = main_layer.main_layout;
+    main_layout.setSizeFull();
+    main_layout.setHeight("300%");
+    setContent(main_layout);
+    ResponsiveRow slider_row = main_layer.content_row_layout.addRow();*/

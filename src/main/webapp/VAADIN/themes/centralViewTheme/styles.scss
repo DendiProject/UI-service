@@ -4,19 +4,6 @@
 @mixin centralViewTheme 
 {
     @include valo;
-    
-    
-    
-    
-    
-    #myDiv
-    {
-        background-color: green;
-    }
-    #myDiv2
-    {
-        background-color: black;
-    }
     /* Стили слайдера */
     /* HTML5 display-role reset for older browsers */
     article, aside, details, figcaption, figure, 
