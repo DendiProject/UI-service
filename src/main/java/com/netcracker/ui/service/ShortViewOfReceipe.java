@@ -15,12 +15,12 @@ import org.vaadin.visjs.networkDiagram.Node;
 import org.vaadin.visjs.networkDiagram.options.Options;
 import org.vaadin.visjs.networkDiagram.Node.Shape;
 import org.vaadin.visjs.networkDiagram.api.JsonGenerator;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.vaadin.visjs.networkDiagram.options.Group;
 import org.vaadin.visjs.networkDiagram.options.Groups;
+import org.vaadin.visjs.networkDiagram.options.ShapeProperties;
 import org.vaadin.visjs.networkDiagram.options.modules.Edges;
 import org.vaadin.visjs.networkDiagram.options.modules.Nodes;
 import org.vaadin.visjs.networkDiagram.util.Color;
@@ -30,6 +30,7 @@ import org.vaadin.visjs.networkDiagram.util.Color;
  * @author eliza
  */
 import org.vaadin.visjs.networkDiagram.util.Fixed;
+import org.vaadin.visjs.networkDiagram.util.Icon;
 public class ShortViewOfReceipe extends HorizontalLayout {
 
     List<Node> nodes= new ArrayList();
@@ -52,7 +53,7 @@ public class ShortViewOfReceipe extends HorizontalLayout {
         groups.addGroup(groupName, group); 
                  
         Color color = new Color();
-        color.setColor("black");
+        color.setColor("#FFEFD5");
          group.setFontFace("sans-serif");
          group.setFontSize(15);
          group.setRadius(10); 
@@ -73,8 +74,9 @@ public class ShortViewOfReceipe extends HorizontalLayout {
         Node node10 = new Node(10, "Промыть рис, добавить его к содержимому,"+"\n"+" варить до готовности.", "https://images.lady.mail.ru/2819/");
         Node node11 = new Node(11,"Приятного аппетита!", "https://images.lady.mail.ru/2820/");
         
-        node1.setGroup(groupName);
-        
+        ShapeProperties pr = new ShapeProperties ();
+       node1.setTitle("Шаг1");
+        //node1.setShapeProperties(pr.);
         //options.setNodes(node1, node2, node3);
         
         Nodes nodes1 = new Nodes();
@@ -95,89 +97,17 @@ public class ShortViewOfReceipe extends HorizontalLayout {
         
         Fixed f = new Fixed();
         f.setX(true);
-        f.setY(true);
-        int nodesCount=0;
-        int X=-700;
-        int Y=0;
+        f.setY(true);        
                 Iterator iterNodes =nodes.iterator();
-                Iterator iterNodes2 =nodes.iterator();
+                
          while (iterNodes.hasNext())
                 {
                     Node node = (Node) iterNodes.next();
                     node.setFixed(f);                   
                 }  
          
+         nodesLocation(nodes);
          
-         while (iterNodes2.hasNext())         {
-                            
-             if (nodesCount<3)
-             {
-                X+=300;
-                for (int i=0; i<3; i++)
-                    {
-                          if (iterNodes2.hasNext())  
-                          {
-                           Node node = (Node) iterNodes2.next();   
-                           node.setX(X);
-                           node.setY(Y);
-                           Y+=200;
-                           nodesCount++; 
-                        }
-                    }
-             }
-            else   
-             {   X+=300; 
-                 for (int i=0; i<3; i++)
-                 {
-                       if (iterNodes2.hasNext())  
-                       {
-                        Y-=200;
-                        Node node = (Node) iterNodes2.next();  
-                        node.setX(X);
-                        node.setY(Y);
-                                                    
-                        nodesCount--;  
-                       }
-                 } 
-             }
-             }
-                  
-        
-       /* node1.setX(-400);
-        node1.setY(0);
-        
-        node2.setX(-400);
-        node2.setY(200);
-        
-        node3.setX(-400);
-        node3.setY(400);
-        
-        node4.setX(-100);
-        node4.setY(400);
-        
-        node5.setX(-100);
-        node5.setY(200);
-        
-        node6.setX(-100);
-        node6.setY(0);
-        
-        node7.setX(200);
-        node7.setY(0);
-        
-        node8.setX(200);
-        node8.setY(200);
-        
-        node9.setX(200);
-        node9.setY(400);
-        
-        node10.setX(500);
-        node10.setY(400);
-        
-        node11.setX(500);
-        node11.setY(200);
-        
-       // node12.setX(-100);
-       // node12.setY(0);    */
 
         
         //create edges
@@ -208,7 +138,7 @@ public class ShortViewOfReceipe extends HorizontalLayout {
                 {
                     Edge edge = (Edge) iterEgdes.next();
                     edge.setWidth(4); 
-                    
+                    edge.setColor(color);
                 }        
 
 
@@ -221,6 +151,46 @@ public class ShortViewOfReceipe extends HorizontalLayout {
         networkDiagram.addEdges(edges);
         //networkDiagram.addNode(node1,node2, node3, node4, node5, node6, node7, node8, node9, node10, node11);
         //networkDiagram.addEdge(edge1, edge2, edge3, edge4, edge5, edge6, edge7, edge8, edge9, edge10);
+    }
+    
+    public void nodesLocation(List<Node> nodes)
+    {
+        Iterator iterNodes2 =nodes.iterator();
+        int X=-700;
+        int Y=0;
+        int nodesCount=0;
+        while (iterNodes2.hasNext())         
+         {                            
+            if (nodesCount<3)
+            {
+                X+=300;
+                for (int i=0; i<3; i++)
+                {
+                      if (iterNodes2.hasNext())  
+                      {
+                       Node node = (Node) iterNodes2.next();   
+                       node.setX(X);
+                       node.setY(Y);
+                       Y+=200;
+                       nodesCount++; 
+                    }
+                }
+            }
+            else   
+            {   X+=300; 
+                for (int i=0; i<3; i++)
+                {
+                    if (iterNodes2.hasNext())  
+                     {
+                      Y-=200;
+                      Node node = (Node) iterNodes2.next();  
+                      node.setX(X);
+                      node.setY(Y);
+                      nodesCount--;  
+                     }
+                } 
+            }
+        }     
     }
             
 }
