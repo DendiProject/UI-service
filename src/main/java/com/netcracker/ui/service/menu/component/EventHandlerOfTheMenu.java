@@ -13,20 +13,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- *
+ * Используется для взаимодействия с js
  * @author Artem
  */
 @JavaScript({"mylibrary.js", "mycomponent-connector.js"})
-public class EventHandlerOfTheForm extends AbstractJavaScriptComponent 
-{
+public class EventHandlerOfTheMenu extends AbstractJavaScriptComponent{
 
-    public interface ValueChangeListener extends Serializable 
-    {
+    public interface ValueChangeListener extends Serializable{
         void valueChange();
     }
 
-    public EventHandlerOfTheForm() 
-    {
+    public EventHandlerOfTheMenu(){
         addFunction("onClick", new JavaScriptFunction() 
         {
             @Override
@@ -43,30 +40,20 @@ public class EventHandlerOfTheForm extends AbstractJavaScriptComponent
 
     ArrayList<ValueChangeListener> listeners = new ArrayList<ValueChangeListener>();
 
-    public void addValueChangeListener(ValueChangeListener listener) 
-    {
+    public void addValueChangeListener(ValueChangeListener listener){
         listeners.add(listener);
     }
     
-    
-    //Задание значения общих переменных(js и java)
-    public void setValue(String value) 
-    {
+    public void setValue(String value){
         getState().buttonId = value;
     }
-    //Считывание значения общих переменных(js и java)
-    public String getValue() 
-    {
+   
+    public String getValue(){
         return getState().buttonId;
     }
 
-    
-    
-    
     @Override
-    public EventHandlerOfTheFormState getState() 
-    {
-        return (EventHandlerOfTheFormState) super.getState();
+    public MenusState getState(){
+        return (MenusState) super.getState();
     }
-
 }

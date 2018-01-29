@@ -8,13 +8,14 @@ package com.netcracker.ui.service.menu.component;
 import com.vaadin.ui.CustomLayout;
 
 /**
- *
+ * Используется для создания в меню строки поиска
  * @author Artem
  */
-public class MenusSearchBar extends CustomLayout
+public class MenusSearchBar extends MenusItem
 {
-    public MenusSearchBar(String id)//id-идентификатор кнопки поиска для js
-    {
+    public MenusSearchBar(String id, HandlerForClickingTheButton handler){
+        setHandlerForClickingTheButton(handler);
+        this.id = id;
         String template = "<div><nav id='colorNav'><ul><li><form><input type='text' placeholder='Искать здесь...'><button type='submit' id='"+id+"Btn'></button></form></li></ul></nav></div></div>";
         setTemplateContents(template);
     }

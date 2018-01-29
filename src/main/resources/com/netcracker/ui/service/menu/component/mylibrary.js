@@ -2,12 +2,12 @@
 var mylibrary = mylibrary || {};
 
 mylibrary.MyComponent = function (element) {
+        var idBtn;
         //Считывание id нажатой кнопки
         this.getValue = function () 
         {
             //Вернем "чистый id кнопки, то есть без идентификатора Btn"
-            var clean = getCookie('idClickedButton');
-            return clean.slice(0,(clean.length-3));
+            return idBtn.slice(0,(idBtn.length-3));
         };
 
         var self = this; // Can't use this inside the function
@@ -24,18 +24,10 @@ mylibrary.MyComponent = function (element) {
                 var chekBtnSymbols = action.substr((action.length-3), 3);
                 if(chekBtnSymbols === 'Btn')//Если true, то вызываем событие
                 {     
-                    document.cookie = 'idClickedButton=' + action;
+                    //document.cookie = 'idClickedButton=' + action;
+                    idBtn = action;
                     self.click();
                 }
             }
         };
-        
-        // возвращает cookie с именем name, если есть, если нет, то undefined
-        function getCookie(name) 
-        {
-            var matches = document.cookie.match(new RegExp(
-              "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-            ));
-            return matches ? decodeURIComponent(matches[1]) : undefined;
-        }
 };

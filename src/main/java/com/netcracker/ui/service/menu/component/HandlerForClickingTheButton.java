@@ -5,13 +5,10 @@
  */
 package com.netcracker.ui.service.menu.component;
 
-import com.vaadin.shared.ui.JavaScriptComponentState;
-
 /**
- *
+ * Используется для обработки события нажатия кнопки меню
  * @author Artem
  */
-public class EventHandlerOfTheFormState extends JavaScriptComponentState
-{
-    public String buttonId;    
+abstract public class HandlerForClickingTheButton{
+    abstract public void onEventClickDo();
 }

@@ -1,6 +1,6 @@
-window.com_netcracker_ui_service_menu_component_EventHandlerOfTheForm = function() 
+window.com_netcracker_ui_service_menu_component_EventHandlerOfTheMenu = function() 
 {
-    //Создание компонента, в конструктор отправляем текущий DOM
+    //В конструктор отправляем текущий DOM
     var mycomponent = new mylibrary.MyComponent(this.getElement());
 
     this.onStateChange = function() 
@@ -15,7 +15,6 @@ window.com_netcracker_ui_service_menu_component_EventHandlerOfTheForm = function
     var self = this;
     mycomponent.click = function() 
     {
-        //Считывание значения из первого элемента с тегом "input"
         self.onClick(mycomponent.getValue());
     };
 };

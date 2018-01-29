@@ -9,26 +9,39 @@ import com.vaadin.ui.CustomLayout;
 import java.util.ArrayList;
 
 /**
- *
+ * Используется для создания кнопки меню
  * @author Artem
- * Класс формирует Custom
  */
-public class MenusButton extends CustomLayout
-{
-    public MenusButton(String name, String id, ArrayList<String> subMenus)//name-название кнопки, id-идентификатор кнопки для обработки js, subMenus-подпункты меню
-    {
-        //В этом конструкторе нажатия выполняются только на подменю(из-за его наличия), нет смысла обрабатывать нажатия просто на кнопку
-        String template = "<div><nav id='colorNav'><ul><li><a class='icon-home'>"+name+"</a><ul>";
-        for(int i=0;i<subMenus.size();i++)
+public class MenusButton extends MenusItem{
+    /** Список подпунктов текущей кнопки, если кнопка 1-уровневая, то он равен null*/
+    public ArrayList<MenusButton> itemsSub;
+    
+    /**
+     * Добавление многоуровневой кнопки в меню
+     * @see MenusButton
+     */
+    public MenusButton(String name, String id, HandlerForClickingTheButton handler, ArrayList<MenusButton> itemsSub){
+        setHandlerForClickingTheButton(handler);
+        this.id = id;
+        this.name = name;
+        this.itemsSub = itemsSub;
+        String template = "<div><nav id='colorNav'><ul><li><a  id='"+id+"Btn' class='icon-home'>"+name+"</a><ul>";
+        for(int i=0;i<itemsSub.size();i++)
         {
-            template+="<li><a   id='"+id+subMenus.get(i)+"Btn'>"+subMenus.get(i)+"</a></li>";
+            template+="<li><a   id='"+itemsSub.get(i).id+"Btn'>"+itemsSub.get(i).name+"</a></li>";
         }
         template+="</ul></li></ul></nav></div></div>";
         setTemplateContents(template);
     }
     
-    public MenusButton(String name, String id)//name-название кнопки, id-идентификатор кнопки для обработки js
-    {
+    /**
+     * Добавление одноуровенвой кнопки в меню
+     * @see MenusButton
+     */
+    public MenusButton(String name, String id, HandlerForClickingTheButton handler){
+        setHandlerForClickingTheButton(handler);
+        this.id = id;
+        this.name = name;
         //К id дописываю "Btn", для идентификации в js
         String template = "<div id='"+id+"'><nav id='colorNav'><ul><li><a href='#' id='"+id+"Btn' class='icon-home'>"+name+"</a></li></ul></nav></div></div>";
         setTemplateContents(template);
