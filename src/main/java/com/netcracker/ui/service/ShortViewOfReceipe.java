@@ -40,6 +40,8 @@ public class ShortViewOfReceipe extends HorizontalLayout {
 
     public ShortViewOfReceipe() {
 
+        ResponsesFromTheBackEnd response = new ResponsesFromTheBackEnd();
+        
         options = new Options();
         networkDiagram = new NetworkDiagram(options);
         networkDiagram.setSizeFull();
@@ -62,7 +64,7 @@ public class ShortViewOfReceipe extends HorizontalLayout {
         options.setGroups(groups);        
         
         //crete nodes
-        Node node1 = new Node(1,"Подготовьте ингридиенты",Shape.box, groupName , "https://images.lady.mail.ru/2810/");
+        Node node1 = new Node(1,response.getReceipeName(),Shape.box, groupName , "https://images.lady.mail.ru/2810/");
         Node node2 = new Node(2, "Мякоть отделить от кости и нарезать на кубики"+"\n"+" размером 2 на 2 см. Кости не выбрасывать.", Shape.box,"group", " https://images.lady.mail.ru/2811/");
         Node node3 = new Node(3,"Морковь нарезать тонкой соломкой.",Shape.box, groupName, "https://images.lady.mail.ru/2812/");
         Node node4 = new Node(4,"Лук нарезать полукольцами.", "https://images.lady.mail.ru/2813/" );

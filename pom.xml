@@ -99,6 +99,11 @@
              <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
              <version>1.4.2.RELEASE</version>
            </dependency>
+           <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20140107</version>
+            </dependency>
     </dependencies>
     <repositories>
         <repository>
