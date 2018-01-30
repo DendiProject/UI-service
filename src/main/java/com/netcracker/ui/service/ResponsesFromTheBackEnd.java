@@ -5,6 +5,8 @@
  */
 package com.netcracker.ui.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.lang.annotation.Annotation;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,64 +17,63 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpRange;
 import org.json.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 
 /**
  *
  * @author eliza
  */
-public class ResponsesFromTheBackEnd {
+  @Component
+ public class ResponsesFromTheBackEnd implements Component {
     int receipe_id=0;
-    String receipeName = new String();
+    String receipeName = new String();    
+    @Autowired
+    private RestTemplate restTemplate;
+     @Autowired
+     private ObjectMapper objectMapper;
+
+    //@Value( "${spring.environment.url}" )
+      //  private String jdbcUrl;
+     
+
+     
     public ResponsesFromTheBackEnd(){
-       /* receipe_name = this.receipe_name;
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://localhost:8082/v1/shortViewOfReceipe")
-        .queryParam("receipe_id", receipe_id)
-        .queryParam("receipe_name", receipe_name);
+         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://localhost:8082/v1/shortViewOfReceipe")        
+            .queryParam("receipe_id", receipe_id);
+
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
         HttpEntity<String> response = restTemplate.exchange(
-        builder.build().encode().toUri(), 
-        HttpMethod.GET, 
-        entity, 
-        String.class);(
-       RestTemplate restTemplate = new RestTemplate();
-       String fooResourceUrl= "http://localhost:8082/v1/shortViewOfReceipe";
-        ResponseEntity<String> response= restTemplate.getForEntity(fooResourceUrl + "/1", String.class);
-        assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));*/
-       
-        RestTemplate restTemplate = new RestTemplate();
-       HttpHeaders headers = new HttpHeaders();
-    headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-
-    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://localhost:8082/v1/shortViewOfReceipe")
-        .queryParam("receipe_name", receipeName)
-        .queryParam("receipe_id", receipe_id);
-
-
-    HttpEntity<?> entity = new HttpEntity<>(headers);
-
-    HttpEntity<String> response = restTemplate.exchange(
-        builder.build().encode().toUri(), 
-        HttpMethod.GET, 
-        entity, 
-        String.class);
+            builder.build().encode().toUri(), 
+            HttpMethod.GET, 
+            entity, 
+            String.class);
         
-    JSONObject obj = new JSONObject(response.getBody());
-    receipeName = obj.getJSONObject("Receipe").getString("receipe_name");
+        JSONObject obj = new JSONObject(response.getBody());
+        receipeName = obj.getJSONObject("Receipe").getString("receipe_name");
 
+    }
+
+    @Override
+    public String value() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Class<? extends Annotation> annotationType() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public String getReceipeName()
-    {
-        
-        return receipeName;
-    }
+
  
     
 }
