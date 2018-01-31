@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
  * @author eliza
  */
   @Component
- public class ResponsesFromTheBackEnd implements Component {
+ public class ResponsesFromTheBackEnd  {
     int receipe_id=0;
     String receipeName = new String();    
     @Autowired
@@ -46,7 +46,7 @@ import org.springframework.stereotype.Component;
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://localhost:8082/v1/shortViewOfReceipe")        
+         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://localhost:8082/v1/Receipe")        
             .queryParam("receipe_id", receipe_id);
 
 
@@ -62,18 +62,5 @@ import org.springframework.stereotype.Component;
         receipeName = obj.getJSONObject("Receipe").getString("receipe_name");
 
     }
-
-    @Override
-    public String value() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Class<? extends Annotation> annotationType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-
  
-    
 }
