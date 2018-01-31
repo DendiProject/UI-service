@@ -16,7 +16,7 @@ public class UiServiceApplication {
         SpringApplication.run(UiServiceApplication.class, args);
     }
     
-    @Bean
+   /* @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
        // Do any additional configuration here
        return builder.build();     
@@ -29,5 +29,5 @@ public class UiServiceApplication {
         mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
 
         return mapper;
-    }
+    }*/
 }

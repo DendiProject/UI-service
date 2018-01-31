@@ -31,10 +31,10 @@ import org.springframework.stereotype.Component;
  public class ResponsesFromTheBackEnd  {
     int receipe_id=0;
     String receipeName = new String();    
-    @Autowired
+   /* @Autowired
     private RestTemplate restTemplate;
      @Autowired
-     private ObjectMapper objectMapper;
+     private ObjectMapper objectMapper;*/
 
     //@Value( "${spring.environment.url}" )
       //  private String jdbcUrl;
