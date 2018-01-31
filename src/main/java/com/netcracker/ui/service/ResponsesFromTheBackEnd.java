@@ -7,6 +7,7 @@ package com.netcracker.ui.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.annotation.Annotation;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpStatusCodeException;
 
 
 /**
@@ -31,18 +33,23 @@ import org.springframework.stereotype.Component;
  public class ResponsesFromTheBackEnd  {
     int receipe_id=0;
     String receipeName = new String();    
-   /* @Autowired
+    @Autowired
     private RestTemplate restTemplate;
      @Autowired
-     private ObjectMapper objectMapper;*/
-
+     private ObjectMapper objectMapper;
+     String result = new String();
     //@Value( "${spring.environment.url}" )
       //  private String jdbcUrl;
      
 
      
-    public ResponsesFromTheBackEnd(){
-        RestTemplate restTemplate = new RestTemplate();
+    public ResponsesFromTheBackEnd(){       
+    }
+    
+    public void getResponce()
+    {
+       // String result = null;
+        try {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
@@ -60,7 +67,19 @@ import org.springframework.stereotype.Component;
         
         JSONObject obj = new JSONObject(response.getBody());
         receipeName = obj.getJSONObject("Receipe").getString("receipe_name");
+        
+        } catch (HttpStatusCodeException e) {
+            result = "Get FAILED with HttpStatusCode: " + e.getStatusCode() + "|" + e.getStatusText();
+        } catch (RuntimeException e) {
+            result = "Get FAILED\n" + ExceptionUtils.getFullStackTrace(e);
+        }       
 
     }
- 
+            public String getResult()
+        {
+            return result;
+        }
+        
 }
+ 
+
