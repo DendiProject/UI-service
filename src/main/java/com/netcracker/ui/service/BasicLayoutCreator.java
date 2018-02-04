@@ -6,6 +6,7 @@
 package com.netcracker.ui.service;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
 
 /**
@@ -23,7 +24,7 @@ public class BasicLayoutCreator
         main_layout = new ResponsiveLayout();
         CustomLayout main_custom_layout = new CustomLayout("MainLayout");
         main_layout.addComponent(main_custom_layout);
-        main_custom_layout.addComponent(content_row_layout,"content_row");  
+        main_custom_layout.addComponent(content_row_layout,"content_row");
     }
 }
 /*Реализация BasicLayout, создает main_layout  и добавляет в него
