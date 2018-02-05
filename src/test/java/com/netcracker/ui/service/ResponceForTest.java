@@ -5,11 +5,10 @@
  */
 package com.netcracker.ui.service;
 
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
+
 
 /** Spring 3.2.x use these */
+import static org.hamcrest.CoreMatchers.containsString;
  import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
  import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
  import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -24,29 +23,33 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
-import com.netcracker.ui.service.SimpleRestServise;
+
 import org.json.JSONException;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
-import com.netcracker.ui.service.UiServiceApplication;
-import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+
+
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import static org.springframework.test.web.client.ExpectedCount.manyTimes;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
 /**
  *
  * @author eliza
  */
 
-
+@SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
 public class ResponceForTest extends AbstractJUnit4SpringContextTests {  
 
-    private  SimpleRestServise simpleRestService;    
+     
     private MockRestServiceServer mockServer;
     
     
@@ -56,62 +59,59 @@ public class ResponceForTest extends AbstractJUnit4SpringContextTests {
     @Autowired        
     private RestTemplate restTemplate;
 
-  /*   
+   
     @Before
     public void setUp() {        
         mockServer = MockRestServiceServer.createServer(restTemplate);        
     }
-/*
+
         @Test
 	public void performGet() throws Exception {	
 
-            this.mockServer.expect(requestTo("http://google.com"))
+            this.mockServer.expect(manyTimes(),requestTo("http://localhost:8082/v1/Receipe"))
                     .andExpect(method(HttpMethod.GET))
-                    .andRespond(withSuccess("resultSuccess", MediaType.TEXT_PLAIN));
+                    .andRespond(withSuccess( "Success",MediaType.APPLICATION_JSON));
+                    
             
             
-            
-            String result = simpleRestService.getMessage();
+            ResponseEntity<String> result = restTemplate.getForEntity("http://localhost:8082/v1/Receipe", String.class);
             mockServer.verify();
                 
-   
-        assertThat(result, allOf(containsString("SUCCESS"),
-                       containsString("resultSuccess")));       
+           
+            assertThat(result.getStatusCode(), equalTo(HttpStatus.OK));    
 	
 	}
-        @Test
-    public void testGetMessage_404() {
-        mockServer.expect(requestTo("http://google.com"))
+        
+   /*     @Test
+    public void testGetMessage_404() throws Exception {
+        mockServer.expect(requestTo("http://localhost:8082/v1/Receipe"))
                 .andExpect(method(HttpMethod.GET))                
                 .andRespond(withStatus(HttpStatus.NOT_FOUND));
 
-        String result = simpleRestService.getMessage();
-
-        mockServer.verify();
-        assertThat(result, allOf(containsString("FAILED"),
-                       containsString("404")));
+         ResponseEntity<String> result = restTemplate.getForEntity("http://localhost:8082/v1/Receipe", String.class);
+            mockServer.verify();
+       // Assert.assertt
+        //assertThat(result.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
+        assertThat(result, equalTo(HttpStatus.NOT_FOUND));
     }
+    
      @Test
-    public void testGetMessage_500() {
-        mockServer.expect(requestTo("http://google.com"))
+    public void testGetMessage_500() throws Exception {
+        mockServer.expect(requestTo("http://localhost:8082/v1/Receipe"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withServerError());
 
-        String result = simpleRestService.getMessage();
-
+        ResponseEntity<String> result = restTemplate.getForEntity("http://localhost:8082/v1/Receipe", String.class);
         mockServer.verify();
-        assertThat(result, allOf(containsString("FAILED"),
-                       containsString("500")));
+        
+        assertThat(result.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
     }
-*/
-    @Test
-	public void performGet() throws Exception {
-            
-        }
+
+
         
     @Test
 	public void testRetrieveReceipe() throws JSONException {
-    HttpEntity<String> entity = new HttpEntity<String>(null, headers);
+   /* HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
 		ResponseEntity<String> response = restTemplate.exchange(
 				createURLWithPort("/v1/Receipe"),
@@ -139,6 +139,6 @@ public class ResponceForTest extends AbstractJUnit4SpringContextTests {
         
         	private String createURLWithPort(String uri) {
 		return "http://localhost:8082"  + uri;
-	}
+	}*/
     
 }

@@ -43,7 +43,7 @@ public class ReceipeDataStore implements DataStore{
             HttpMethod.GET, 
             entity, 
             String.class);       
-       httpResult =restTemplate.getForObject("http://localhost:8082/v1/Receipe", String.class);
+      // httpResult =restTemplate.getForObject("http://localhost:8082/v1/Receipe", String.class);
         
     }
 
