@@ -53,11 +53,7 @@ public class UiServiceMainUI extends UI {
                 new Graf.ValueChangeListener() {
             @Override
             public void valueChange() {
-                //int a =com.getValue();
-                //Notification.show("Value: " + String.valueOf(a));
-                //RegistrationForm modalWindow = new RegistrationForm();
-                //addWindow(modalWindow);
-                Notification.show("Value: " + com.getValue());
+                Notification.show("Value: " + com.clickedNodeIs);
             }
         });
         TextField sample = new TextField();
@@ -66,28 +62,15 @@ public class UiServiceMainUI extends UI {
         //main_layout.addComponent(com);
         main_layer.content_row_layout.setHeight("700px");
         main_layer.content_row_layout.addComponent(com);
-        //com.addNode("https://ru4.anyfad.com/items/t1@dd86b0fb-d896-4da6-80b4-7fe5c9e3e17c/samye-milye-kotyata.jpg","Cat", 1,2,1);
-        //com.addNode("https://negani.com/uploads/posts/2012-02/1330543487_husky_47.jpg","Dog", 1,2,2);
-        //com.addNode("https://negani.com/uploads/posts/2012-02/1330543487_husky_47.jpg","Dog", 3,2,3);
-        test(1);
-        test(2);
-        btn.addClickListener(new Button.ClickListener() {
-            public void buttonClick(Button.ClickEvent event) {
-                String a = sample.getValue();
-                com.addNode("https://negani.com/uploads/posts/2012-02/1330543487_husky_47.jpg","Dog", 3,4,Integer.parseInt(a));
-                //com.addNode("https://negani.com/uploads/posts/2012-02/1330543487_husky_47.jpg","Dog", 3,4,Integer.parseInt(a)+1);
-            }
-        });
+        com.addNode("https://ru4.anyfad.com/items/t1@dd86b0fb-d896-4da6-80b4-7fe5c9e3e17c/samye-milye-kotyata.jpg","Cat",1);
+        com.addNode("https://negani.com/uploads/posts/2012-02/1330543487_husky_47.jpg","Dog",2);
+        com.addNodesConnection(1,2);
+
 
         
         //Задание отступа до коцна страницы
         ResponsiveRow the_distance_between_bottom_and_recipes = main_layer.content_row_layout.addRow();
         the_distance_between_bottom_and_recipes.setHeight("60px");
         the_distance_between_bottom_and_recipes.addColumn().withDisplayRules(12, 12, 12, 12);
-    }
-    
-    public void test(int a)
-    {
-        com.addNode("https://ru4.anyfad.com/items/t1@dd86b0fb-d896-4da6-80b4-7fe5c9e3e17c/samye-milye-kotyata.jpg","Cat", 1,2,a);
     }
 }

@@ -4,7 +4,7 @@ var mylibrary = mylibrary || {};
 mylibrary.MyComponent = function (element) {
         element.innerHTML = "<div id='mynetwork'></div>";
         var self = this; // Can't use this inside the function
-        var nodesId = null;
+        var nodesId = null;//Хранит nodesId, по которой был сделан клик
         
         var nodes = null;
         var edges = null;
@@ -21,49 +21,48 @@ mylibrary.MyComponent = function (element) {
             '</svg>';*/
 
         //var url = "data:image/svg+xml;charset=utf-8,"+ encodeURIComponent(svg);
-
-        // Create a data table with nodes.
-        nodes = [];
-
-        // Create a data table with links.
-        edges = [];
-
         
         // Called when the Visualization API is loaded.
-        this.draw = function (newNodesimageUrl, newNodesLabel, idNodesConnectedFrom, idNodesConnectedTo,newNodesId) {
-            if(newNodesimageUrl !== undefined)
-            {
-                //SVG-вариант
-                //nodes.push({id: 1, label: 'Get HTML', image: url, shape: 'circularImage'});
-                //nodes.push({id: 2, label: 'Using SVG', image: url, shape: 'circularImage'});
-                //Просто картинка
-                alert(newNodesId);
-                nodes.push({id: newNodesId, label: newNodesLabel, image: newNodesimageUrl, shape: 'circularImage'});
-                edges.push({from: idNodesConnectedFrom, to: idNodesConnectedTo, length: 100});
+        this.draw = function (nodesBuf, nodesConnectionsBuf) {
+            //SVG-вариант
+            //nodes.push({id: 1, label: 'Get HTML', image: url, shape: 'circularImage'});
+            //nodes.push({id: 2, label: 'Using SVG', image: url, shape: 'circularImage'});
+            //Просто картинка
+            // Create a data table with nodes.
+            nodes = [];
 
-                // create a network
-                var container = document.getElementById('mynetwork');
-                var data = {
-                    nodes: nodes,
-                    edges: edges
-                };
-                var options = {
-                    physics: {stabilization: false},
-                    edges: {smooth: false}
-                };
-                network = new vis.Network(container, data, options);
-                element.style.width="100%";
-                element.style.height="100%";
-                //создал здесь, потом учто это событие нельзя на значить на простые типы, вроде int и string
-                network.on("click", function (params) {
-                    nodesId = params["nodes"];
-                    if(nodesId > 0)
-                    {
-                        //alert(nodesId);
-                        self.click();
-                    }
-                });
+            // Create a data table with links.
+            edges = [];
+            for (var i = 0; i < nodesBuf.length; i++) 
+            {
+                nodes.push({id: nodesBuf[i].newNodesId, label: nodesBuf[i].newNodesLabel, image: nodesBuf[i].newNodesimageUrl, shape: 'circularImage'});
             }
+            for (var i = 0; i < nodesConnectionsBuf.length; i++) 
+            {
+                edges.push({from: nodesConnectionsBuf[i].idNodesConnectedFrom, to: nodesConnectionsBuf[i].idNodesConnectedTo, length: 100});
+            }
+
+            // create a network
+            var container = document.getElementById('mynetwork');
+            var data = {
+                nodes: nodes,
+                edges: edges
+            };
+            var options = {
+                physics: {stabilization: false},
+                edges: {smooth: false}
+            };
+            network = new vis.Network(container, data, options);
+            element.style.width="100%";
+            element.style.height="100%";
+            //создал здесь, потом учто это событие нельзя на значить на простые типы, вроде int и string
+            network.on("click", function (params) {
+                nodesId = params["nodes"];
+                if(nodesId > 0)
+                {
+                    self.click();
+                }
+            });
         };
         
         // Style it
@@ -72,6 +71,10 @@ mylibrary.MyComponent = function (element) {
 
         // Getter and setter for the value property
         this.getValue = function () {
+                return nodesId;
+        };
+        
+        this.setValue = function () {
                 return nodesId;
         };
 };

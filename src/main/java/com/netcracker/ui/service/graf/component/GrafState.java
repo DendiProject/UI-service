@@ -6,16 +6,13 @@
 package com.netcracker.ui.service.graf.component;
 
 import com.vaadin.shared.ui.JavaScriptComponentState;
+import java.util.ArrayList;
 
 /**
  *
  * @author ivan
  */
 public class GrafState extends JavaScriptComponentState{
-    public String newNodesimageUrl;
-    public int idNodesConnectedFrom;
-    public int idNodesConnectedTo;
-    public int newNodesId;
-    public String newNodesLabel;
-    public int ClickedNodeIs;
+    public ArrayList<Node> nodes;
+    public ArrayList<NodesConnection> nodesConnections;
 }

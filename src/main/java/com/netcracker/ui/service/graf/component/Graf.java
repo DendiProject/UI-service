@@ -19,6 +19,8 @@ import java.util.ArrayList;
 @JavaScript({"mylibrary.js", "mycomponent-connector.js","https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js","https://cdnjs.cloudflare.com/ajax/libs/vis/4.19.1/vis.js"})
 public class Graf extends AbstractJavaScriptComponent {
 
+    public int clickedNodeIs;
+    
     public interface ValueChangeListener extends Serializable {
 
         void valueChange();
@@ -34,6 +36,8 @@ public class Graf extends AbstractJavaScriptComponent {
                 }
             }
         });
+        getState().nodes = new ArrayList<>();
+        getState().nodesConnections = new ArrayList<>();
         //setValue("bla bla");
     }
 
@@ -45,18 +49,15 @@ public class Graf extends AbstractJavaScriptComponent {
         listeners.add(listener);
     }
     public void setValue(double value) {
-        getState().ClickedNodeIs = (int)value;
+        clickedNodeIs = (int)value;
     }
-    public void addNode(String newNodesimageUrl, String newNodesLabel,int idNodesConnectedFrom, int idNodesConnectedTo, int newNodesId) {
-        getState().newNodesimageUrl = newNodesimageUrl;
-        getState().idNodesConnectedFrom = idNodesConnectedFrom;
-        getState().idNodesConnectedTo = idNodesConnectedTo;
-        getState().newNodesId = newNodesId;
-        getState().newNodesLabel = newNodesLabel;
+    public void addNode(String newNodesimageUrl, String newNodesLabel, int newNodesId) {
+        Node node = new Node(newNodesimageUrl, newNodesId, newNodesLabel);
+        getState().nodes.add(node);
     }
-    
-    public int getValue() {
-        return getState().ClickedNodeIs;
+    public void addNodesConnection(int idNodesConnectedFrom, int idNodesConnectedTo) {
+        NodesConnection nodeConnection = new NodesConnection(idNodesConnectedFrom, idNodesConnectedTo);
+        getState().nodesConnections.add(nodeConnection);
     }
 
     @Override
