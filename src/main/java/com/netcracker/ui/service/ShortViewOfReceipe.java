@@ -40,7 +40,7 @@ public class ShortViewOfReceipe extends HorizontalLayout {
 
     public ShortViewOfReceipe() {
 
-        ResponsesFromTheBackEnd response = new ResponsesFromTheBackEnd();
+        
         
         options = new Options();
         networkDiagram = new NetworkDiagram(options);
