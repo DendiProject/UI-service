@@ -6,32 +6,30 @@
 package com.netcracker.ui.service;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
+import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
+import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
+import com.netcracker.ui.service.menu.component.Menu;
+import com.netcracker.ui.service.menu.component.MenusButton;
+import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.vaadin.ui.CustomLayout;
+import java.util.ArrayList;
 
 /**
- *
+ * Используется для создания базового макета приложения
  * @author Artem
  */
-public class BasicLayoutCreator
-{
-    public ResponsiveLayout main_layout;
-    public ResponsiveLayout content_row_layout;
-    
-    public BasicLayoutCreator()
+public class BasicLayoutCreator{
+    public ResponsiveLayout mainLayout;
+    public ResponsiveLayout contentRowLayout;
+    public Menu menu;
+    public BasicLayoutCreator() throws MenuComponentException
     {
-        content_row_layout = new ResponsiveLayout();
-        main_layout = new ResponsiveLayout();
-        CustomLayout main_custom_layout = new CustomLayout("MainLayout");
-        main_layout.addComponent(main_custom_layout);
-        main_custom_layout.addComponent(content_row_layout,"content_row");  
+        contentRowLayout = new ResponsiveLayout();
+        mainLayout = new ResponsiveLayout();
+        CustomLayout mainCustomLayout = new CustomLayout("MainLayout");
+        menu = new Menu();
+        mainCustomLayout.addComponent(menu,"navigate_row");
+        mainLayout.addComponent(mainCustomLayout);
+        mainCustomLayout.addComponent(contentRowLayout,"content_row");  
     }
 }
-/*Реализация BasicLayout, создает main_layout  и добавляет в него
-content_row, далее используется именно content_row для добавления контента
-Пример использования:
-    BasicLayoutCreator main_layer = new BasicLayoutCreator();
-    ResponsiveLayout main_layout = main_layer.main_layout;
-    main_layout.setSizeFull();
-    main_layout.setHeight("300%");
-    setContent(main_layout);
-    ResponsiveRow slider_row = main_layer.content_row_layout.addRow();*/

@@ -1,77 +1,10 @@
 ﻿<div class="main_layout" id="main_layout">	
-	<div class="navigate_row" id="navigate_row">
-		<div class="left_allign_navigate_row_components">
-			<div>
-				<nav id="colorNav">
-					<ul>
-						<li class="green">
-							<a href="#" class="icon-home">Главная</a>
-							<ul>
-								<li><a href="#">Dropdown item 1</a></li>
-								<li><a href="#">Dropdown item 2</a></li>
-								<!-- More dropdown options -->
-							</ul>
-						</li>
-					</ul>
-				</nav>
-			</div>
-			<div>
-				<nav id="colorNav">
-					<ul>
-						<li class="green">
-							<a href="#" class="icon-home">Рецепты</a>
-							<ul>
-								<li><a href="#">Dropdown item 1</a></li>
-								<li><a href="#">Dropdown item 2</a></li>
-								<!-- More dropdown options -->
-							</ul>
-						</li>
-					</ul>
-				</nav>
-			</div>
-		</div>
-		<div class="right_allign_navigate_row_components">
-			<div>
-				<nav id="colorNav">
-					<ul>
-						<li>
-							<form>
-							  <input type="text" placeholder="Искать здесь...">
-							  <button type="submit"></button>
-							</form>
-						</li>
-					</ul>
-				</nav>
-			</div>
-			<div>
-				<nav id="colorNav">
-					<ul>
-						<li class="green">
-							<a href="#" class="icon-home">Вход</a>
-						</li>
-					</ul>
-				</nav>
-			</div>
-		</div>
+	<div class="navigate_row" id="navigate_row" data-location="navigate_row">
+		
+
+		
 	</div>
 	<div class="content_row" id ="content_row" data-location="content_row">
 		
 	</div>
 </div>
-
-
-
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script><!-- Без этого не работает слайдер -->
-<script type="text/javascript">
-	$(document).ready(function()
-	{
-		var scr_w=screen.width*0.85;
-		document.getElementById("main_layout").style.width=scr_w+"px";
-	});
-	
-	window.onresize = function()
-	{
-		var scr_w=screen.width*0.85;
-		document.getElementById("main_layout").style.width=scr_w+"px";
-	};
-</script>
