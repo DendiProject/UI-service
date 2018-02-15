@@ -87,7 +87,25 @@
             <groupId>com.jarektoro</groupId>
             <artifactId>responsive-layout</artifactId>
             <version>2.1.1</version>
-        </dependency> 
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+        
+         
+        
+          
+        
+        
+        
+        
+        
+        
+        
+        
+        
         <dependency>
             <groupId>org.vaadin.addon</groupId>
             <artifactId>visjs-addon</artifactId>
@@ -95,44 +113,45 @@
             <type>jar</type>
         </dependency>	
         <dependency>
-             <groupId>org.springframework.cloud</groupId>
-             <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
-             <version>1.4.2.RELEASE</version>
-           </dependency>
-           <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+            <version>1.4.2.RELEASE</version>
+        </dependency>
+        <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20140107</version>
-            </dependency>
-            <dependency>
+        </dependency>
+        <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.9</version>
-            </dependency>
-            <dependency>  
+        </dependency>
+        <dependency>  
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
             <version>1.8.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>4.3.13.RELEASE</version>
-                  <scope>test</scope>
-                  <type>jar</type>
-            </dependency>
-                <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <scope>test</scope>
-                </dependency>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>4.3.13.RELEASE</version>
+              <scope>test</scope>
+              <type>jar</type>
+        </dependency>
+        
+              
+                
+                    
+           
+            
+         
     </dependencies>
     <repositories>
         <repository>
             <id>vaadin-addons</id>
             <url>http://maven.vaadin.com/vaadin-addons</url>
         </repository>
-		
     </repositories>
     <build>
         <resources>
@@ -205,7 +224,7 @@
                     </excludeProperties>
                 </configuration>
             </plugin>
-            <plugin>
+			<plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>${asciidoctor.maven.plugin.version}</version>
@@ -266,28 +285,28 @@
                             </attributes>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>asciidoc-to-html</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>html5</backend>
-                            <sourceHighlighter>coderay</sourceHighlighter>
-                            <attributes>
-                                <linkcss>true</linkcss>
-                                <imagesdir>./images</imagesdir>
-                                <toc>left</toc>
-                                <icons>font</icons>
-                                <sectanchors>true</sectanchors>
-                                <!-- set the idprefix to blank -->
-                                <idprefix/>
-                                <idseparator>-</idseparator>
-                                <docinfo1>true</docinfo1>
-                            </attributes>
-                        </configuration>
-                    </execution>
+					<execution>
+								    <id>asciidoc-to-html</id>
+								    <phase>generate-resources</phase>
+								    <goals>
+										<goal>process-asciidoc</goal>
+								    </goals>
+								    <configuration>
+                            	    	<backend>html5</backend>
+                            			<sourceHighlighter>coderay</sourceHighlighter>
+										<attributes>
+			                                <linkcss>true</linkcss>
+			                                <imagesdir>./images</imagesdir>
+											<toc>left</toc>
+			                                <icons>font</icons>
+			                                <sectanchors>true</sectanchors>
+			                                <!-- set the idprefix to blank -->
+			                                <idprefix/>
+			                                <idseparator>-</idseparator>
+			                                <docinfo1>true</docinfo1>
+			                            </attributes>
+									</configuration>
+							    </execution>
                 </executions>
             </plugin>
         </plugins>

@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service;
-
-import org.springframework.web.bind.annotation.RestController;
+package com.netcracker.ui.service.graf.component;
 
 /**
  *
- * @author eliza
+ * @author Artem
  */
-@RestController
-public class ReceipeController {
-    
+abstract public class HandlerForClickingTheNode {
+    abstract public void onEventClickDo();
 }

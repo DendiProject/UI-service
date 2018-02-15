@@ -5,20 +5,11 @@
  */
 package com.netcracker.ui.service;
 
-import com.vaadin.annotations.Theme;
-import com.vaadin.data.Validator;
-import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.annotations.VaadinServletConfiguration;
 
 
 //import com.vaadin.data.Validator.InvalidValueException;

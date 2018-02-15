@@ -1,0 +1,37 @@
+@import "../valo/valo.scss";
+
+@mixin shortViewOfRecipeTheme 
+{
+    @include valo;
+    .shortViewOfRecipe
+    {
+        width: 100%;
+        //border: solid 2px grey;
+        height: 100%;
+        margin-top:-25px;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+    }
+    .panelWithGraf
+    {
+        width: 70%;
+        height: 100%;
+        border: solid 4px grey;
+    }
+    .panelWithDescriptionOfNode
+    {
+        width: 30%;
+        height: 100%;
+        border: solid 4px grey;
+    }
+    #mynetwork 
+    {
+        width: 100%;
+        height: 100%;
+        margin: 0 auto;
+    }
+}
+@include shortViewOfRecipeTheme;
