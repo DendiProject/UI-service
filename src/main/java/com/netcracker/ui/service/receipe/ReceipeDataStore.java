@@ -23,7 +23,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * @author Artem
  */
 public class ReceipeDataStore implements DataStore{
-    // @Autowired
+    @Autowired
     //private RestTemplate restTemplate;
     //String httpResult;
     //String receipeName=new String();
