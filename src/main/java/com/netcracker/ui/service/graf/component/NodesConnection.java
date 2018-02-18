@@ -13,12 +13,37 @@ import java.io.Serializable;
  */
 public class NodesConnection  implements Serializable
 {
-    public int idNodesConnectedFrom;
-    public int idNodesConnectedTo;
+    private int idNodesConnectedFrom;
+    private int idNodesConnectedTo;
+    
+    public NodesConnection()
+    {
+        
+    }
     
     public NodesConnection(int idNodesConnectedFrom, int idNodesConnectedTo)
     {
         this.idNodesConnectedFrom = idNodesConnectedFrom;
+        this.idNodesConnectedTo = idNodesConnectedTo;
+    }
+    
+    public int getIdNodesConnectedFrom()
+    {
+        return idNodesConnectedFrom;
+    }
+    
+    public void setIdNodesConnectedFrom(int idNodesConnectedFrom)
+    {
+        this.idNodesConnectedFrom = idNodesConnectedFrom;
+    }
+    
+    public int getIdNodesConnectedTo()
+    {
+        return idNodesConnectedTo;
+    }
+    
+    public void setIdNodesConnectedTo(int idNodesConnectedTo)
+    {
         this.idNodesConnectedTo = idNodesConnectedTo;
     }
 }

@@ -13,10 +13,57 @@ import java.io.Serializable;
  */
 public class Node  implements Serializable
 {
-    public String newNodesimageUrl;
-    public int newNodesId;
-    public String newNodesLabel;
+    private String newNodesimageUrl;
+    private int newNodesId;
+    private String newNodesLabel;
     private HandlerForClickingTheNode handlerForClickingTheNode;
+    
+    public Node()
+    {
+        
+    }
+    
+    public Node(String _newNodesimageUrl, int _newNodesId, String _newNodesLabel)
+    {
+        newNodesimageUrl = _newNodesimageUrl;
+        newNodesId = _newNodesId;
+        newNodesLabel = _newNodesLabel;
+    }
+    
+    
+    public String getNewNodesimageUrl()
+    {
+        return newNodesimageUrl;
+    }
+    
+    public void setNewNodesimageUrl(String newNodesimageUrl)
+    {
+        this.newNodesimageUrl = newNodesimageUrl;
+    }
+    
+    public int getNewNodesId()
+    {
+        return newNodesId;
+    }
+    
+    public void setNewNodesId(int newNodesId)
+    {
+        this.newNodesId = newNodesId;
+    }
+    
+    public String getNewNodesLabel()
+    {
+        return newNodesLabel;
+    }
+    
+    public void setNewNodesLabel(String newNodesLabel)
+    {
+        this.newNodesLabel = newNodesLabel;
+    }
+    
+    
+    
+    
     
     /**
      * Вызов обработчика события onClick
@@ -36,13 +83,6 @@ public class Node  implements Serializable
         {
             return false;
         }
-    }
-    
-    public Node(String newNodesimageUrl, int newNodesId, String newNodesLabel)
-    {
-        this.newNodesimageUrl = newNodesimageUrl;
-        this.newNodesId = newNodesId;
-        this.newNodesLabel = newNodesLabel;
     }
     
     public void setHandlerForClickingTheNode(HandlerForClickingTheNode handler)

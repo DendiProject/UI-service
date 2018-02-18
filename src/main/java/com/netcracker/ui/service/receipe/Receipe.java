@@ -15,6 +15,46 @@ import java.util.ArrayList;
  */
 public class Receipe {
     public String receipesName;
-    public ArrayList<Node> nodes;
-    public ArrayList<NodesConnection> nodesConnections;
+    public ArrayList<Node> steps;
+    public ArrayList<NodesConnection> stepsConnections;
+    
+    public Receipe(){
+        
+    }
+    
+    public Receipe(String _receipesName, ArrayList<Node> _steps, ArrayList<NodesConnection> _stepsConnections){
+        receipesName = _receipesName;
+        steps = _steps;
+        stepsConnections = _stepsConnections;
+    }
+    
+    public String getReceipesName()
+    {
+        return receipesName;
+    }
+    
+    public void setReceipesName(String receipesName)
+    {
+        this.receipesName = receipesName;
+    }
+    
+    public ArrayList<Node> getSteps()
+    {
+        return steps;
+    }
+    
+    public void setNodes(ArrayList<Node> nodes)
+    {
+        this.steps = nodes;
+    }
+    
+    public ArrayList<NodesConnection> getStepsConnections()
+    {
+        return stepsConnections;
+    }
+    
+    public void setStepsConnections(ArrayList<NodesConnection> stepsConnections)
+    {
+        this.stepsConnections = stepsConnections;
+    }
 }

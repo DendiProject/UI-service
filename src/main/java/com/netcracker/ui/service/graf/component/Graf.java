@@ -44,7 +44,7 @@ public class Graf extends AbstractJavaScriptComponent {
             public void valueChange() {
                 for(int i=0;i<getState().nodes.size();i++)
                 {
-                    if(getState().nodes.get(i).newNodesId == clickedNodeIs)
+                    if(getState().nodes.get(i).getNewNodesId() == clickedNodeIs)
                     {
                         if(getState().nodes.get(i).checkHandlerState())
                         {
@@ -89,7 +89,7 @@ public class Graf extends AbstractJavaScriptComponent {
     {
         for(int i=0; i<getState().nodes.size(); i++)
         {
-            if(getState().nodes.get(i).newNodesId == nodesId)
+            if(getState().nodes.get(i).getNewNodesId() == nodesId)
             {
                 getState().nodes.get(i).setHandlerForClickingTheNode(handler);
                 break;
