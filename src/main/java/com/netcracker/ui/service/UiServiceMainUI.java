@@ -16,6 +16,9 @@ import com.netcracker.ui.service.navigator.View;
 import com.netcracker.ui.service.receipe.ShortViewOfReceipeCreator;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.Page;
+import com.vaadin.server.Page.UriFragmentChangedEvent;
+import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringUI;
@@ -37,15 +40,16 @@ import org.slf4j.LoggerFactory;
 @SpringUI
 public class UiServiceMainUI extends UI {
     
-    private ResponsiveLayout contentRowLayout;
-    private Navigator navigator;
+    //private ResponsiveLayout contentRowLayout;
+    //private Navigator navigator;
     
     @Override
     protected void init(VaadinRequest vaadinRequest){
         try
         {
-            contentRowLayout = createMainLayout();
-            reDraw("Main");
+            createMainLayout();
+            //Page.getCurrent().setUriFragment(getPage().getUriFragment(), true);
+            //reDraw("Main");
         }
         catch(Exception ex)
         {
@@ -65,6 +69,40 @@ public class UiServiceMainUI extends UI {
         mainLayout.setSizeFull();
         //mainLayout.setHeight("330%");
         setContent(mainLayout);
+        
+        //Создание и добавление видов в навигатор
+        ArrayList<View> newViews = new ArrayList<>();
+        
+        newViews.add(new View("Main") {
+            @Override
+            public void draw() {
+                mainLayer.contentRowLayout.removeAllComponents();
+                addSliderComponent(mainLayer.contentRowLayout);
+                addTopRecepiesComponent(mainLayer.contentRowLayout);
+            }
+        });
+
+        newViews.add(new View("Recept") {
+            @Override
+            public void draw() {
+                ShortViewOfReceipeCreator shortViewOfReceipe = new ShortViewOfReceipeCreator();
+                mainLayer.contentRowLayout.removeAllComponents();
+                mainLayer.contentRowLayout = shortViewOfReceipe.create(mainLayer.contentRowLayout);
+                //mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Вы перешли на страницу с рецептами"));
+            }
+        });
+        
+        newViews.add(new View("Search") {
+            @Override
+            public void draw() {
+                mainLayer.contentRowLayout.removeAllComponents();
+                mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Рецепты, удовлетворяющие условию поиска:"));
+            }
+        });
+        
+        Navigator navigator = new Navigator(getPage(),newViews);
+        
+        
         //Создаем подпункты меню
         ArrayList<MenusButton> mainSubMenus = new ArrayList<>();
         mainSubMenus.add(new MenusButton("Подпункт1","idsubMain1", new HandlerForClickingTheButton(){
@@ -84,7 +122,7 @@ public class UiServiceMainUI extends UI {
         MenusButton mainBtn = new MenusButton("Главная","idMain", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                reDraw("Main");
+                navigator.navigateTo("Main");
             }
             
         },mainSubMenus);
@@ -94,7 +132,7 @@ public class UiServiceMainUI extends UI {
         MenusButton recepsBtn = new MenusButton("Рецепты","idRecept", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                reDraw("Recept");
+                navigator.navigateTo("Recept");
             }
             
         });
@@ -102,7 +140,7 @@ public class UiServiceMainUI extends UI {
         MenusSearchBar search = new MenusSearchBar("idSearch", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                reDraw("Search");
+                navigator.navigateTo("Search");
             }
             
         });
@@ -121,36 +159,7 @@ public class UiServiceMainUI extends UI {
         mainLayer.menu.addItem(search);
         mainLayer.menu.addItem(inBtn);
         
-        //Создание и добавление видов в навигатор
-        navigator = new Navigator();
-        navigator.Views.add(new View("Main") {
-            @Override
-            public void draw() {
-                contentRowLayout.removeAllComponents();
-                addSliderComponent(contentRowLayout);
-                addTopRecepiesComponent(contentRowLayout);
-            }
-        });
-
-        navigator.Views.add(new View("Recept") {
-            @Override
-            public void draw() {
-                ShortViewOfReceipeCreator shortViewOfReceipe = new ShortViewOfReceipeCreator();
-                contentRowLayout.removeAllComponents();
-                contentRowLayout = shortViewOfReceipe.create(contentRowLayout);
-                //contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Вы перешли на страницу с рецептами"));
-            }
-        });
         
-        navigator.Views.add(new View("Search") {
-            @Override
-            public void draw() {
-                contentRowLayout.removeAllComponents();
-                contentRowLayout.removeAllComponents();
-                contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Рецепты, удовлетворяющие условию поиска:"));
-            }
-        });
-
         return mainLayer.contentRowLayout;
     }
     
@@ -208,10 +217,5 @@ public class UiServiceMainUI extends UI {
         ResponsiveRow theDistanceBetweenBottomAndRecipes = contentRowLayout.addRow();
         theDistanceBetweenBottomAndRecipes.setHeight("60px");
         theDistanceBetweenBottomAndRecipes.addColumn().withDisplayRules(12, 12, 12, 12);
-    }
-    
-    public void reDraw(String viewsName)
-    {
-        navigator.drawView(viewsName);
     }
 }
