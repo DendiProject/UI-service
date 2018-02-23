@@ -29,9 +29,10 @@ public class ShortViewOfReceipeCreator {
         
         graf = new Graf();
         
-        ShortViewOfReceipeLayout.addComponent(graf,"panelWithGraf");
+        
         graf.setNodesCollection(receipe.steps);
         graf.setNodesConnections(receipe.stepsConnections);
+        ShortViewOfReceipeLayout.addComponent(graf,"panelWithGraf");
         
         graf.setHandlerForClickingTheNode(1, new HandlerForClickingTheNode(){
                                 @Override

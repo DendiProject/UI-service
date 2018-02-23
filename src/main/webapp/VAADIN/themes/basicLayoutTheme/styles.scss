@@ -83,17 +83,17 @@
     {
         width: 280px;
     }
-    button 
+    .buttonSearch 
     {
         width: 42px;
         height: 42px;
         background: none;
         border: none;
         position: absolute;
-        top: 4px;
-        right: 25px;
+        top: 17px;
+        right: 20px;
     }
-    button:before
+    .buttonSearch:before
     {
         content: "\f002";
         font-family: FontAwesome;

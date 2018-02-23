@@ -31,6 +31,9 @@ import java.io.File;
 import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -48,6 +51,14 @@ public class UiServiceMainUI extends UI {
         try
         {
             createMainLayout();
+            /*AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+            ctx.register(AppConfig.class);
+            ctx.refresh();
+            Employee employee = ctx.getBean(Employee.class);
+            System.out.println("Company Name:"+ employee.getCompany().getCompName());
+            System.out.println("Location:"+ employee.getCompany().getLocation());
+            ctx.close();*/
+            
             //Page.getCurrent().setUriFragment(getPage().getUriFragment(), true);
             //reDraw("Main");
         }

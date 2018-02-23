@@ -16,7 +16,11 @@ import java.util.ArrayList;
 public class Navigator {
     private ArrayList<View> views;
     Page currentPage;
-    
+    String newCurrentPage;
+    public Navigator()
+    {
+        
+    }
     public Navigator(Page newcurrentPage, ArrayList<View> newViews)
     {
         views = newViews;
@@ -25,14 +29,7 @@ public class Navigator {
         String currentPath = currentPage.getUriFragment();
         if(views.size()>0)
         {
-            if(currentPath != null && !currentPath.equals(""))
-            {
-                drawView(currentPath);
-            }
-            else
-            {
-                drawView(views.get(0).name);
-            }
+            drawView(currentPath);
         }
         else
         {
@@ -43,27 +40,22 @@ public class Navigator {
             new Page.UriFragmentChangedListener() {
                 public void uriFragmentChanged(
                     Page.UriFragmentChangedEvent source) {
-                        if(views.size()>0)
-                        {
-                            if(source.getUriFragment() != null && !source.getUriFragment().equals(""))
-                            {
-                                drawView(source.getUriFragment());
-                            }
-                            else
-                            {
-                                drawView(views.get(0).name);
-                            }
-                        }
-                        else
-                        {
-                            Notification.show("Пустой набор видов");
-                        }
+                        drawView(newCurrentPage);
                 }
             });
     }
     
     private void drawView(String viewsName)
     {
+        if(views.size()>0)
+        {
+            //Если путо, то отобразить дефолтный вид (считаю дефолтным первый вид)
+            if(viewsName == null || viewsName.equals(""))
+            {
+                viewsName = views.get(0).name;
+            }
+        }
+        
         for(int i=0; i<views.size(); i++)
         {
             if(views.get(i).name.equals(viewsName))
@@ -81,6 +73,7 @@ public class Navigator {
     
     public void navigateTo(String path)
     {
+        newCurrentPage = path;
         currentPage.setUriFragment(path);
     }
 }
