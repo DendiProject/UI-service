@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Представляет собой конкретный рецепт
  * @author Artem
  */
-public class Receipe {
+public class Receipe implements Comparable<Receipe>{
     public String receipesName;
     public ArrayList<Node> steps;
     public ArrayList<NodesConnection> stepsConnections;
@@ -56,5 +56,37 @@ public class Receipe {
     public void setStepsConnections(ArrayList<NodesConnection> stepsConnections)
     {
         this.stepsConnections = stepsConnections;
+    }
+
+    @Override
+    public int compareTo(Receipe t) {
+        
+        if(t.steps.size() != steps.size() | t.stepsConnections.size() != 
+                stepsConnections.size() | !t.receipesName.equals(receipesName))
+        {
+            return 0;
+        }
+        
+        for(int i=0;i<t.steps.size();i++)
+        {
+            if(t.steps.get(i).getNewNodesId() != steps.get(i).getNewNodesId())
+            {
+                return 0;
+            }
+        }
+        
+        for(int i=0;i<t.stepsConnections.size();i++)
+        {
+            if(t.stepsConnections.get(i).getIdNodesConnectedTo() != 
+                    stepsConnections.get(i).getIdNodesConnectedTo() | 
+                    t.stepsConnections.get(i).getIdNodesConnectedFrom() != 
+                    stepsConnections.get(i).getIdNodesConnectedFrom())
+            {
+                return 0;
+            }
+        }
+        
+        
+        return 1;
     }
 }

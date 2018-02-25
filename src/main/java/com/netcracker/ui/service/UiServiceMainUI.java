@@ -13,6 +13,8 @@ import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.netcracker.ui.service.navigator.Navigator;
 import com.netcracker.ui.service.navigator.View;
+import com.netcracker.ui.service.receipe.ReceipeObserver;
+import com.netcracker.ui.service.receipe.ReceipeSubject;
 import com.netcracker.ui.service.receipe.ShortViewOfReceipeCreator;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.FileResource;
@@ -50,6 +52,16 @@ public class UiServiceMainUI extends UI {
     protected void init(VaadinRequest vaadinRequest){
         try
         {
+            ReceipeSubject receipeSubject = new ReceipeSubject();
+            ReceipeObserver receipeObserver = new ReceipeObserver(1, receipeSubject);
+            receipeSubject.getUpdatesForReceipes();
+            
+            
+            
+            
+            
+            
+            
             createMainLayout();
             /*AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
             ctx.register(AppConfig.class);
