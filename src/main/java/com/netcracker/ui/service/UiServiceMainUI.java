@@ -13,14 +13,12 @@ import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.netcracker.ui.service.navigator.Navigator;
 import com.netcracker.ui.service.navigator.View;
-import com.netcracker.ui.service.receipe.ReceipeObserver;
-import com.netcracker.ui.service.receipe.ReceipeSubject;
-import com.netcracker.ui.service.receipe.ShortViewOfReceipeCreator;
+import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeDataConverter;
+import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxi;
+import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeStore;
+import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.FileResource;
-import com.vaadin.server.Page;
-import com.vaadin.server.Page.UriFragmentChangedEvent;
-import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringUI;
@@ -31,11 +29,15 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 /**
  *
@@ -52,17 +54,7 @@ public class UiServiceMainUI extends UI {
     protected void init(VaadinRequest vaadinRequest){
         try
         {
-            ReceipeSubject receipeSubject = new ReceipeSubject();
-            ReceipeObserver receipeObserver = new ReceipeObserver(1, receipeSubject);
-            receipeSubject.getUpdatesForReceipes();
-            
-            
-            
-            
-            
-            
-            
-            createMainLayout();
+            createMainLayout();        
             /*AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
             ctx.register(AppConfig.class);
             ctx.refresh();
@@ -108,9 +100,20 @@ public class UiServiceMainUI extends UI {
         newViews.add(new View("Recept") {
             @Override
             public void draw() {
-                ShortViewOfReceipeCreator shortViewOfReceipe = new ShortViewOfReceipeCreator();
+                
+                MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+                parameters.add("receipe_id", "1"); 
+                ReceipeProxi proxi = new ReceipeProxi("http://localhost:8082/v1/Receipe", parameters);
+
+                ReceipeDataConverter converter = new ReceipeDataConverter();
+                ReceipeStore store = new ReceipeStore(converter);
+
+                ReceipeView view = new ReceipeView(proxi, store);
+                view.reload();
+                //ShortViewOfReceipeCreator shortViewOfReceipe = new ShortViewOfReceipeCreator();
                 mainLayer.contentRowLayout.removeAllComponents();
-                mainLayer.contentRowLayout = shortViewOfReceipe.create(mainLayer.contentRowLayout);
+                mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
+                //mainLayer.contentRowLayout = shortViewOfReceipe.create(mainLayer.contentRowLayout);
                 //mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Вы перешли на страницу с рецептами"));
             }
         });

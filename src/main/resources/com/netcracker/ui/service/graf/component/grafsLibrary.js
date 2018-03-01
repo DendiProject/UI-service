@@ -1,7 +1,7 @@
 // Define the namespace
 var mylibrary = mylibrary || {};
 
-mylibrary.MyComponent = function (element) {
+mylibrary.MyGraf = function (element) {
         element.innerHTML = "<div id='mynetwork'></div>";
         var self = this; // Can't use this inside the function
         var nodesId = null;//Хранит nodesId, по которой был сделан клик

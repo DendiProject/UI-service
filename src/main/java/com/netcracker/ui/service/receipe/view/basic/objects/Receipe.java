@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service.receipe;
+package com.netcracker.ui.service.receipe.view.basic.objects;
 
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.NodesConnection;

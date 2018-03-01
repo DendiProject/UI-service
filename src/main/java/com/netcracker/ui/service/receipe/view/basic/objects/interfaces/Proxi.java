@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service.receipe;
+package com.netcracker.ui.service.receipe.view.basic.objects.interfaces;
 
 /**
  *
  * @author Artem
  */
-public interface ReceipeObserverInterface {
-    public void updateReceipeGraf(Receipe receipe);
-    public int getId();
-    public int getDrawingReceipesId();
+public interface Proxi {
+    Object load();//Выполнение запроса на бэкенд
 }
