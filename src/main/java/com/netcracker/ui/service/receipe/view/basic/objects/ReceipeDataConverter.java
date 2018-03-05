@@ -17,14 +17,18 @@ import java.io.IOException;
 public class ReceipeDataConverter implements DataConverter{
 
     @Override
-    public Object convert(Object object) {
+    public Receipe convert(Object object) {
         ObjectMapper mapper = new ObjectMapper();
         try {
+            if(object instanceof Receipe)
+            {
+                return (Receipe)object;
+            }
             Receipe receipe = (Receipe) mapper.readValue(object.toString(),Receipe.class);
             return receipe;
         }
         catch (IOException ex) {
-            //Notification.show("Все очень плохА((((");
+            
         }
 
         return null;

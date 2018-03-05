@@ -5,10 +5,12 @@
  */
 package com.netcracker.ui.service.receipe.view.basic.objects.interfaces;
 
+import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
+
 /**
  *
  * @author Artem
  */
-public interface DataConverter {
-    Object convert(Object object);
+public interface DataConverter<T extends Receipe> {
+    T convert(Object object);
 }

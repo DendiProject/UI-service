@@ -93,19 +93,6 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.5</version>
         </dependency>
-        
-         
-        
-          
-        
-        
-        
-        
-        
-        
-        
-        
-        
         <dependency>
             <groupId>org.vaadin.addon</groupId>
             <artifactId>visjs-addon</artifactId>
@@ -138,11 +125,6 @@
             <version>4.3.13.RELEASE</version>
               <scope>test</scope>
               <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.13</version>
         </dependency>
               
                 

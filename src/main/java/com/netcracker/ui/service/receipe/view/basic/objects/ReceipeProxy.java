@@ -5,8 +5,9 @@
  */
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
-import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxi;
+import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,17 +21,16 @@ import org.springframework.web.util.UriComponentsBuilder;
  *
  * @author Artem
  */
-public class ReceipeProxi implements Proxi{
-
+public class ReceipeProxy  implements Proxy{
     private String connectionUrl;
-    MultiValueMap<String, String> parameters;
-    private Boolean accessIsAllowed;
+    public MultiValueMap<String, String> parameters;
     
-    public ReceipeProxi(String connectionUrl, MultiValueMap<String, String> parameters)
+    private RestTemplate restTemplate;
+    
+    public ReceipeProxy(String connectionUrl, MultiValueMap<String, String> parameters)
     {
         this.connectionUrl = connectionUrl;
         this.parameters = parameters;
-        accessIsAllowed = connect();
     }
    
     //Проверка прав пользователя
@@ -42,14 +42,11 @@ public class ReceipeProxi implements Proxi{
     //Загрузка с бэкенда данных о конкретном рецепте, используя конфигарцию, определенную через функцию connect()
     @Override
     public Object load() {
-        if(accessIsAllowed)
+        if(connect())
         {
-            RestTemplate restTemplate = new RestTemplate();
+            //RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-
-            /*MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-            parameters.add("receipe_id", "1");*/
 
             UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(connectionUrl).queryParams(parameters);
@@ -71,5 +68,4 @@ public class ReceipeProxi implements Proxi{
             return null;
         }
     }
-    
 }

@@ -10,7 +10,7 @@ package com.netcracker.ui.service.receipe.view.basic.objects.interfaces;
  * @author Artem
  */
 public interface StoreSubject {
-    void treatmentNewData(Object object);//преобразование данных до нужного формата при помощи DataConverter
+    void handleNewData(Object object);//преобразование данных до нужного формата при помощи DataConverter
     void notifyObservers();//уведомление об изменившихся данных
     void subscribe(PresenterObserver observer);
     void unsubscribe(PresenterObserver observer);

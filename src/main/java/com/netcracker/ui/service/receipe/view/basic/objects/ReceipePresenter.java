@@ -7,7 +7,7 @@ package com.netcracker.ui.service.receipe.view.basic.objects;
 
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
-import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxi;
+import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
 
 /**
@@ -18,11 +18,11 @@ public class ReceipePresenter implements PresenterObserver{
 
     private int observersId;
     private View view;
-    private Proxi proxi;//Для 1 presenter может существовать только 1 proxi
+    private Proxy proxi;//Для 1 presenter может существовать только 1 proxi
     private StoreSubject storeSubject;//Presenter может подписываться на несколько subject(Пока для
                                       //данной задачи не увидел смысла подписываться сразу на 
                                       //несколько subject)
-    public ReceipePresenter(Proxi proxi, StoreSubject store, View view)
+    public ReceipePresenter(Proxy proxi, StoreSubject store, View view)
     {
         this.proxi = proxi;
         this.storeSubject = store;
@@ -37,7 +37,7 @@ public class ReceipePresenter implements PresenterObserver{
 
     @Override
     public void updateStore(Object result) {
-        storeSubject.treatmentNewData(result);
+        storeSubject.handleNewData(result);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ReceipePresenter implements PresenterObserver{
     }
 
     @Override
-    public void updateView(Object newData) {
+    public void updateView(Receipe newData) {
         view.setNewViewsData(newData);
     }
     

@@ -11,7 +11,7 @@ import com.netcracker.ui.service.graf.component.HandlerForClickingTheNode;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.NodesConnection;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
-import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxi;
+import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
 import com.vaadin.ui.CustomLayout;
@@ -28,7 +28,7 @@ public class ReceipeView implements View{
     private final PresenterObserver presenter;
     public Receipe receipe;
     
-    public ReceipeView(Proxi proxi, StoreSubject store)
+    public ReceipeView(Proxy proxi, StoreSubject store)
     {
         presenter = new ReceipePresenter(proxi, store, (ReceipeView)this);
     }
@@ -40,7 +40,7 @@ public class ReceipeView implements View{
     }
 
     @Override
-    public void setNewViewsData(Object object) {
+    public void setNewViewsData(Receipe object) {
         if(object instanceof Receipe)
         {
             receipe = (Receipe)object;
@@ -58,19 +58,6 @@ public class ReceipeView implements View{
         contentRowLayout.setHeight("100%");
         contentRowLayout.addComponent(ShortViewOfReceipeLayout);
         
-        
-        /*receipe = new Receipe();
-        Node node = new Node("D:\\Files\\Java\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\vk.png", 1, "first");
-        Node node2 = new Node("D:\\Files\\Java\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\vk.png", 2, "second");
-        receipe.steps = new ArrayList<>();
-        receipe.steps.add(node);
-        receipe.steps.add(node2);
-        NodesConnection nc = new NodesConnection(1, 2);
-        receipe.stepsConnections = new ArrayList<>();
-        receipe.stepsConnections.add(nc);*/
-        
-        
-        
         graf = new Graf();
         graf.setNodesCollection(receipe.steps);
         graf.setNodesConnections(receipe.stepsConnections);
@@ -82,14 +69,6 @@ public class ReceipeView implements View{
                                     Notification.show("Value: " + "первый");
                                 }
                             });
-        /*graf.setHandlerForClickingTheNode(2, new HandlerForClickingTheNode(){
-                                @Override
-                                public void onEventClickDo() {
-                                    Notification.show("Value: " + "второй");
-                                }
-                            });
-        */
-        
         return contentRowLayout;
     }
     

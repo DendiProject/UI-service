@@ -9,6 +9,6 @@ package com.netcracker.ui.service.receipe.view.basic.objects.interfaces;
  *
  * @author Artem
  */
-public interface Proxi {
+public interface Proxy {
     Object load();//Выполнение запроса на бэкенд
 }

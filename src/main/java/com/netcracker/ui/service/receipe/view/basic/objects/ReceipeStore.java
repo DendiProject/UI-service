@@ -16,23 +16,14 @@ import java.util.ArrayList;
  */
 public class ReceipeStore implements StoreSubject{
 
-    private static DataConverter converter;
-    private static Object currentData;
-    private static ArrayList<PresenterObserver> observers;
-    private static ReceipeStore instance = null;
+    private DataConverter converter;
+    private Object currentData;
+    private ArrayList<PresenterObserver> observers;
     
     public ReceipeStore(DataConverter converter)
     {
         this.converter = converter;
         observers = new ArrayList<>();
-    }
-    
-    public static synchronized ReceipeStore getInstance(DataConverter converter){
-        if(instance == null)
-        {
-            instance = new ReceipeStore(converter);
-        }
-        return instance;
     }
     
     @Override
@@ -53,7 +44,7 @@ public class ReceipeStore implements StoreSubject{
     }
     
     @Override
-    public void treatmentNewData(Object object) {
+    public void handleNewData(Object object) {
         currentData = object;
         notifyObservers();
     }

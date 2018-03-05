@@ -6,13 +6,14 @@
 package com.netcracker.ui.service.receipe.view.basic.objects.interfaces;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
+import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
 
 /**
  *
  * @author Artem
  */
-public interface View {
+public interface View<T extends Receipe> {
     void reload();//Запрос из view на обновление
-    void setNewViewsData(Object object);//Presenter устанавливает новую data
+    void setNewViewsData(T object);//Presenter устанавливает новую data
     ResponsiveLayout drawReceipe(ResponsiveLayout contentRowLayout);//отрисовка рецепта
 }
