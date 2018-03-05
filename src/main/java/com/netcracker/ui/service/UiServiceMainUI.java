@@ -126,6 +126,15 @@ public class UiServiceMainUI extends UI {
             }
         });
         
+        newViews.add(new View("UserPage") {
+           @Override
+            public void draw() {
+                mainLayer.contentRowLayout.removeAllComponents();
+                addUserPageComponent(mainLayer.contentRowLayout);
+                
+            }
+        });
+        
         Navigator navigator = new Navigator(getPage(),newViews);
         
         
@@ -171,7 +180,7 @@ public class UiServiceMainUI extends UI {
             
         });
         
-        MenusButton inBtn = new MenusButton("Вход","idIn", new  HandlerForClickingTheButton(){
+        MenusButton registration = new MenusButton("Регистрация","idregistration", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
                 RegistrationForm modalWindow = new RegistrationForm();
@@ -180,10 +189,19 @@ public class UiServiceMainUI extends UI {
 
         });
         
+        MenusButton userPageBtn = new MenusButton("Профиль","iduserPage", new  HandlerForClickingTheButton(){
+            @Override
+            public void onEventClickDo() {
+               navigator.navigateTo("UserPage");
+            }
+
+        });
+        
         mainLayer.menu.addItem(mainBtn);
         mainLayer.menu.addItem(recepsBtn);
         mainLayer.menu.addItem(search);
-        mainLayer.menu.addItem(inBtn);
+        mainLayer.menu.addItem(registration);
+        mainLayer.menu.addItem(userPageBtn);
         
         
         return mainLayer.contentRowLayout;
@@ -243,5 +261,14 @@ public class UiServiceMainUI extends UI {
         ResponsiveRow theDistanceBetweenBottomAndRecipes = contentRowLayout.addRow();
         theDistanceBetweenBottomAndRecipes.setHeight("60px");
         theDistanceBetweenBottomAndRecipes.addColumn().withDisplayRules(12, 12, 12, 12);
+    }
+    
+     private void addUserPageComponent(ResponsiveLayout contentRowLayout){
+        
+        ResponsiveRow sliderRow = contentRowLayout.addRow();
+        
+        CustomLayout userPage = new CustomLayout("UserPageLayout");
+        
+        sliderRow.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(userPage);
     }
 }

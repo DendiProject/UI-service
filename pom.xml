@@ -5,7 +5,7 @@
     <artifactId>ui-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>ui-service</name>
+    <name>ui-service &lt;-----github</name>
     <description>Dendi Project ui-service</description>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -93,19 +93,6 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.5</version>
         </dependency>
-        
-         
-        
-          
-        
-        
-        
-        
-        
-        
-        
-        
-        
         <dependency>
             <groupId>org.vaadin.addon</groupId>
             <artifactId>visjs-addon</artifactId>
@@ -139,11 +126,7 @@
               <scope>test</scope>
               <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.13</version>
-        </dependency>
+        
               
                 
                     
@@ -216,6 +199,7 @@
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
+                <version>2.2.4</version>
                 <configuration>
                     <verbose>true</verbose>
                     <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
