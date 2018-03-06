@@ -28,9 +28,9 @@ public class ReceipeView implements View{
     private final PresenterObserver presenter;
     public Receipe receipe;
     
-    public ReceipeView(Proxy proxi, StoreSubject store)
+    public ReceipeView(Proxy proxy, StoreSubject store)
     {
-        presenter = new ReceipePresenter(proxi, store, (ReceipeView)this);
+        presenter = new ReceipePresenter(proxy, store, (ReceipeView)this);
     }
     
     @Override
@@ -58,6 +58,19 @@ public class ReceipeView implements View{
         contentRowLayout.setHeight("100%");
         contentRowLayout.addComponent(ShortViewOfReceipeLayout);
         
+        
+        /*receipe = new Receipe();
+        Node node = new Node("D:\\Files\\Java\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\vk.png", 1, "first");
+        Node node2 = new Node("D:\\Files\\Java\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\vk.png", 2, "second");
+        receipe.steps = new ArrayList<>();
+        receipe.steps.add(node);
+        receipe.steps.add(node2);
+        NodesConnection nc = new NodesConnection(1, 2);
+        receipe.stepsConnections = new ArrayList<>();
+        receipe.stepsConnections.add(nc);*/
+        
+        
+        
         graf = new Graf();
         graf.setNodesCollection(receipe.steps);
         graf.setNodesConnections(receipe.stepsConnections);
@@ -69,6 +82,14 @@ public class ReceipeView implements View{
                                     Notification.show("Value: " + "первый");
                                 }
                             });
+        /*graf.setHandlerForClickingTheNode(2, new HandlerForClickingTheNode(){
+                                @Override
+                                public void onEventClickDo() {
+                                    Notification.show("Value: " + "второй");
+                                }
+                            });
+        */
+        
         return contentRowLayout;
     }
     

@@ -14,7 +14,7 @@ import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.netcracker.ui.service.navigator.Navigator;
 import com.netcracker.ui.service.navigator.View;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeDataConverter;
-import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
+import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxi;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeStore;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeView;
 import com.vaadin.annotations.Theme;
@@ -29,8 +29,13 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -41,11 +46,25 @@ import org.springframework.util.MultiValueMap;
 @Theme("centralViewTheme")
 @SpringUI
 public class UiServiceMainUI extends UI {
+    
+    //private ResponsiveLayout contentRowLayout;
+    //private Navigator navigator;
+    
     @Override
     protected void init(VaadinRequest vaadinRequest){
         try
         {
             createMainLayout();        
+            /*AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+            ctx.register(AppConfig.class);
+            ctx.refresh();
+            Employee employee = ctx.getBean(Employee.class);
+            System.out.println("Company Name:"+ employee.getCompany().getCompName());
+            System.out.println("Location:"+ employee.getCompany().getLocation());
+            ctx.close();*/
+            
+            //Page.getCurrent().setUriFragment(getPage().getUriFragment(), true);
+            //reDraw("Main");
         }
         catch(Exception ex)
         {
@@ -56,12 +75,14 @@ public class UiServiceMainUI extends UI {
         }
     }
     
-    private ResponsiveLayout createMainLayout() throws MenuComponentException{
+    private ResponsiveLayout createMainLayout() throws MenuComponentException
+    {
         setSizeFull();//Пользовательский интерфейс на весь экран
         BasicLayoutCreator mainLayer;
         mainLayer = new BasicLayoutCreator();
         ResponsiveLayout mainLayout = mainLayer.mainLayout;
         mainLayout.setSizeFull();
+        //mainLayout.setHeight("330%");
         setContent(mainLayout);
         
         //Создание и добавление видов в навигатор
@@ -82,15 +103,18 @@ public class UiServiceMainUI extends UI {
                 
                 MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
                 parameters.add("receipe_id", "1"); 
-                ReceipeProxy proxi = new ReceipeProxy("http://localhost:8082/v1/Receipe", parameters);
+                ReceipeProxi proxi = new ReceipeProxi("http://localhost:8082/v1/Receipe", parameters);
 
                 ReceipeDataConverter converter = new ReceipeDataConverter();
                 ReceipeStore store = new ReceipeStore(converter);
 
                 ReceipeView view = new ReceipeView(proxi, store);
                 view.reload();
+                //ShortViewOfReceipeCreator shortViewOfReceipe = new ShortViewOfReceipeCreator();
                 mainLayer.contentRowLayout.removeAllComponents();
                 mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
+                //mainLayer.contentRowLayout = shortViewOfReceipe.create(mainLayer.contentRowLayout);
+                //mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Вы перешли на страницу с рецептами"));
             }
         });
         
@@ -165,7 +189,8 @@ public class UiServiceMainUI extends UI {
         return mainLayer.contentRowLayout;
     }
     
-    private void addSliderComponent(ResponsiveLayout contentRowLayout){
+    private void addSliderComponent(ResponsiveLayout contentRowLayout)
+    {
         //Создание строки, для добавления конкретного контента на даную страницу
         ResponsiveRow sliderRow = contentRowLayout.addRow();
         //Создание custom слоя для добавления слайдера
@@ -173,7 +198,8 @@ public class UiServiceMainUI extends UI {
         sliderRow.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(sliderLayout);
     }
     
-    private void addTopRecepiesComponent(ResponsiveLayout contentRowLayout){
+    private void addTopRecepiesComponent(ResponsiveLayout contentRowLayout)
+    {
         //Отрисовка заголовка топа рецептов
         ResponsiveRow recipeTitle = contentRowLayout.addRow();
         CustomLayout  topRecipeTitleLayout = new CustomLayout("TopRecipeTitle");

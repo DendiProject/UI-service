@@ -59,8 +59,7 @@ public class ResponceForTest extends AbstractJUnit4SpringContextTests {
     @Autowired        
     private RestTemplate restTemplate;
 
-    
-    
+   
     @Before
     public void setUp() {        
         mockServer = MockRestServiceServer.createServer(restTemplate);        

@@ -16,16 +16,16 @@ import java.util.ArrayList;
  */
 public class ReceipeStore implements StoreSubject{
 
-    private DataConverter converter;
-    private Object currentData;
-    private ArrayList<PresenterObserver> observers;
+    private static DataConverter converter;
+    private static Object currentData;
+    private static ArrayList<PresenterObserver> observers;
     
     public ReceipeStore(DataConverter converter)
     {
         this.converter = converter;
         observers = new ArrayList<>();
     }
-    
+
     @Override
     public void subscribe(PresenterObserver observer) {
         observers.add(observer);
