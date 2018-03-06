@@ -11,7 +11,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -45,9 +44,6 @@ public class ReceipeProxi implements Proxy{
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-
-            /*MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-            parameters.add("receipe_id", "1");*/
 
             UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(connectionUrl).queryParams(parameters);

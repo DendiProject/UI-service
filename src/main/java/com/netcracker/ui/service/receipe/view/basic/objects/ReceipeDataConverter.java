@@ -24,7 +24,7 @@ public class ReceipeDataConverter implements DataConverter{
             return receipe;
         }
         catch (IOException ex) {
-            //Notification.show("Все очень плохА((((");
+            
         }
 
         return null;

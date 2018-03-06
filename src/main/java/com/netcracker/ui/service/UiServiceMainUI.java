@@ -29,13 +29,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -46,25 +41,12 @@ import org.springframework.util.MultiValueMap;
 @Theme("centralViewTheme")
 @SpringUI
 public class UiServiceMainUI extends UI {
-    
-    //private ResponsiveLayout contentRowLayout;
-    //private Navigator navigator;
-    
+
     @Override
     protected void init(VaadinRequest vaadinRequest){
         try
         {
             createMainLayout();        
-            /*AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-            ctx.register(AppConfig.class);
-            ctx.refresh();
-            Employee employee = ctx.getBean(Employee.class);
-            System.out.println("Company Name:"+ employee.getCompany().getCompName());
-            System.out.println("Location:"+ employee.getCompany().getLocation());
-            ctx.close();*/
-            
-            //Page.getCurrent().setUriFragment(getPage().getUriFragment(), true);
-            //reDraw("Main");
         }
         catch(Exception ex)
         {
@@ -82,7 +64,6 @@ public class UiServiceMainUI extends UI {
         mainLayer = new BasicLayoutCreator();
         ResponsiveLayout mainLayout = mainLayer.mainLayout;
         mainLayout.setSizeFull();
-        //mainLayout.setHeight("330%");
         setContent(mainLayout);
         
         //Создание и добавление видов в навигатор
@@ -110,11 +91,8 @@ public class UiServiceMainUI extends UI {
 
                 ReceipeView view = new ReceipeView(proxi, store);
                 view.reload();
-                //ShortViewOfReceipeCreator shortViewOfReceipe = new ShortViewOfReceipeCreator();
                 mainLayer.contentRowLayout.removeAllComponents();
                 mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
-                //mainLayer.contentRowLayout = shortViewOfReceipe.create(mainLayer.contentRowLayout);
-                //mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Вы перешли на страницу с рецептами"));
             }
         });
         
