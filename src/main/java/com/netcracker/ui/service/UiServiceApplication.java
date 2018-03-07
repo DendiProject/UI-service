@@ -7,9 +7,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
+@Configuration
 public class UiServiceApplication {
 
     public static void main(String[] args) {
@@ -24,10 +26,10 @@ public class UiServiceApplication {
      
     @Bean
     public ObjectMapper objectMapper(){
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
         
-        return mapper;
+        return objectMapper;
     }
 }

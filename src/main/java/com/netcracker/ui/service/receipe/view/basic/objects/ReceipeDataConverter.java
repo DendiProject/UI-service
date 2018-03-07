@@ -7,20 +7,26 @@ package com.netcracker.ui.service.receipe.view.basic.objects;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.DataConverter;
-import com.vaadin.ui.Notification;
+import com.netcracker.ui.service.UiServiceApplication;
 import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Artem
  */
+@Component
 public class ReceipeDataConverter implements DataConverter{
 
+    @Autowired
+    private ObjectMapper objectMapper;
+    
     @Override
     public Receipe convert(Object object) {
-        ObjectMapper mapper = new ObjectMapper();
+        //ObjectMapper mapper = new ObjectMapper();
         try {
-            Receipe receipe = (Receipe) mapper.readValue(object.toString(),Receipe.class);
+            Receipe receipe = (Receipe) objectMapper.readValue(object.toString(),Receipe.class);
             return receipe;
         }
         catch (IOException ex) {
