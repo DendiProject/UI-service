@@ -85,8 +85,6 @@ public class UiServiceMainUI extends UI {
         newViews.add(new View("Recept") {
             @Override
             public void draw() {
-                BeansFactory bf = BeansFactory.getInstance();
-                bf.addBean(new ObjectMapperBean());
                 MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
                 parameters.add("receipe_id", "1"); 
                 ReceipeProxi proxi = new ReceipeProxi("http://localhost:8082/v1/Receipe", parameters);
