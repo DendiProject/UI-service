@@ -7,6 +7,8 @@ package com.netcracker.ui.service;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.jarektoro.responsivelayout.ResponsiveRow;
+import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.beans.factory.ObjectMapperBean;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
 import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
 import com.netcracker.ui.service.menu.component.MenusButton;
@@ -34,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  *
@@ -42,10 +45,6 @@ import org.springframework.util.MultiValueMap;
 @Theme("centralViewTheme")
 @SpringUI
 public class UiServiceMainUI extends UI {
-
-    //Так бин работает
-    /*@Autowired
-    private Greeter greeter;*/
     
     @Override
     protected void init(VaadinRequest vaadinRequest){
@@ -86,7 +85,8 @@ public class UiServiceMainUI extends UI {
         newViews.add(new View("Recept") {
             @Override
             public void draw() {
-                
+                BeansFactory bf = BeansFactory.getInstance();
+                bf.addBean(new ObjectMapperBean());
                 MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
                 parameters.add("receipe_id", "1"); 
                 ReceipeProxi proxi = new ReceipeProxi("http://localhost:8082/v1/Receipe", parameters);

@@ -6,14 +6,17 @@
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.netcracker.ui.service.Greeter;
+import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.beans.factory.ObjectMapperBean;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.DataConverter;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.spring.annotation.VaadinSessionScope;
 import com.vaadin.spring.annotation.ViewScope;
+import com.vaadin.ui.UI;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,21 +25,13 @@ import org.springframework.stereotype.Component;
  *
  * @author Artem
  */
-@UIScope
 public class ReceipeDataConverter implements DataConverter{
     
-    @Autowired
-    private ObjectMapper objectMapper;
-    
-    @Autowired
-    private Greeter greeter;
-    
     @Override
-    public Receipe convert(Object object) {
-        //ObjectMapper mapper = new ObjectMapper();
+    public Receipe convert(Object object) {   
+        ObjectMapper mapper = (ObjectMapper)BeansFactory.getInstance().getBean(ObjectMapper.class);
         try {
-            greeter.sayHello();//Не работает, пустой объект
-            Receipe receipe = (Receipe) objectMapper.readValue(object.toString(),Receipe.class);
+            Receipe receipe = (Receipe) mapper.readValue(object.toString(),Receipe.class);
             return receipe;
         }
         catch (IOException ex) {
@@ -45,5 +40,5 @@ public class ReceipeDataConverter implements DataConverter{
 
         return null;
     }
-    
+
 }
