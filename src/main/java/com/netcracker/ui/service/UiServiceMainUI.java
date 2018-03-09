@@ -31,6 +31,7 @@ import java.io.File;
 import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -42,6 +43,10 @@ import org.springframework.util.MultiValueMap;
 @SpringUI
 public class UiServiceMainUI extends UI {
 
+    //Так бин работает
+    /*@Autowired
+    private Greeter greeter;*/
+    
     @Override
     protected void init(VaadinRequest vaadinRequest){
         try
