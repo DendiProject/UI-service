@@ -5,6 +5,8 @@
  */
 package com.netcracker.ui.service.receipe.view.basic.objects.interfaces;
 
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
 
 /**
@@ -12,5 +14,5 @@ import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
  * @author Artem
  */
 public interface DataConverter<T extends Receipe> {
-    T convert(Object object);
+    T convert(Object object) throws ConvertDataException, NotFoundBean;
 }

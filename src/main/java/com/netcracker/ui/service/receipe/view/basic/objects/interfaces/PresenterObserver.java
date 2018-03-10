@@ -5,6 +5,9 @@
  */
 package com.netcracker.ui.service.receipe.view.basic.objects.interfaces;
 
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
+import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
 
 /**
@@ -12,8 +15,8 @@ import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
  * @author Artem
  */
 public interface PresenterObserver<T extends Receipe> {
-    void load();//Вызов функции load Proxi
-    void updateStore(Object newData);//Вызов функции обновления у хранилища
+    void load() throws ConnectionErrorException, ConvertDataException, NotFoundBean;//Вызов функции load Proxi
+    void updateStore(Object newData) throws ConvertDataException, NotFoundBean;//Вызов функции обновления у хранилища
     int getId();//Возвращает id текущего presenter
     void updateView(T newData);
 }

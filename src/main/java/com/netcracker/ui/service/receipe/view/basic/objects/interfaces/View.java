@@ -6,6 +6,9 @@
 package com.netcracker.ui.service.receipe.view.basic.objects.interfaces;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
+import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
 
 /**
@@ -13,7 +16,7 @@ import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
  * @author Artem
  */
 public interface View<T extends Receipe> {
-    void reload();//Запрос из view на обновление
+    void reload() throws ConnectionErrorException, ConvertDataException, NotFoundBean;//Запрос из view на обновление
     void setNewViewsData(T object);//Presenter устанавливает новую data
     ResponsiveLayout drawReceipe(ResponsiveLayout contentRowLayout);//отрисовка рецепта
 }

@@ -6,6 +6,9 @@
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
+import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.graf.component.Graf;
 import com.netcracker.ui.service.graf.component.HandlerForClickingTheNode;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
@@ -31,21 +34,14 @@ public class ReceipeView implements View{
     }
     
     @Override
-    public void reload() {
+    public void reload() throws ConnectionErrorException, ConvertDataException, NotFoundBean{
         //Вызов функции load PresenterObserver
         presenter.load();
     }
 
     @Override
     public void setNewViewsData(Receipe object) {
-        if(object instanceof Receipe)
-        {
-            receipe = (Receipe)object;
-        }
-        else
-        {
-            //Добавить код исключения
-        }
+        receipe = (Receipe)object;
     }
 
     @Override

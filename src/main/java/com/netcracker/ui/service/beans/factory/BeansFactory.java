@@ -7,6 +7,7 @@ package com.netcracker.ui.service.beans.factory;
 
 import com.netcracker.ui.service.beans.factory.basic.objects.interfaces.Factory;
 import com.netcracker.ui.service.beans.factory.basic.objects.interfaces.Product;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import java.util.ArrayList;
 
 /**
@@ -34,7 +35,7 @@ public class BeansFactory implements Factory{
     }
     
     @Override
-    public Object getBean(Class beansClass) {
+    public Object getBean(Class beansClass) throws NotFoundBean{
         for(int i=0;i<beans.size();i++)
         {
             if(beans.get(i).getContent().getClass() == beansClass)
@@ -42,7 +43,7 @@ public class BeansFactory implements Factory{
                 return beans.get(i).getContent();
             }
         }
-        return null;
+        throw new NotFoundBean("Bean class "+beansClass.getName()+" not found");
     }
 
     @Override

@@ -7,12 +7,8 @@ package com.netcracker.ui.service;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
-import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
 import com.netcracker.ui.service.menu.component.Menu;
-import com.netcracker.ui.service.menu.component.MenusButton;
-import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.vaadin.ui.CustomLayout;
-import java.util.ArrayList;
 
 /**
  * Используется для создания базового макета приложения

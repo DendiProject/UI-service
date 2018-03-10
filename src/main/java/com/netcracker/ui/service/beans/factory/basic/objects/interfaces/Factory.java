@@ -5,12 +5,14 @@
  */
 package com.netcracker.ui.service.beans.factory.basic.objects.interfaces;
 
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+
 
 /**
  *
  * @author Artem
  */
 public interface Factory {
-    Object getBean(Class beansClass);
+    Object getBean(Class beansClass) throws NotFoundBean;
     void addBean(Product bean);
 }

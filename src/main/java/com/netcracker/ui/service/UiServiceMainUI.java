@@ -7,16 +7,18 @@ package com.netcracker.ui.service;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.jarektoro.responsivelayout.ResponsiveRow;
-import com.netcracker.ui.service.beans.factory.BeansFactory;
-import com.netcracker.ui.service.beans.factory.ObjectMapperBean;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
+import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
+import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
+import com.netcracker.ui.service.exception.receipe.view.ShortViewException;
 import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
 import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.netcracker.ui.service.navigator.Navigator;
 import com.netcracker.ui.service.navigator.View;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeDataConverter;
-import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxi;
+import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeStore;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeView;
 import com.vaadin.annotations.Theme;
@@ -33,10 +35,9 @@ import java.io.File;
 import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vaadin.ui.Notification;
 
 /**
  *
@@ -87,15 +88,36 @@ public class UiServiceMainUI extends UI {
             public void draw() {
                 MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
                 parameters.add("receipe_id", "1"); 
-                ReceipeProxi proxi = new ReceipeProxi("http://localhost:8082/v1/Receipe", parameters);
+                ReceipeProxy proxy = new ReceipeProxy("http://localhost:8082/v1/Receipe", parameters);
 
                 ReceipeDataConverter converter = new ReceipeDataConverter();
                 ReceipeStore store = new ReceipeStore(converter);
 
-                ReceipeView view = new ReceipeView(proxi, store);
-                view.reload();
-                mainLayer.contentRowLayout.removeAllComponents();
-                mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
+                ReceipeView view = new ReceipeView(proxy, store);
+                try
+                {
+                    view.reload();
+                    mainLayer.contentRowLayout.removeAllComponents();
+                    mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
+                }
+                catch(NotFoundBean e)
+                {
+                    Notification.show(e.toString(),e.getMessage(), Notification.Type.ERROR_MESSAGE);
+                    Logger logger = LoggerFactory.getLogger(UiServiceMainUI.class);
+                    logger.error(e.toString());
+                }
+                catch(ConvertDataException e)
+                {
+                    Notification.show(e.toString(),e.getMessage(), Notification.Type.ERROR_MESSAGE);
+                    Logger logger = LoggerFactory.getLogger(UiServiceMainUI.class);
+                    logger.error("DataConverter cannot provide data to the correct format");
+                }
+                catch(ConnectionErrorException e)
+                {
+                    Notification.show(e.toString(),e.getMessage(), Notification.Type.ERROR_MESSAGE);
+                    Logger logger = LoggerFactory.getLogger(UiServiceMainUI.class);
+                    logger.error("No access or connection");
+                }
             }
         });
         

@@ -5,6 +5,9 @@
  */
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
+import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
@@ -31,12 +34,12 @@ public class ReceipePresenter implements PresenterObserver{
     }
     
     @Override
-    public void load() {
+    public void load() throws ConnectionErrorException, ConvertDataException, NotFoundBean{
         updateStore(proxi.load());
     }
 
     @Override
-    public void updateStore(Object result) {
+    public void updateStore(Object result) throws ConvertDataException, NotFoundBean{
         storeSubject.handleNewData(result);
     }
 

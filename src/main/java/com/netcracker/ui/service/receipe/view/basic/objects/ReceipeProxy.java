@@ -5,6 +5,9 @@
  */
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
+import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
@@ -32,17 +35,24 @@ public class ReceipeProxy  implements Proxy{
     }
    
     //Проверка прав пользователя
-    private Boolean connect() {
-        
-        return true;
+    @Override
+    public Boolean connect() throws ConnectionErrorException{
+        if(true)
+        {
+            return true;
+        }
+        else
+        {
+            throw new ConnectionErrorException("Access error: insufficient permissions or connection loss");
+        }
     }
 
     //Загрузка с бэкенда данных о конкретном рецепте, используя конфигарцию, определенную через функцию connect()
     @Override
-    public Object load() {
+    public Object load() throws ConnectionErrorException, NotFoundBean{
         if(connect())
         {
-            //RestTemplate restTemplate = new RestTemplate();
+            restTemplate = (RestTemplate)BeansFactory.getInstance().getBean(RestTemplate.class);
             HttpHeaders headers = new HttpHeaders();
             headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
