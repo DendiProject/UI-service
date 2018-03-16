@@ -21,8 +21,9 @@ public class ReceipeDataConverter implements DataConverter{
     @Override
     public Receipe convert(Object object) throws ConvertDataException, NotFoundBean{   
         try {
-            ObjectMapper mapper = (ObjectMapper)BeansFactory.getInstance().getBean(ObjectMapper.class);
-            Receipe receipe = (Receipe) mapper.readValue(object.toString(),Receipe.class);
+            BeansFactory<ObjectMapper> bf = BeansFactory.getInstance();
+            ObjectMapper mapper = bf.getBean(ObjectMapper.class);
+            Receipe receipe = mapper.readValue(object.toString(),Receipe.class);
             return receipe;
         }
         catch (IOException ex) {

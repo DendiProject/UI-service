@@ -12,7 +12,7 @@ import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
  *
  * @author Artem
  */
-public interface Factory {
-    Object getBean(Class beansClass) throws NotFoundBean;
+public interface Factory <T>{
+    T getBean(Class beansClass) throws NotFoundBean;
     void addBean(Product bean);
 }

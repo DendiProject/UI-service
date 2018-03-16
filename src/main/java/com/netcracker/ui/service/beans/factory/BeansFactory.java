@@ -13,8 +13,9 @@ import java.util.ArrayList;
 /**
  *
  * @author Artem
+ * @param <T>
  */
-public class BeansFactory implements Factory{
+public class BeansFactory <T> implements Factory<T>{
 
     private static ArrayList<Product> beans;
     
@@ -35,12 +36,13 @@ public class BeansFactory implements Factory{
     }
     
     @Override
-    public Object getBean(Class beansClass) throws NotFoundBean{
+    public T getBean(Class beansClass) throws NotFoundBean{
         for(int i=0;i<beans.size();i++)
         {
             if(beans.get(i).getContent().getClass() == beansClass)
             {
-                return beans.get(i).getContent();
+                Product<T> bean = beans.get(i);
+                return bean.getContent();
             }
         }
         throw new NotFoundBean("Bean class "+beansClass.getName()+" not found");

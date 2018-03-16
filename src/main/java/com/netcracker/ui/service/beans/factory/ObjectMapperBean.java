@@ -14,7 +14,7 @@ import com.netcracker.ui.service.beans.factory.basic.objects.interfaces.Product;
  *
  * @author Artem
  */
-public class ObjectMapperBean implements Product{
+public class ObjectMapperBean implements Product<ObjectMapper>{
     
     private ObjectMapper content;
     
@@ -32,7 +32,7 @@ public class ObjectMapperBean implements Product{
     }
 
     @Override
-    public Object getContent() {
+    public ObjectMapper getContent() {
         return content;
     }
     

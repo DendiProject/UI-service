@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service.beans.factory.basic.objects.interfaces;
+package com.netcracker.ui.service.exception;
 
 /**
  *
  * @author Artem
  */
-public interface Product<T> {
-    T getContent();
-    void setContent();
+abstract public class ConcreteExceptionHandler {
+    public abstract void handling();
 }

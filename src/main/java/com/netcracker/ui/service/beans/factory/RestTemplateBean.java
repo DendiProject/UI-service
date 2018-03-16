@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
  *
  * @author Artem
  */
-public class RestTemplateBean implements Product{
+public class RestTemplateBean implements Product<RestTemplate>{
     
     private RestTemplate content;
     
@@ -27,7 +27,7 @@ public class RestTemplateBean implements Product{
     }
 
     @Override
-    public Object getContent() {
+    public RestTemplate getContent() {
         return content;
     }
     

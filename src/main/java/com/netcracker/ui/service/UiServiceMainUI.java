@@ -7,6 +7,11 @@ package com.netcracker.ui.service;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.jarektoro.responsivelayout.ResponsiveRow;
+import com.netcracker.ui.service.exception.ConcreteException;
+import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
+import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.exception.UiServiceException;
+import com.netcracker.ui.service.exception.beans.factory.BeansFactoryException;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
@@ -38,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import com.vaadin.ui.Notification;
+import org.springframework.web.client.ResourceAccessException;
 
 /**
  *
@@ -86,6 +92,49 @@ public class UiServiceMainUI extends UI {
         newViews.add(new View("Recept") {
             @Override
             public void draw() {
+                //Далее код, в котором могут вылететь исключения: 
+                //ConnectionErrorException,ConvertDataException,
+                //ShortViewException,ResourceAccessException
+                //имеет смысл создать соответсвующие обработчики
+                ExceptionHandler ex = ExceptionHandler.getInstance();
+                
+                ConcreteException connectionErrorException = 
+                        new ConcreteException(new ConcreteExceptionHandler() {
+                            @Override
+                            public void handling() {
+                                throw new UnsupportedOperationException("Not supported yet.");
+                            }
+                        }, ConnectionErrorException.class);
+                ex.addException(connectionErrorException);
+                
+                ConcreteException convertDataException = 
+                        new ConcreteException(new ConcreteExceptionHandler() {
+                            @Override
+                            public void handling() {
+                                throw new UnsupportedOperationException("Not supported yet.");
+                            }
+                        }, ConvertDataException.class);
+                ex.addException(convertDataException);
+                
+                ConcreteException shortViewException = 
+                                new ConcreteException(new ConcreteExceptionHandler() {
+                            @Override
+                            public void handling() {
+                                throw new UnsupportedOperationException("Not supported yet.");
+                            }
+                }, ShortViewException.class);
+                ex.addException(shortViewException);
+                
+                ConcreteException resourceAccessException = 
+                                new ConcreteException(new ConcreteExceptionHandler() {
+                            @Override
+                            public void handling() {
+                                throw new UnsupportedOperationException("Not supported yet.");
+                            }
+                }, ResourceAccessException.class);
+                ex.addException(resourceAccessException);
+                        
+                
                 MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
                 parameters.add("receipe_id", "1"); 
                 ReceipeProxy proxy = new ReceipeProxy("http://localhost:8082/v1/Receipe", parameters);
@@ -100,23 +149,9 @@ public class UiServiceMainUI extends UI {
                     mainLayer.contentRowLayout.removeAllComponents();
                     mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
                 }
-                catch(NotFoundBean e)
+                catch(Exception exception)
                 {
-                    Notification.show(e.toString(),e.getMessage(), Notification.Type.ERROR_MESSAGE);
-                    Logger logger = LoggerFactory.getLogger(UiServiceMainUI.class);
-                    logger.error(e.toString());
-                }
-                catch(ConvertDataException e)
-                {
-                    Notification.show(e.toString(),e.getMessage(), Notification.Type.ERROR_MESSAGE);
-                    Logger logger = LoggerFactory.getLogger(UiServiceMainUI.class);
-                    logger.error("DataConverter cannot provide data to the correct format");
-                }
-                catch(ConnectionErrorException e)
-                {
-                    Notification.show(e.toString(),e.getMessage(), Notification.Type.ERROR_MESSAGE);
-                    Logger logger = LoggerFactory.getLogger(UiServiceMainUI.class);
-                    logger.error("No access or connection");
+                    ExceptionHandler.getInstance().runExceptionhandling(exception);
                 }
             }
         });
