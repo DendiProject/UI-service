@@ -60,14 +60,14 @@
     
     /* Стили строки поиска */
     * {box-sizing: border-box;}
-    form 
+    .navigate_row form 
     {
         width: auto;
         height: 50px;
         float: right;
         margin-right: 30px;
     }
-    input 
+    .navigate_row input 
     {
         width: 250px;
         height: 42px;
@@ -79,11 +79,11 @@
         transition: .3s linear;
         top: 6px;
     }
-    input:focus 
+    .navigate_row input:focus 
     {
         width: 280px;
     }
-    .buttonSearch 
+    .navigate_row .buttonSearch 
     {
         width: 42px;
         height: 42px;
@@ -93,7 +93,7 @@
         top: 17px;
         right: 20px;
     }
-    .buttonSearch:before
+    .navigate_row .buttonSearch:before
     {
         content: "\f002";
         font-family: FontAwesome;
