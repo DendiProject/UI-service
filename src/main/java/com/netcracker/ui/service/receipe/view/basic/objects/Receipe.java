@@ -5,8 +5,8 @@
  */
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
+import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Node;
-import com.netcracker.ui.service.graf.component.NodesConnection;
 import java.util.ArrayList;
 
 /**
@@ -16,13 +16,13 @@ import java.util.ArrayList;
 public class Receipe implements Comparable<Receipe>{
     public String receipesName;
     public ArrayList<Node> steps;
-    public ArrayList<NodesConnection> stepsConnections;
+    public ArrayList<Edge> stepsConnections;
     
     public Receipe(){
         
     }
     
-    public Receipe(String _receipesName, ArrayList<Node> _steps, ArrayList<NodesConnection> _stepsConnections){
+    public Receipe(String _receipesName, ArrayList<Node> _steps, ArrayList<Edge> _stepsConnections){
         receipesName = _receipesName;
         steps = _steps;
         stepsConnections = _stepsConnections;
@@ -48,12 +48,12 @@ public class Receipe implements Comparable<Receipe>{
         this.steps = nodes;
     }
     
-    public ArrayList<NodesConnection> getStepsConnections()
+    public ArrayList<Edge> getStepsConnections()
     {
         return stepsConnections;
     }
     
-    public void setStepsConnections(ArrayList<NodesConnection> stepsConnections)
+    public void setStepsConnections(ArrayList<Edge> stepsConnections)
     {
         this.stepsConnections = stepsConnections;
     }
@@ -69,7 +69,7 @@ public class Receipe implements Comparable<Receipe>{
         
         for(int i=0;i<t.steps.size();i++)
         {
-            if(t.steps.get(i).getNewNodesId() != steps.get(i).getNewNodesId())
+            if(t.steps.get(i).getId() != steps.get(i).getId())
             {
                 return 0;
             }
@@ -77,10 +77,10 @@ public class Receipe implements Comparable<Receipe>{
         
         for(int i=0;i<t.stepsConnections.size();i++)
         {
-            if(t.stepsConnections.get(i).getIdNodesConnectedTo() != 
-                    stepsConnections.get(i).getIdNodesConnectedTo() | 
-                    t.stepsConnections.get(i).getIdNodesConnectedFrom() != 
-                    stepsConnections.get(i).getIdNodesConnectedFrom())
+            if(t.stepsConnections.get(i).getTo() != 
+                    stepsConnections.get(i).getTo() | 
+                    t.stepsConnections.get(i).getFrom() != 
+                    stepsConnections.get(i).getFrom())
             {
                 return 0;
             }

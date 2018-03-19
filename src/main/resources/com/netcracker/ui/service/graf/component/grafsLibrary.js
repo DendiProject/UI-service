@@ -7,6 +7,7 @@ mylibrary.MyGraf = function (element) {
     var network = null;
     var self = this; // Can't use this inside the function
     var nodesId = null;//Хранит nodesId, по которой был сделан клик
+    var event = null;//Хранит название события
     // randomly create some nodes and edges
     //var data = getScaleFreeNetwork(25);
     var seed = 2;
@@ -17,11 +18,11 @@ mylibrary.MyGraf = function (element) {
         edges = [];
         for (var i = 0; i < nodesBuf.length; i++) 
         {
-            nodes.push({id: nodesBuf[i].newNodesId, label: nodesBuf[i].newNodesLabel, image: nodesBuf[i].newNodesimageUrl, shape: 'circularImage'});
+            nodes.push({id: nodesBuf[i].id, label: nodesBuf[i].label, image: nodesBuf[i].image, shape: 'circularImage'});
         }
         for (var i = 0; i < nodesConnectionsBuf.length; i++) 
         {
-            edges.push({from: nodesConnectionsBuf[i].idNodesConnectedFrom, to: nodesConnectionsBuf[i].idNodesConnectedTo, length: 100});
+            edges.push({from: nodesConnectionsBuf[i].from, to: nodesConnectionsBuf[i].to, length: 100});
         }
         var data = {
             nodes: nodes,
@@ -40,6 +41,8 @@ mylibrary.MyGraf = function (element) {
               document.getElementById('saveButton').onclick = saveData.bind(this, data, callback);
               document.getElementById('cancelButton').onclick = clearPopUp.bind();
               document.getElementById('network-popUp').style.display = 'block';
+              document.getElementById('node-image').value = 'url';
+              
             },
             editNode: function (data, callback) {
               // filling in the popup DOM elements
@@ -49,6 +52,7 @@ mylibrary.MyGraf = function (element) {
               document.getElementById('saveButton').onclick = saveData.bind(this, data, callback);
               document.getElementById('cancelButton').onclick = cancelEdit.bind(this,callback);
               document.getElementById('network-popUp').style.display = 'block';
+              document.getElementById('node-image').value = 'url';
             },
             addEdge: function (data, callback) {
               if (data.from == data.to) {
@@ -69,6 +73,7 @@ mylibrary.MyGraf = function (element) {
             nodesId = params["nodes"];
             if(nodesId > 0)
             {
+                event = 'ClickOnNode';
                 self.click();
             }
         });
@@ -79,31 +84,43 @@ mylibrary.MyGraf = function (element) {
     //element.style.display = "inline-block";
 
     // Getter and setter for the value property
-    this.getValue = function () {
-            return nodesId;
+    this.onNodeClick = function () {
+        return nodesId;
+    };
+
+    this.onUpdateData= function () {
+        var data = {
+            event: event,
+            nodes: nodes
+        };
+        return data;
     };
 
     this.setValue = function () {
-            return nodesId;
+        return nodesId;
     };
 
         
         
     function clearPopUp() {
-      document.getElementById('saveButton').onclick = null;
-      document.getElementById('cancelButton').onclick = null;
-      document.getElementById('network-popUp').style.display = 'none';
+        document.getElementById('saveButton').onclick = null;
+        document.getElementById('cancelButton').onclick = null;
+        document.getElementById('network-popUp').style.display = 'none';
     }
 
     function cancelEdit(callback) {
-      clearPopUp();
-      callback(null);
+        clearPopUp();
+        callback(null);
     }
 
     function saveData(data,callback) {
-      data.id = document.getElementById('node-id').value;
-      data.label = document.getElementById('node-label').value;
-      clearPopUp();
-      callback(data);
+        data.id = document.getElementById('node-id').value;
+        data.label = document.getElementById('node-label').value;
+        data.image = document.getElementById('node-image').value;
+        data.shape = "circularImage";
+        clearPopUp();
+        callback(data);
+        event = 'DataChange';
+        self.dataChange();
     }
 };

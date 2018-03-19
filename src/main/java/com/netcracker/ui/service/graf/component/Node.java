@@ -13,9 +13,9 @@ import java.io.Serializable;
  */
 public class Node  implements Serializable
 {
-    private String newNodesimageUrl;
-    private int newNodesId;
-    private String newNodesLabel;
+    private String image;
+    private int id;
+    private String label;
     private HandlerForClickingTheNode handlerForClickingTheNode;
     
     public Node()
@@ -23,42 +23,42 @@ public class Node  implements Serializable
         
     }
     
-    public Node(String _newNodesimageUrl, int _newNodesId, String _newNodesLabel)
+    public Node(String _image, int _id, String _label)
     {
-        newNodesimageUrl = _newNodesimageUrl;
-        newNodesId = _newNodesId;
-        newNodesLabel = _newNodesLabel;
+        image = _image;
+        id = _id;
+        label = _label;
     }
     
     
-    public String getNewNodesimageUrl()
+    public String getImage()
     {
-        return newNodesimageUrl;
+        return image;
     }
     
-    public void setNewNodesimageUrl(String newNodesimageUrl)
+    public void setImage(String image)
     {
-        this.newNodesimageUrl = newNodesimageUrl;
+        this.image = image;
     }
     
-    public int getNewNodesId()
+    public int getId()
     {
-        return newNodesId;
+        return id;
     }
     
-    public void setNewNodesId(int newNodesId)
+    public void setId(int id)
     {
-        this.newNodesId = newNodesId;
+        this.id = id;
     }
     
-    public String getNewNodesLabel()
+    public String getLabel()
     {
-        return newNodesLabel;
+        return label;
     }
     
-    public void setNewNodesLabel(String newNodesLabel)
+    public void setLabel(String label)
     {
-        this.newNodesLabel = newNodesLabel;
+        this.label = label;
     }
     
     

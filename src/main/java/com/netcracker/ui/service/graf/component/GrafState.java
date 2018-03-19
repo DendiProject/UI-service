@@ -14,5 +14,5 @@ import java.util.ArrayList;
  */
 public class GrafState extends JavaScriptComponentState{
     public ArrayList<Node> nodes;
-    public ArrayList<NodesConnection> nodesConnections;
+    public ArrayList<Edge> edges;
 }
