@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service;
+package com.netcracker.ui.service.forms;
 
+import com.netcracker.ui.service.forms.BasicForm;
 import com.google.gson.Gson;
+import com.netcracker.ui.service.UserDto;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;

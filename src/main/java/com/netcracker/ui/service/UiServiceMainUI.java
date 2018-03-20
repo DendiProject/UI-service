@@ -5,6 +5,8 @@
  */
 package com.netcracker.ui.service;
 
+import com.netcracker.ui.service.forms.RegistrationForm;
+import com.netcracker.ui.service.forms.AuthorizationForm;
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.jarektoro.responsivelayout.ResponsiveRow;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;

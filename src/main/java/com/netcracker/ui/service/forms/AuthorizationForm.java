@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service;
+package com.netcracker.ui.service.forms;
 
 import com.google.gson.Gson;
 import com.vaadin.server.Page;
