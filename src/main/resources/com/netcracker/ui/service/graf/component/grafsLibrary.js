@@ -64,11 +64,22 @@ mylibrary.MyGraf = function (element) {
               else {
                 callback(data);
               }
+            },
+            deleteEdge: function (data, callback) {
+              if (data.from == data.to) {
+                var r = confirm("Do you want to connect the node to itself?");
+                if (r == true) {
+                  callback(data);
+                }
+              }
+              else {
+                callback(data);
+              }
             }
           }
         };
         network = new vis.Network(container, data, options);
-        //создал здесь, потом учто это событие нельзя на значить на простые типы, вроде int и string
+        //создал здесь, потому что это событие нельзя на значить на простые типы, вроде int и string
         network.on("click", function (params) {
             nodesId = params["nodes"];
             if(nodesId > 0)
@@ -78,30 +89,51 @@ mylibrary.MyGraf = function (element) {
             }
         });
     };
-        
+    
+    
+    
+    var button =document.getElementById("mynetwork"); 
+        button.onclick = function(event) 
+        {
+            var target = event.target; // где был клик?
+            var action = target.getAttribute('class');
+            //Кнопка, если последние 3 символа - Btn
+            //Для начала проверяем длинну, чтобы не вылетало исключение
+            if(action !== null && action.length>4)//название хотя бы 1 символ, 3 символа на Btn
+            {
+                //В конце каждого id кнопки должны стоять символы Btn
+                var chekBtnSymbols = action.substr((action.length-3), 3);
+                if(chekBtnSymbols === 'Btn')//Если true, то вызываем событие
+                {     
+                    //document.cookie = 'idClickedButton=' + action;
+                    idBtn = action;
+                    self.click();
+                }
+            }
+        };
+    
+    
     // Style it
     //element.style.border = "thin solid red";
     //element.style.display = "inline-block";
 
     // Getter and setter for the value property
-    this.onNodeClick = function () {
-        return nodesId;
-    };
-
-    this.onUpdateData= function () {
+    this.getCurrentData= function () {
+        //Данные на стороне java парсятся автоматически, необходимо заполнить
+        //nodesId, даже если он не нужен
+        if(nodesId.length < 1)
+        {
+            nodesId = -1;
+        }
         var data = {
+            nodesId: nodesId,
             event: event,
-            nodes: nodes
+            nodes: nodes,
+            edges: edges
         };
         return data;
     };
-
-    this.setValue = function () {
-        return nodesId;
-    };
-
-        
-        
+  
     function clearPopUp() {
         document.getElementById('saveButton').onclick = null;
         document.getElementById('cancelButton').onclick = null;
@@ -121,6 +153,6 @@ mylibrary.MyGraf = function (element) {
         clearPopUp();
         callback(data);
         event = 'DataChange';
-        self.dataChange();
+        self.click();
     }
 };

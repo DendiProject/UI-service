@@ -13,8 +13,9 @@ import java.util.ArrayList;
  */
 public class TestClass {
     public String event;
-    public int nodesId = -1;
+    public int nodesId;
     public ArrayList<Node> nodes;
+    public ArrayList<Edge> edges;
     
     public TestClass()
     {
@@ -55,5 +56,15 @@ public class TestClass {
     public void setNodes(ArrayList<Node> nodes)
     {
         this.nodes = nodes;
+    }
+    
+    public ArrayList<Edge> getEdges()
+    {
+        return edges;
+    }
+    
+    public void setEdges(ArrayList<Edge> edges)
+    {
+        this.edges = edges;
     }
 }

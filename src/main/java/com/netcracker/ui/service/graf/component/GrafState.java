@@ -13,6 +13,8 @@ import java.util.ArrayList;
  * @author Artem
  */
 public class GrafState extends JavaScriptComponentState{
+    public String event;
+    public int nodesId;
     public ArrayList<Node> nodes;
     public ArrayList<Edge> edges;
 }

@@ -51,7 +51,24 @@ public class ReceipeView implements View{
         contentRowLayout.setHeight("100%");
         contentRowLayout.addComponent(ShortViewOfReceipeLayout);
         
-        graf = new Graf();
+        graf = new Graf(new Graf.ValueChangeListener() 
+        {
+            @Override
+            public void valueChange() {
+                int a =0;
+                /*for(int i=0;i<getState().nodes.size();i++)
+                {
+                    if(getState().nodes.get(i).getId() == clickedNodeIs)
+                    {
+                        if(getState().nodes.get(i).checkHandlerState())
+                        {
+                            getState().nodes.get(i).onEventClickDo();
+                        }
+                        break;
+                    }
+                }*/
+            }
+        });
         graf.setNodesCollection(receipe.steps);
         graf.setNodesConnections(receipe.stepsConnections);
         ShortViewOfReceipeLayout.addComponent(graf,"panelWithGraf");

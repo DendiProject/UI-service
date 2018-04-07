@@ -14,9 +14,6 @@ function() {
     // Pass user interaction to the server-side
     var self = this;
     mygraf.click = function() {
-        self.onClick(mygraf.onNodeClick());
-    };
-    mygraf.dataChange = function() {
-        self.onClick(mygraf.onUpdateData());
+        self.onClick(mygraf.getCurrentData());
     };
 };

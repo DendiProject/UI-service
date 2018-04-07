@@ -7,12 +7,10 @@ package com.netcracker.ui.service;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.jarektoro.responsivelayout.ResponsiveRow;
+import com.netcracker.ui.service.content.handler.ContentManadgerController;
 import com.netcracker.ui.service.exception.ConcreteException;
 import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
-import com.netcracker.ui.service.exception.UiServiceException;
-import com.netcracker.ui.service.exception.beans.factory.BeansFactoryException;
-import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
@@ -137,7 +135,7 @@ public class UiServiceMainUI extends UI {
                 
                 MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
                 parameters.add("receipe_id", "1"); 
-                ReceipeProxy proxy = new ReceipeProxy("http://localhost:8082/v1/Receipe", parameters);
+                ReceipeProxy proxy = new ReceipeProxy("http://localhost:8083/v1/Receipe", parameters);
 
                 ReceipeDataConverter converter = new ReceipeDataConverter();
                 ReceipeStore store = new ReceipeStore(converter);

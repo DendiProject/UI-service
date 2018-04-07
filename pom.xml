@@ -144,12 +144,12 @@
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.13</version>
         </dependency>
-              
-                
-                    
-           
-            
-         
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.5.2</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>

@@ -52,7 +52,8 @@ public class ReceipeProxy  implements Proxy{
     public Object load() throws ConnectionErrorException, NotFoundBean{
         if(connect())
         {
-            restTemplate = (RestTemplate)BeansFactory.getInstance().getBean(RestTemplate.class);
+            BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
+            restTemplate = bfOM.getBean(RestTemplate.class);
             HttpHeaders headers = new HttpHeaders();
             headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 

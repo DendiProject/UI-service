@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.beans.factory.ContentManadgerControllerBean;
 import com.netcracker.ui.service.beans.factory.ObjectMapperBean;
 import com.netcracker.ui.service.beans.factory.RestTemplateBean;
 import org.springframework.boot.SpringApplication;
@@ -19,6 +20,7 @@ public class UiServiceApplication {
         BeansFactory bf = BeansFactory.getInstance();
         bf.addBean(new ObjectMapperBean());
         bf.addBean(new RestTemplateBean());
+        bf.addBean(new ContentManadgerControllerBean());
         SpringApplication.run(UiServiceApplication.class, args);
     }
 
