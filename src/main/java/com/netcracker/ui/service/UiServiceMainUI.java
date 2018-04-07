@@ -212,8 +212,8 @@ public class UiServiceMainUI extends UI {
         MenusButton inBtn = new MenusButton("Вход","idIn", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                RegistrationForm modalWindow = new RegistrationForm();
-                addWindow(modalWindow);
+                AddIngredient addForm = new  AddIngredient();
+                addWindow(addForm);
             }
 
         });

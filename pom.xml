@@ -144,12 +144,12 @@
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.13</version>
         </dependency>
-              
-                
-                    
-           
-            
-         
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-server</artifactId>
+            <version>8.0.4</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
