@@ -11,7 +11,15 @@ mylibrary.MyGraf = function (element) {
     // randomly create some nodes and edges
     //var data = getScaleFreeNetwork(25);
     var seed = 2;
-
+    var edgesId = null;
+    var xClick = 0;//координаты клика по рабочему полю
+    var yClick = 0;//координаты клика по рабочему полю
+    var data2 =  {
+        id: "0",
+        lable: "0",
+        x: 0,
+        y: 0
+    };
 
     this.draw = function (nodesBuf, nodesConnectionsBuf) {
         nodes = [];
@@ -31,57 +39,46 @@ mylibrary.MyGraf = function (element) {
         // create a network
         var container = document.getElementById('mynetwork');
         var options = {
-          layout: {randomSeed:seed}, // just to make sure the layout is the same when the locale is changed
-          manipulation: {
-            addNode: function (data, callback) {
-              // filling in the popup DOM elements
-              document.getElementById('operation').innerHTML = "Add Node";
-              document.getElementById('node-id').value = data.id;
-              document.getElementById('node-label').value = data.label;
-              document.getElementById('saveButton').onclick = saveData.bind(this, data, callback);
-              document.getElementById('cancelButton').onclick = clearPopUp.bind();
-              document.getElementById('network-popUp').style.display = 'block';
-              document.getElementById('node-image').value = 'url';
-              
-            },
-            editNode: function (data, callback) {
-              // filling in the popup DOM elements
-              document.getElementById('operation').innerHTML = "Edit Node";
-              document.getElementById('node-id').value = data.id;
-              document.getElementById('node-label').value = data.label;
-              document.getElementById('saveButton').onclick = saveData.bind(this, data, callback);
-              document.getElementById('cancelButton').onclick = cancelEdit.bind(this,callback);
-              document.getElementById('network-popUp').style.display = 'block';
-              document.getElementById('node-image').value = 'url';
-            },
-            addEdge: function (data, callback) {
-              if (data.from == data.to) {
-                var r = confirm("Do you want to connect the node to itself?");
-                if (r == true) {
-                  callback(data);
+            layout: {randomSeed:seed}, // just to make sure the layout is the same when the locale is changed
+            manipulation: {
+                enabled: false,
+                editNode: function (data, callback) {
+                    // filling in the popup DOM elements
+                    console.log('edit', data);
+                },
+                addEdge: function (data, callback) {
+                    console.log('add edge', data);
+                    if (data.from == data.to) {
+                        var r = confirm("Do you want to connect the node to itself?");
+                        if (r === true) {
+                            callback(data);
+                        }
+                    }
+                    else {
+                        callback(data);
+                    }
+                },
+                editEdge: function (data, callback) {
+                    console.log('add edge', data);
+                    if (data.from == data.to) {
+                        var r = confirm("Do you want to connect the node to itself?");
+                        if (r === true) {
+                            callback(data);
+                        }
+                    }
+                    else {
+                        callback(data);
+                    }
                 }
-              }
-              else {
-                callback(data);
-              }
-            },
-            deleteEdge: function (data, callback) {
-              if (data.from == data.to) {
-                var r = confirm("Do you want to connect the node to itself?");
-                if (r == true) {
-                  callback(data);
-                }
-              }
-              else {
-                callback(data);
-              }
             }
-          }
-        };
+	};
         network = new vis.Network(container, data, options);
         //создал здесь, потому что это событие нельзя на значить на простые типы, вроде int и string
         network.on("click", function (params) {
             nodesId = params["nodes"];
+            edgesId = params["edges"];//id связи
+            xClick = params.pointer.canvas.x;//координаты клика по рабочему полю
+            yClick = params.pointer.canvas.y;//координаты клика по рабочему полю
             if(nodesId > 0)
             {
                 event = 'ClickOnNode';
@@ -139,7 +136,7 @@ mylibrary.MyGraf = function (element) {
         document.getElementById('cancelButton').onclick = null;
         document.getElementById('network-popUp').style.display = 'none';
     }
-
+    
     function cancelEdit(callback) {
         clearPopUp();
         callback(null);
@@ -155,4 +152,50 @@ mylibrary.MyGraf = function (element) {
         event = 'DataChange';
         self.click();
     }
+    
+    var addNodeBtn = document.getElementById("networkAddNode");
+    addNodeBtn.onclick = function(event) 
+    {
+        //document.getElementById('network-popUp').style.display = block;
+
+        //network.addNodeMode();
+        data2.id = "767686";
+        data2.label = "new";
+        data2.x = xClick;
+        data2.y = yClick;
+        network.body.data.nodes.getDataSet().add(data2);
+    };
+    var addEdgeBtn = document.getElementById("networkAddEdge");
+    addEdgeBtn.onclick = function(event) 
+    {
+        network.addEdgeMode();
+    };
+    
+    var editEdgeBtn = document.getElementById("networkEditEdge");
+    editEdgeBtn.onclick = function(event) 
+    {
+        var idEdge = 0;
+        if(network.getSelectedEdges().length > 0)
+        {
+                idEdge = network.getSelectedEdges()[0];
+                network.editEdgeMode();
+        }
+        //network.getConnectedNodes("idEdge");
+    };
+
+    var deleteElementBtn = document.getElementById("networkDeleteElement");
+    deleteElementBtn.onclick = function(event) 
+    {
+        var id=0;
+        if(network.getSelectedEdges().length > 0)
+        {
+                id = network.getSelectedEdges()[0];
+                network.body.data.edges.getDataSet().remove(network.getSelectedEdges()[0],null);
+        }
+        if(network.getSelectedNodes().length > 0)
+        {
+                id = network.getSelectedNodes()[0];
+                network.body.data.nodes.getDataSet().remove(network.getSelectedNodes()[0],null);
+        }
+    };
 };
