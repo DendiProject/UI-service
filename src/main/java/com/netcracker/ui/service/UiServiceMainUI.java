@@ -223,8 +223,8 @@ public class UiServiceMainUI extends UI {
         MenusButton registration = new MenusButton("Регистрация", "idregistration", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                RegistrationForm modalWindow = new RegistrationForm();
-                addWindow(modalWindow);
+                AddIngredient addForm = new  AddIngredient();
+                addWindow(addForm);
             }
 
         });
