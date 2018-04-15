@@ -183,6 +183,8 @@
                         <goals>
                             <goal>update-theme</goal>
                             <goal>compile-theme</goal>
+                            <goal>update-widgetset</goal>
+                            <goal>compile</goal>
                             <!--
                             <goal>clean</goal>
                             <goal>resources</goal>
@@ -228,7 +230,7 @@
                     </excludeProperties>
                 </configuration>
             </plugin>
-			<plugin>
+            <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>${asciidoctor.maven.plugin.version}</version>
@@ -289,28 +291,28 @@
                             </attributes>
                         </configuration>
                     </execution>
-					<execution>
-								    <id>asciidoc-to-html</id>
-								    <phase>generate-resources</phase>
-								    <goals>
-										<goal>process-asciidoc</goal>
-								    </goals>
-								    <configuration>
-                            	    	<backend>html5</backend>
-                            			<sourceHighlighter>coderay</sourceHighlighter>
-										<attributes>
-			                                <linkcss>true</linkcss>
-			                                <imagesdir>./images</imagesdir>
-											<toc>left</toc>
-			                                <icons>font</icons>
-			                                <sectanchors>true</sectanchors>
-			                                <!-- set the idprefix to blank -->
-			                                <idprefix/>
-			                                <idseparator>-</idseparator>
-			                                <docinfo1>true</docinfo1>
-			                            </attributes>
-									</configuration>
-							    </execution>
+                    <execution>
+                        <id>asciidoc-to-html</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>html5</backend>
+                            <sourceHighlighter>coderay</sourceHighlighter>
+                            <attributes>
+                                <linkcss>true</linkcss>
+                                <imagesdir>./images</imagesdir>
+                                <toc>left</toc>
+                                <icons>font</icons>
+                                <sectanchors>true</sectanchors>
+                                <!-- set the idprefix to blank -->
+                                <idprefix/>
+                                <idseparator>-</idseparator>
+                                <docinfo1>true</docinfo1>
+                            </attributes>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
