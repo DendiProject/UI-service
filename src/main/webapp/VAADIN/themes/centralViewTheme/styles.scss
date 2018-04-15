@@ -35,6 +35,50 @@
             border-collapse: collapse;
             border-spacing: 0;
     }
+    
+    /* Страница пользоватедя */
+   #userPicture{
+        width: 250px;
+        height: 250px;
+
+    }
+    #leftBlock{
+        float: left;
+        width: 25%
+    }
+    #mainBlock{
+        float: left;
+        margin-left: 50px;
+
+    }
+    #userPage{
+        margin: 2%;
+    }
+    .first-raw, .second-raw{
+        display: flex;
+        justify-content: center;
+    }
+    .input_fields{
+        margin-left: 10px;
+        margin-right: 10px;
+
+    }
+    button{
+        margin: 1%;
+        height: 1%;
+        width: 250px;
+    }
+    #save{
+        background-color: #00CED1;
+    }
+
+    #userinfo{
+        width: 600px;
+        height: 200px;
+    }
+
+
+
 
     /* Common */
     html, body 

@@ -5,6 +5,8 @@
  */
 package com.netcracker.ui.service;
 
+import com.netcracker.ui.service.forms.RegistrationForm;
+import com.netcracker.ui.service.forms.AuthorizationForm;
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.jarektoro.responsivelayout.ResponsiveRow;
 import com.netcracker.ui.service.content.handler.ContentManadgerController;
@@ -164,6 +166,15 @@ public class UiServiceMainUI extends UI {
             }
         });
         
+        newViews.add(new View("UserPage") {
+           @Override
+            public void draw() {
+                mainLayer.contentRowLayout.removeAllComponents();
+                addUserPageComponent(mainLayer.contentRowLayout);
+                
+            }
+        });
+        
         Navigator navigator = new Navigator(getPage(),newViews);
         
         
@@ -209,7 +220,7 @@ public class UiServiceMainUI extends UI {
             
         });
         
-        MenusButton inBtn = new MenusButton("Вход","idIn", new  HandlerForClickingTheButton(){
+        MenusButton registration = new MenusButton("Регистрация", "idregistration", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
                 RegistrationForm modalWindow = new RegistrationForm();
@@ -218,10 +229,29 @@ public class UiServiceMainUI extends UI {
 
         });
         
+        MenusButton signIn = new MenusButton("Войти", "idSignin", new  HandlerForClickingTheButton(){
+            @Override
+            public void onEventClickDo() {
+                AuthorizationForm modalWindow = new AuthorizationForm();
+                addWindow(modalWindow);
+            }
+
+        });
+        
+        MenusButton userPageBtn = new MenusButton("Профиль","iduserPage", new  HandlerForClickingTheButton(){
+            @Override
+            public void onEventClickDo() {
+               navigator.navigateTo("UserPage");
+            }
+
+        });
+        
         mainLayer.menu.addItem(mainBtn);
         mainLayer.menu.addItem(recepsBtn);
         mainLayer.menu.addItem(search);
-        mainLayer.menu.addItem(inBtn);
+        mainLayer.menu.addItem(registration);
+        mainLayer.menu.addItem(signIn);
+        mainLayer.menu.addItem(userPageBtn);
         
         
         return mainLayer.contentRowLayout;
@@ -281,5 +311,14 @@ public class UiServiceMainUI extends UI {
         ResponsiveRow theDistanceBetweenBottomAndRecipes = contentRowLayout.addRow();
         theDistanceBetweenBottomAndRecipes.setHeight("60px");
         theDistanceBetweenBottomAndRecipes.addColumn().withDisplayRules(12, 12, 12, 12);
+    }
+    
+     private void addUserPageComponent(ResponsiveLayout contentRowLayout){
+        
+        ResponsiveRow sliderRow = contentRowLayout.addRow();
+        
+        CustomLayout userPage = new CustomLayout("UserPageLayout");
+        
+        sliderRow.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(userPage);
     }
 }
