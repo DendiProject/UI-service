@@ -20,13 +20,10 @@ import java.io.File;
  */
 public class BasicForm extends Window 
 {
-    Button vk_integration = new Button(" ");
-    Button ok_integration = new Button(" ");
-    Button fb_integration = new Button(" ");
-    HorizontalLayout buttons = new HorizontalLayout(vk_integration, ok_integration, fb_integration);
+  
     Image img = new Image();
     VerticalLayout image = new VerticalLayout(img);
-    VerticalLayout information = new VerticalLayout(buttons);
+    VerticalLayout information = new VerticalLayout();
      
 
     public BasicForm() 

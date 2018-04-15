@@ -21,10 +21,12 @@ import org.springframework.stereotype.Component;
 import org.apache.http.client.*;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 
 
 /**
@@ -40,8 +42,10 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
   
   @Override
   public void onApplicationEvent(final ContextRefreshedEvent event) {
-     if (start){
+     if (start){   
         try {
+            
+            
             String encoded = "Basic dWk6dWlwYXNz";
             HttpClient httpclient = HttpClients.createDefault();
             HttpPost httppost = new HttpPost("http://localhost:8182/oauth/token");
@@ -56,15 +60,15 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
             params.add(new BasicNameValuePair("scope", "read"));
             
             httppost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-            
+            System.out.println("TOKEN");
             HttpResponse response = httpclient.execute(httppost);            
-            System.err.println(response);
+          //  System.out.println("UI token" + response.getHeaders());
         } 
         catch (UnsupportedEncodingException ex) {
             Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
              Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
-         }
+        }
         start = false;
      }
   }
