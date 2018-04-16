@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.graf.component.events.clickOnNode.ClickOnNodeEvent;
+import com.netcracker.ui.service.graf.component.events.clickOnNode.ClickOnNodeEventListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,73 +32,76 @@ public class Graf extends AbstractJavaScriptComponent {
 
         void valueChange();
     }
-
-    public Graf(ValueChangeListener valueChangeListener) {
+    ArrayList<ValueChangeListener> listeners
+            = new ArrayList<ValueChangeListener>();
+    
+    //Массив слушателей события нажатия на любую ноду
+    //Событие нажатия на кокретную ноду обрабатывается в этой ноде
+    ArrayList<ClickOnNodeEventListener> clickOnNodeListeners;
+    
+    public Graf() {
+        ClickOnNodeEvent cone = new ClickOnNodeEvent(this);
+        
         addFunction("onClick", new JavaScriptFunction() {
             @Override
             public void call(JsonArray arguments) {                 
-                BeansFactory<ObjectMapper> bf = BeansFactory.getInstance();
-                TestClass testClass = new TestClass();
-                /*ObjectMapper mapper = new ObjectMapper();
-                try {
-                    mapper = bf.getBean(ObjectMapper.class);
-                    testClass = mapper.readValue(arguments.getObject(0).toString(),TestClass.class);
-                } catch (Exception exception) {
-                    ExceptionHandler.getInstance().runExceptionhandling(exception);
-                }
-                setValue(testClass);*/
-                
-                
-                /*if(testClass.nodesId >= 0)
-                {
-                    setValue(testClass.nodesId);
-                    for (ValueChangeListener listener : listeners) {
-                        listener.valueChange();
-                    }
-                }*//*
-                for(ValueChangeListener listener : listeners) {
-                        listener.valueChange();
-                }*/
+                cone.handleEvent(arguments);
             }
         });
+    
         getState().nodes = new ArrayList<>();
         getState().edges = new ArrayList<>();
-        this.addValueChangeListener(valueChangeListener);
-        //setValue("bla bla");
+        clickOnNodeListeners = new ArrayList<>();
     }
 
-    ArrayList<ValueChangeListener> listeners
-            = new ArrayList<ValueChangeListener>();
 
     public void addValueChangeListener(
             ValueChangeListener listener) {
         listeners.add(listener);
     }
+    
+    
     public void setValue(TestClass newData) {
         getState().nodesId = newData.nodesId;
         getState().event = newData.event;
         getState().nodes = newData.getNodes();
         getState().edges = newData.edges;
     }
-    public void addNode(String newNodesimageUrl, String newNodesLabel, int newNodesId, HandlerForClickingTheNode handler) {
+    
+    
+    public void addNode(String newNodesimageUrl, String newNodesLabel, 
+            int newNodesId, HandlerForClickingTheNode handler) {
         Node node = new Node(newNodesimageUrl, newNodesId, newNodesLabel);
         node.setHandlerForClickingTheNode(handler);
         getState().nodes.add(node);
     }
-    public void addNodesConnection(int idNodesConnectedFrom, int idNodesConnectedTo) {
+    
+    
+    public void addNodesConnection(int idNodesConnectedFrom, 
+            int idNodesConnectedTo) {
         Edge nodeConnection = new Edge(idNodesConnectedFrom, idNodesConnectedTo);
         getState().edges.add(nodeConnection);
     }
-    public void setNodesCollection(ArrayList<Node> nodesCollection)
-    {
+    
+    
+    public void setNodesCollection(ArrayList<Node> nodesCollection) {
         getState().nodes = nodesCollection;
     }
-    public void setNodesConnections(ArrayList<Edge> nodesConnections)
+    
+    
+    public ArrayList<Node> getNodesCollection()
     {
+        return getState().nodes;
+    }
+    
+    
+    public void setNodesConnections(ArrayList<Edge> nodesConnections) {
         getState().edges = nodesConnections;
     }
-    public void setHandlerForClickingTheNode(int nodesId,HandlerForClickingTheNode handler)
-    {
+    
+    
+    public void setHandlerForClickingTheNode(int nodesId,
+            HandlerForClickingTheNode handler) {
         for(int i=0; i<getState().nodes.size(); i++)
         {
             if(getState().nodes.get(i).getId() == nodesId)
@@ -106,14 +111,29 @@ public class Graf extends AbstractJavaScriptComponent {
             }
             if(i == getState().nodes.size()-1)
             {
-                throw new UnsupportedOperationException("Graf havent recipe with id= "+nodesId); 
+                throw new UnsupportedOperationException(
+                        "Graf havent recipe with id= "+nodesId); 
             }
         }
     }
+    
+    
+    public void addHandlerForClickingOnNode(ClickOnNodeEventListener handler) {
+        clickOnNodeListeners.add(handler);
+    }
+    
+    
+    public void notifyClickOnNodeEventListeners()
+    {
+        for(int i=0; i<clickOnNodeListeners.size(); i++)
+        {
+            clickOnNodeListeners.get(i).onEventDo();
+        }
+    }
+    
     
     @Override
     public GrafState getState() {
         return (GrafState) super.getState();
     }
-
 }

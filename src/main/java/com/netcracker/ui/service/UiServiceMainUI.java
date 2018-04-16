@@ -251,7 +251,7 @@ public class UiServiceMainUI extends UI {
         mainLayer.menu.addItem(search);
         mainLayer.menu.addItem(registration);
         mainLayer.menu.addItem(signIn);
-        mainLayer.menu.addItem(userPageBtn);
+        //mainLayer.menu.addItem(userPageBtn);
         
         
         return mainLayer.contentRowLayout;

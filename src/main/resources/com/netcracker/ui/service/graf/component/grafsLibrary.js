@@ -99,7 +99,7 @@ mylibrary.MyGraf = function (element) {
             {
                 //Синхронизация состояния
                 returnUnswer ={
-                    nodesIdClick: nodesId
+                    nodesIdClick: nodesId[0]
                 };
                 //Обновление состояния
                 self.click();
@@ -182,7 +182,8 @@ mylibrary.MyGraf = function (element) {
         //Синхронизация состояния
         returnUnswer ={
             newNodesId: newData.id,
-            //newNodesLable: newData.label,
+            newNodesLable: newData.label,
+            newNodesImage: newData.image,
             newNodesX: newData.x,
             newNodesY: newData.y
         };
@@ -226,19 +227,24 @@ mylibrary.MyGraf = function (element) {
             returnUnswer ={
                 deleteNodesId: id
             };
+            //Обновление состояния
+            self.click();
         }
         //Если пользователь хочет удалить связь, то он кликает именно на ней и нода
         //в таком случае не выделится
         if(network.getSelectedEdges().length > 0)
         {
             var id = network.getSelectedEdges()[0];
-            network.body.data.edges.getDataSet().remove(network.getSelectedEdges()[0],null);
-
             //Синхронизация состояния
             returnUnswer ={
                 deleteEdgeFrom: network.getConnectedNodes(id)[0],
                 deleteEdgeTo: network.getConnectedNodes(id)[1]
             };
+            
+            network.body.data.edges.getDataSet().remove(network.getSelectedEdges()[0],null);
+
+            //Обновление состояния
+            self.click();
         }
     };
 };

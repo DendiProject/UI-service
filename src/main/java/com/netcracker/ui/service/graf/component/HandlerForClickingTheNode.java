@@ -6,7 +6,8 @@
 package com.netcracker.ui.service.graf.component;
 
 /**
- *
+ * Реализация паттерна стратегия для обработки события нажатия на конкретную
+ * ноду
  * @author Artem
  */
 abstract public class HandlerForClickingTheNode {
