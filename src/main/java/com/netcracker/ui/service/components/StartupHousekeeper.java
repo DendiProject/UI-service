@@ -57,8 +57,7 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
             
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("grant_type", "client_credentials"));
-            params.add(new BasicNameValuePair("scope", "read"));
-            
+            params.add(new BasicNameValuePair("scope", "read")); 
             httppost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
             System.out.println("TOKEN");
             HttpResponse response = httpclient.execute(httppost);            

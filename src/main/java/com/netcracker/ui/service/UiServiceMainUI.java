@@ -220,11 +220,20 @@ public class UiServiceMainUI extends UI {
             
         });
         
-        MenusButton registration = new MenusButton("Регистрация", "idregistration", new  HandlerForClickingTheButton(){
+        MenusButton addIngredient = new MenusButton("Конфигуратор ингредиентов", "idconfigIngredient", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
                 AddIngredient addForm = new  AddIngredient();
                 addWindow(addForm);
+            }
+
+        });
+        
+        MenusButton registration = new MenusButton("Регистрация", "idregistration", new  HandlerForClickingTheButton(){
+            @Override
+            public void onEventClickDo() {
+                RegistrationForm modalWindow = new RegistrationForm();
+                addWindow(modalWindow);
             }
 
         });
@@ -249,6 +258,7 @@ public class UiServiceMainUI extends UI {
         mainLayer.menu.addItem(mainBtn);
         mainLayer.menu.addItem(recepsBtn);
         mainLayer.menu.addItem(search);
+        mainLayer.menu.addItem(addIngredient);
         mainLayer.menu.addItem(registration);
         mainLayer.menu.addItem(signIn);
         mainLayer.menu.addItem(userPageBtn);
