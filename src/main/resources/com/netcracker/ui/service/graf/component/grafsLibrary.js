@@ -6,20 +6,12 @@ mylibrary.MyGraf = function (element) {
     var edges = null;
     var network = null;
     var self = this; // Can't use this inside the function
-    var nodesId = null;//Хранит nodesId, по которой был сделан клик
-    var event = null;//Хранит название события
     // randomly create some nodes and edges
     //var data = getScaleFreeNetwork(25);
     var seed = 2;
-    var edgesId = null;
     var xClick = 0;//координаты клика по рабочему полю
     var yClick = 0;//координаты клика по рабочему полю
-    var data2 =  {
-        id: "0",
-        lable: "0",
-        x: 0,
-        y: 0
-    };
+    var returnUnswer;//Содержит данные об обновлении стейта
 
     this.draw = function (nodesBuf, nodesConnectionsBuf) {
         nodes = [];
@@ -42,19 +34,31 @@ mylibrary.MyGraf = function (element) {
             layout: {randomSeed:seed}, // just to make sure the layout is the same when the locale is changed
             manipulation: {
                 enabled: false,
-                editNode: function (data, callback) {
-                    // filling in the popup DOM elements
-                    console.log('edit', data);
-                },
                 addEdge: function (data, callback) {
                     console.log('add edge', data);
                     if (data.from == data.to) {
                         var r = confirm("Do you want to connect the node to itself?");
                         if (r === true) {
+                            //Синхронизация стейта
+                            returnUnswer ={
+                                newEdgesFrom: data.from,
+                                newEdgesTo: data.to,
+                            };
+                            //Обновление состояния
+                            self.click();
+                            
                             callback(data);
                         }
                     }
                     else {
+                        //Синхронизация стейта
+                        returnUnswer ={
+                            newEdgesFrom: data.from,
+                            newEdgesTo: data.to,
+                        };
+                        //Обновление состояния
+                        self.click();
+                        
                         callback(data);
                     }
                 },
@@ -63,10 +67,22 @@ mylibrary.MyGraf = function (element) {
                     if (data.from == data.to) {
                         var r = confirm("Do you want to connect the node to itself?");
                         if (r === true) {
+                            //Синхронизация стейта
+                            returnUnswer.editableEdgesNewIdFrom = data.from;
+                            returnUnswer.editableEdgesNewIdTo = data.to;
+                            //Обновление состояния
+                            self.click();
+                            
                             callback(data);
                         }
                     }
                     else {
+                        //Синхронизация стейта
+                        returnUnswer.editableEdgesNewIdFrom = data.from;
+                        returnUnswer.editableEdgesNewIdTo = data.to;
+                        //Обновление состояния
+                        self.click();
+
                         callback(data);
                     }
                 }
@@ -75,13 +91,17 @@ mylibrary.MyGraf = function (element) {
         network = new vis.Network(container, data, options);
         //создал здесь, потому что это событие нельзя на значить на простые типы, вроде int и string
         network.on("click", function (params) {
-            nodesId = params["nodes"];
-            edgesId = params["edges"];//id связи
+            var nodesId = params["nodes"];
+            //var edgesId = params["edges"];//id связи
             xClick = params.pointer.canvas.x;//координаты клика по рабочему полю
             yClick = params.pointer.canvas.y;//координаты клика по рабочему полю
             if(nodesId > 0)
             {
-                event = 'ClickOnNode';
+                //Синхронизация состояния
+                returnUnswer ={
+                    nodesIdClick: nodesId
+                };
+                //Обновление состояния
                 self.click();
             }
         });
@@ -89,7 +109,7 @@ mylibrary.MyGraf = function (element) {
     
     
     
-    var button =document.getElementById("mynetwork"); 
+    /*var button =document.getElementById("mynetwork"); 
         button.onclick = function(event) 
         {
             var target = event.target; // где был клик?
@@ -102,12 +122,15 @@ mylibrary.MyGraf = function (element) {
                 var chekBtnSymbols = action.substr((action.length-3), 3);
                 if(chekBtnSymbols === 'Btn')//Если true, то вызываем событие
                 {     
-                    //document.cookie = 'idClickedButton=' + action;
-                    idBtn = action;
+                    //Синхронизация состояния
+                    returnUnswer ={
+                        nodesIdClick: action
+                    };
+                    //Обновление состояния
                     self.click();
                 }
             }
-        };
+        };*/
     
     
     // Style it
@@ -116,19 +139,8 @@ mylibrary.MyGraf = function (element) {
 
     // Getter and setter for the value property
     this.getCurrentData= function () {
-        //Данные на стороне java парсятся автоматически, необходимо заполнить
-        //nodesId, даже если он не нужен
-        if(nodesId.length < 1)
-        {
-            nodesId = -1;
-        }
-        var data = {
-            nodesId: nodesId,
-            event: event,
-            nodes: nodes,
-            edges: edges
-        };
-        return data;
+        //Данные на стороне java парсятся автоматически
+        return returnUnswer;
     };
   
     function clearPopUp() {
@@ -142,7 +154,7 @@ mylibrary.MyGraf = function (element) {
         callback(null);
     }
 
-    function saveData(data,callback) {
+    /*function saveData(data,callback) {
         data.id = document.getElementById('node-id').value;
         data.label = document.getElementById('node-label').value;
         data.image = document.getElementById('node-image').value;
@@ -151,23 +163,34 @@ mylibrary.MyGraf = function (element) {
         callback(data);
         event = 'DataChange';
         self.click();
-    }
+    }*/
     
     var addNodeBtn = document.getElementById("networkAddNode");
     addNodeBtn.onclick = function(event) 
     {
-        //document.getElementById('network-popUp').style.display = block;
-
-        //network.addNodeMode();
-        data2.id = "767686";
-        data2.label = "new";
-        data2.x = xClick;
-        data2.y = yClick;
-        network.body.data.nodes.getDataSet().add(data2);
+        //Создание в правильном формате новой ноды
+        var newData =  {
+            id: 767686,
+            label: "newNode",
+            shape: "circularImage",
+            image: "https://png.icons8.com/edit-property/nolan/64",
+            x: xClick,
+            y: yClick
+        };
+        network.body.data.nodes.getDataSet().add(newData);
+        
+        //Синхронизация состояния
+        returnUnswer ={
+            newNodesId: newData.id,
+            //newNodesLable: newData.label,
+            newNodesX: newData.x,
+            newNodesY: newData.y
+        };
+        //Обновление состояния
+        self.click();
     };
     var addEdgeBtn = document.getElementById("networkAddEdge");
-    addEdgeBtn.onclick = function(event) 
-    {
+    addEdgeBtn.onclick = function(event){
         network.addEdgeMode();
     };
     
@@ -177,25 +200,45 @@ mylibrary.MyGraf = function (element) {
         var idEdge = 0;
         if(network.getSelectedEdges().length > 0)
         {
-                idEdge = network.getSelectedEdges()[0];
-                network.editEdgeMode();
+            idEdge = network.getSelectedEdges()[0];
+            //Синхронизация состояния
+            returnUnswer ={
+                editableEdgesOldIdFrom: network.getConnectedNodes(idEdge)[0],
+                editableEdgesOldIdTo: network.getConnectedNodes(idEdge)[1],
+                editableEdgesNewIdFrom: 0,
+                editableEdgesNewIdTo: 0
+            };
+            
+            network.editEdgeMode();
         }
-        //network.getConnectedNodes("idEdge");
     };
 
     var deleteElementBtn = document.getElementById("networkDeleteElement");
     deleteElementBtn.onclick = function(event) 
     {
-        var id=0;
-        if(network.getSelectedEdges().length > 0)
-        {
-                id = network.getSelectedEdges()[0];
-                network.body.data.edges.getDataSet().remove(network.getSelectedEdges()[0],null);
-        }
+        //Вначале проверка на выделение ноды, она выделяется вместе со связью
         if(network.getSelectedNodes().length > 0)
         {
-                id = network.getSelectedNodes()[0];
-                network.body.data.nodes.getDataSet().remove(network.getSelectedNodes()[0],null);
+            var id = network.getSelectedNodes()[0];
+            network.body.data.nodes.getDataSet().remove(network.getSelectedNodes()[0],null);
+
+            //Синхронизация состояния
+            returnUnswer ={
+                deleteNodesId: id
+            };
+        }
+        //Если пользователь хочет удалить связь, то он кликает именно на ней и нода
+        //в таком случае не выделится
+        if(network.getSelectedEdges().length > 0)
+        {
+            var id = network.getSelectedEdges()[0];
+            network.body.data.edges.getDataSet().remove(network.getSelectedEdges()[0],null);
+
+            //Синхронизация состояния
+            returnUnswer ={
+                deleteEdgeFrom: network.getConnectedNodes(id)[0],
+                deleteEdgeTo: network.getConnectedNodes(id)[1]
+            };
         }
     };
 };

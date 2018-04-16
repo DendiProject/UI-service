@@ -37,14 +37,14 @@ public class Graf extends AbstractJavaScriptComponent {
             public void call(JsonArray arguments) {                 
                 BeansFactory<ObjectMapper> bf = BeansFactory.getInstance();
                 TestClass testClass = new TestClass();
-                ObjectMapper mapper = new ObjectMapper();
+                /*ObjectMapper mapper = new ObjectMapper();
                 try {
                     mapper = bf.getBean(ObjectMapper.class);
                     testClass = mapper.readValue(arguments.getObject(0).toString(),TestClass.class);
                 } catch (Exception exception) {
                     ExceptionHandler.getInstance().runExceptionhandling(exception);
                 }
-                setValue(testClass);
+                setValue(testClass);*/
                 
                 
                 /*if(testClass.nodesId >= 0)
@@ -53,10 +53,10 @@ public class Graf extends AbstractJavaScriptComponent {
                     for (ValueChangeListener listener : listeners) {
                         listener.valueChange();
                     }
-                }*/
+                }*//*
                 for(ValueChangeListener listener : listeners) {
                         listener.valueChange();
-                }
+                }*/
             }
         });
         getState().nodes = new ArrayList<>();

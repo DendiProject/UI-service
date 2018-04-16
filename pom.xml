@@ -5,7 +5,7 @@
     <artifactId>ui-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>ui-service &lt;-----github</name>
+    <name>ui-service</name>
     <description>Dendi Project ui-service</description>
     <parent>
         <groupId>org.springframework.boot</groupId>
