@@ -39,7 +39,7 @@ public class GuestEnter {
                 userInfo.setEmail("guest");
                 userInfo.setPassword("guestpass");
                 PostUserData postRequest = new PostUserData(
-                        "http://localhost:8182/authorization/", userInfo);
+                        "http://localhost:8182/authorization/", userInfo, "change");
 
                 if (postRequest.con.getResponseCode() == HttpURLConnection.HTTP_OK) {
 

@@ -40,17 +40,15 @@ import org.springframework.stereotype.Component;
  *
  * @author ArtemShevelyukhin
  */
-
+@Component
 public class AuthorizationForm extends BasicForm {
 
     TextField email = new TextField("E-mail");
     PasswordField password = new PasswordField("Пароль");
     Button enter = new Button("Вход");
-    
-   
+
     private JWTHandler handler = new JWTHandler();
-    
-    
+
     //  CookieStore cookieStore = new BasicCookieStore();
     // HttpClientBuilder builder = HttpClientBuilder.create().setDefaultCookieStore(cookieStore);
     public AuthorizationForm() {
@@ -58,19 +56,22 @@ public class AuthorizationForm extends BasicForm {
         super.information.addComponent(email);
         super.information.addComponent(password);
         super.information.addComponent(password);
-        super.information.addComponent(password);super.information.addComponent(password);
-        super.information.addComponent(enter);
+        super.information.addComponent(password);
+        super.information.addComponent(password);
+       // super.information.addComponent(new Button("Вход"), this::enter);
         //CookieStore cookieStore = myCookieStore.getInstance();
 
-        enter.addClickListener(e -> {
-            try {
-                UserDto userInfo = new UserDto();
-                userInfo.setEmail(email.getValue());
-                userInfo.setPassword(password.getValue());
-                
-                Cookie myUserCookie = getCookieByName("userInfo"); 
-                PostUserData postRequest = new PostUserData(
-                        "http://localhost:8182/authorization/", userInfo);
+    }
+
+    public void enter() {
+        try {
+            UserDto userInfo = new UserDto();
+            userInfo.setEmail(email.getValue());
+            userInfo.setPassword(password.getValue());
+
+            Cookie myUserCookie = getCookieByName("userInfo");
+            PostUserData postRequest = new PostUserData(
+                    "http://localhost:8182/authorization/", userInfo, "we");
 
 //                    Gson gson = new Gson(); 
 //                    URL url = new URL("http://localhost:8182/authorization/");
@@ -83,48 +84,44 @@ public class AuthorizationForm extends BasicForm {
 //                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
 //                    wr.write(gson.toJson(userInfo));
 //                    wr.flush();
-                if (postRequest.con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            if (postRequest.con.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
-                    CookieManager msCookieManager = new java.net.CookieManager();
-                    Map<String, List<String>> headerFields = postRequest.con.getHeaderFields();
-                    List<String> cookiesHeader = headerFields.get("Set-Cookie");
+                CookieManager msCookieManager = new java.net.CookieManager();
+                Map<String, List<String>> headerFields = postRequest.con.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get("Set-Cookie");
 
-                    
-                    if (cookiesHeader != null) {
-                        for (String cookie : cookiesHeader) {
-                            String name = HttpCookie.parse(cookie).get(0).getName();
-                            if (name.equals("userInfo")) {
-                                String value = HttpCookie.parse(cookie).get(0).getValue();
-                                myUserCookie.setValue(value);
-                            }
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader) {
+                        String name = HttpCookie.parse(cookie).get(0).getName();
+                        if (name.equals("userInfo")) {
+                            String value = HttpCookie.parse(cookie).get(0).getValue();
+                            myUserCookie.setValue(value);
                         }
                     }
-                    
-                    myUserCookie.setPath("/");
-                    VaadinService.getCurrentResponse().addCookie(myUserCookie);
-                    
-                    String end = handler.parseJWT(myUserCookie.getValue(), "test");
-                    
-                    
-                    System.out.println(myUserCookie.getName() + " " + myUserCookie.getValue());     //<--- DELETE
-                    System.out.println("Токен USER");                                               //<--- DELETE
-                    Notification n = new Notification("Вы вошли");                                  //<--- DELETE
-                    n.show(Page.getCurrent());                                                      //<--- DELETE
                 }
-                postRequest.wr.close();
-                postRequest.con.disconnect();
 
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NullPointerException ex) {
-                Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
+                myUserCookie.setPath("/");
+                VaadinService.getCurrentResponse().addCookie(myUserCookie);
+
+                String end = handler.parseJWT(myUserCookie.getValue(), "test");
+
+                System.out.println(myUserCookie.getName() + " " + myUserCookie.getValue());     //<--- DELETE
+                System.out.println("Токен USER");                                               //<--- DELETE
+                Notification n = new Notification("Вы вошли");                                  //<--- DELETE
+                n.show(Page.getCurrent());                                                      //<--- DELETE
             }
+            postRequest.wr.close();
+            postRequest.con.disconnect();
 
-        });
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NullPointerException ex) {
+            Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     private Cookie getCookieByName(String name) {
         Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
 
@@ -136,5 +133,5 @@ public class AuthorizationForm extends BasicForm {
 
         return null;
     }
-    
+
 }

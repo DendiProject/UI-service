@@ -56,7 +56,7 @@ public class RegistrationForm extends BasicForm {
                     userInfo.setPassword(password.getValue());
 
 
-                    String postUrl = "http://localhost:8182/register/";// put in your url
+                    String postUrl = "http://localhost:8182/idpsecure/register";// put in your url
                     Gson gson = new Gson();
                     HttpClient httpClient = HttpClientBuilder.create().build();
                     HttpPost post = new HttpPost(postUrl);
