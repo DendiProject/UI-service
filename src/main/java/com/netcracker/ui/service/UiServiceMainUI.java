@@ -139,7 +139,8 @@ public class UiServiceMainUI extends UI {
                 
                 MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
                 parameters.add("receipe_id", "1"); 
-                ReceipeProxy proxy = new ReceipeProxy("http://localhost:8081/receipes/", parameters);
+                ReceipeProxy proxy = new ReceipeProxy();
+                proxy.setConfig("http://localhost:8081/receipes/", parameters);
 
                 ReceipeDataConverter converter = new ReceipeDataConverter();
                 ReceipeStore store = new ReceipeStore(converter);
