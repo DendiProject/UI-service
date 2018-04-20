@@ -54,19 +54,17 @@ import org.springframework.web.client.ResourceAccessException;
 @Theme("centralViewTheme")
 @SpringUI
 public class UiServiceMainUI extends UI {
-    
+   
     @Override
     protected void init(VaadinRequest vaadinRequest){
         try
         {
-            createMainLayout();        
+            createMainLayout();
+            //throw new ConnectionErrorException();
         }
-        catch(Exception ex)
+        catch(Exception exception)
         {
-            Logger logger = LoggerFactory.getLogger(UiServiceMainUI.class);
-            logger.info("This is an information message");
-            logger.error("this is a error message");
-            logger.warn("this is a warning message");
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
     }
     
@@ -93,50 +91,7 @@ public class UiServiceMainUI extends UI {
 
         newViews.add(new View("Recept") {
             @Override
-            public void draw() {
-                //Далее код, в котором могут вылететь исключения: 
-                //ConnectionErrorException,ConvertDataException,
-                //ShortViewException,ResourceAccessException
-                //имеет смысл создать соответсвующие обработчики
-                ExceptionHandler ex = ExceptionHandler.getInstance();
-                
-                ConcreteException connectionErrorException = 
-                        new ConcreteException(new ConcreteExceptionHandler() {
-                            @Override
-                            public void handling() {
-                                throw new UnsupportedOperationException("Not supported yet.");
-                            }
-                        }, ConnectionErrorException.class);
-                ex.addException(connectionErrorException);
-                
-                ConcreteException convertDataException = 
-                        new ConcreteException(new ConcreteExceptionHandler() {
-                            @Override
-                            public void handling() {
-                                throw new UnsupportedOperationException("Not supported yet.");
-                            }
-                        }, ConvertDataException.class);
-                ex.addException(convertDataException);
-                
-                ConcreteException shortViewException = 
-                                new ConcreteException(new ConcreteExceptionHandler() {
-                            @Override
-                            public void handling() {
-                                throw new UnsupportedOperationException("Not supported yet.");
-                            }
-                }, ShortViewException.class);
-                ex.addException(shortViewException);
-                
-                ConcreteException resourceAccessException = 
-                                new ConcreteException(new ConcreteExceptionHandler() {
-                            @Override
-                            public void handling() {
-                                throw new UnsupportedOperationException("Not supported yet.");
-                            }
-                }, ResourceAccessException.class);
-                ex.addException(resourceAccessException);
-                        
-                
+            public void draw() {               
                 MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
                 parameters.add("receipe_id", "1"); 
                 ReceipeProxy proxy = new ReceipeProxy();

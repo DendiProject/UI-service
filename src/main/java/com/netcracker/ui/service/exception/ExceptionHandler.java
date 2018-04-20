@@ -6,7 +6,8 @@
 package com.netcracker.ui.service.exception;
 
 import java.util.ArrayList;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Класс для реализации стратегии обработки exceptions
  * @author Artem
@@ -65,7 +66,7 @@ public class ExceptionHandler{
         for(int i=0;i<exceptions.size();i++)
         {
             if(exception.getClass().equals(exceptions.get(i).getType()))
-            {
+            { 
                 exceptions.get(i).callExceptionHandler();
                 return;
             }
