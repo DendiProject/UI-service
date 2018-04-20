@@ -5,22 +5,24 @@
  */
 package com.netcracker.ui.service.graf.component;
 
-import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
 import elemental.json.JsonArray;
 import java.io.Serializable;
 import java.util.ArrayList;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.netcracker.ui.service.exception.ExceptionHandler;
-import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.graf.component.events.addEdge.AddEdgeEvent;
+import com.netcracker.ui.service.graf.component.events.addEdge.AddEdgeEventListener;
+import com.netcracker.ui.service.graf.component.events.addNode.AddNodeEvent;
+import com.netcracker.ui.service.graf.component.events.addNode.AddNodeEventListener;
 import com.netcracker.ui.service.graf.component.events.clickOnNode.ClickOnNodeEvent;
 import com.netcracker.ui.service.graf.component.events.clickOnNode.ClickOnNodeEventListener;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.json.JSONObject;
+import com.netcracker.ui.service.graf.component.events.deleteEdge.DeleteEdgeEvent;
+import com.netcracker.ui.service.graf.component.events.deleteEdge.DeleteEdgeEventListener;
+import com.netcracker.ui.service.graf.component.events.deleteNode.DeleteNodeEvent;
+import com.netcracker.ui.service.graf.component.events.deleteNode.DeleteNodeEventListener;
+import com.netcracker.ui.service.graf.component.events.editEdge.EditEdgeEvent;
+import com.netcracker.ui.service.graf.component.events.editEdge.EditEdgeEventListener;
 
 /**
  *
@@ -35,17 +37,33 @@ public class Graf extends AbstractJavaScriptComponent {
     ArrayList<ValueChangeListener> listeners
             = new ArrayList<ValueChangeListener>();
     
-    //Массив слушателей события нажатия на любую ноду
-    //Событие нажатия на кокретную ноду обрабатывается в этой ноде
+    //Массивы слушателей событий
     ArrayList<ClickOnNodeEventListener> clickOnNodeListeners;
+    ArrayList<AddNodeEventListener> addNodeListeners;
+    ArrayList<AddEdgeEventListener> addEdgeListeners;
+    ArrayList<EditEdgeEventListener> editEdgeListeners;
+    ArrayList<DeleteEdgeEventListener> deleteEdgeListeners;
+    ArrayList<DeleteNodeEventListener> deleteNodeListeners;
     
     public Graf() {
-        ClickOnNodeEvent cone = new ClickOnNodeEvent(this);
+        //Конфигурирование цепочки обработчиков событий
+        DeleteNodeEvent deleteNodeEvent = new DeleteNodeEvent(this);
+        DeleteEdgeEvent deleteEdgeEvent = new DeleteEdgeEvent(this);
+        deleteEdgeEvent.setNext(deleteNodeEvent);
+        EditEdgeEvent editEdgeEvent = new EditEdgeEvent(this);
+        editEdgeEvent.setNext(deleteEdgeEvent);
+        AddEdgeEvent addEdgeEvent = new AddEdgeEvent(this);
+        addEdgeEvent.setNext(editEdgeEvent);
+        AddNodeEvent addNodeEvent = new AddNodeEvent(this);
+        addNodeEvent.setNext(addEdgeEvent);
+        ClickOnNodeEvent firstPartCheinOfHandlersEvent = new ClickOnNodeEvent(this);
+        firstPartCheinOfHandlersEvent.setNext(addNodeEvent);
         
         addFunction("onClick", new JavaScriptFunction() {
             @Override
             public void call(JsonArray arguments) {                 
-                cone.handleEvent(arguments);
+                firstPartCheinOfHandlersEvent.handleEvent(arguments);
+                int i=0;
             }
         });
     
@@ -76,13 +94,62 @@ public class Graf extends AbstractJavaScriptComponent {
         getState().nodes.add(node);
     }
     
+    public void addNode(String newNodesimageUrl, String newNodesLabel, 
+            int newNodesId) {
+        Node node = new Node(newNodesimageUrl, newNodesId, newNodesLabel);
+        getState().nodes.add(node);
+    }
     
-    public void addNodesConnection(int idNodesConnectedFrom, 
+    public void addEdge(int idNodesConnectedFrom, 
             int idNodesConnectedTo) {
         Edge nodeConnection = new Edge(idNodesConnectedFrom, idNodesConnectedTo);
         getState().edges.add(nodeConnection);
     }
     
+    public void editEdge(int editableEdgesOldIdFrom, int editableEdgesOldIdTo, 
+            int editableEdgesNewIdFrom, int editableEdgesNewIdTo){
+        for(int i = 0; i< getState().edges.size();i++)
+        {
+            if(getState().edges.get(i).getFrom() == editableEdgesOldIdFrom & 
+                    getState().edges.get(i).getTo() == editableEdgesOldIdTo)
+            {
+                getState().edges.get(i).setFrom(editableEdgesNewIdFrom);
+                getState().edges.get(i).setTo(editableEdgesNewIdTo);
+                break;
+            }
+        }
+    }
+    
+    public void deleteEdge(int deleteEdgeFrom, int deleteEdgeTo){
+        for(int i = 0; i< getState().edges.size();i++)
+        {
+            if(getState().edges.get(i).getFrom() == deleteEdgeFrom & 
+                    getState().edges.get(i).getTo() == deleteEdgeTo)
+            {
+                getState().edges.remove(i);
+                break;
+            }
+        }
+    }
+    
+    public void deleteNode(int deleteNodesId){
+        for(int i = 0; i< getState().nodes.size();i++)
+        {
+            if(getState().nodes.get(i).getId() == deleteNodesId)
+            {
+                //Удаление связей этой ноды
+                for(int j=0; j<getState().edges.size();j++)
+                {
+                    if(getState().edges.get(j).getFrom() == deleteNodesId | 
+                            getState().edges.get(j).getTo() == deleteNodesId){
+                        getState().edges.remove(j);
+                    }
+                }
+                getState().nodes.remove(i);
+                break;
+            }         
+        }
+    }
     
     public void setNodesCollection(ArrayList<Node> nodesCollection) {
         getState().nodes = nodesCollection;
@@ -131,6 +198,45 @@ public class Graf extends AbstractJavaScriptComponent {
         }
     }
     
+    public void notifyAddNodeEventListeners()
+    { 
+        for(int i=0; i<addNodeListeners.size(); i++)
+        {
+            addNodeListeners.get(i).onEventDo();
+        }
+    }
+    
+    public void notifyAddEdgeEventListeners()
+    { 
+        for(int i=0; i<addEdgeListeners.size(); i++)
+        {
+            addEdgeListeners.get(i).onEventDo();
+        }
+    }
+    
+    public void notifyEditEdgeEventListeners()
+    { 
+        for(int i=0; i<editEdgeListeners.size(); i++)
+        {
+            editEdgeListeners.get(i).onEventDo();
+        }
+    }
+    
+    public void notifyDeleteEdgeEventListeners()
+    { 
+        for(int i=0; i<deleteEdgeListeners.size(); i++)
+        {
+            deleteEdgeListeners.get(i).onEventDo();
+        }
+    }
+    
+    public void notifyDeleteNodeEventListeners()
+    { 
+        for(int i=0; i<deleteNodeListeners.size(); i++)
+        {
+            deleteNodeListeners.get(i).onEventDo();
+        }
+    }
     
     @Override
     public GrafState getState() {

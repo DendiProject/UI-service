@@ -3,27 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service.graf.component.events.clickOnNode;
+package com.netcracker.ui.service.graf.component.events.deleteNode;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.graf.component.Graf;
-import com.netcracker.ui.service.graf.component.Node;
-import com.netcracker.ui.service.graf.component.TestClass;
 import com.netcracker.ui.service.graf.component.events.BasicGrafEventHandler;
+import com.netcracker.ui.service.graf.component.events.deleteEdge.DeleteEdgeState;
 import elemental.json.JsonArray;
-import java.util.ArrayList;
 
 /**
  *
  * @author Artem
  */
-public class ClickOnNodeEvent extends BasicGrafEventHandler{
-    private ClickOnNodeState state;
+public class DeleteNodeEvent extends BasicGrafEventHandler{
+    private DeleteNodeState state;
     
-    public ClickOnNodeEvent(Graf graf)
+    public DeleteNodeEvent(Graf graf)
     {
         this.graf = graf;
+    }
+    
+    public void setState(DeleteNodeState state)
+    {
+        this.state = state;
     }
     
     @Override
@@ -33,27 +36,12 @@ public class ClickOnNodeEvent extends BasicGrafEventHandler{
             //Попытка распарсить данные, если не получается-отдать следующему
             BeansFactory<ObjectMapper> bf = BeansFactory.getInstance();
             ObjectMapper mapper = bf.getBean(ObjectMapper.class);
-            state = mapper.readValue(arguments.getObject(0).toString(),ClickOnNodeState.class);
-
+            state = mapper.readValue(arguments.getObject(0).toString(),DeleteNodeState.class);
             if(state.stateReady)
             {
-                ArrayList<Node> nodes = graf.getNodesCollection();
-
-                //Если существует обработчик, который создан для 
-                //этой ноды, то вызов его
-                for(int i=0; i<nodes.size(); i++)
-                {
-                    if(nodes.get(i).getId() == state.nodesIdClick)
-                    {        
-                        if(nodes.get(i).checkHandlerState())
-                        {
-                            nodes.get(i).onEventClickDo();
-                        }
-                        break;
-                    }
-                }
+                graf.deleteNode(state.deleteNodesId);
                 //Оповещаю всех слушателей
-                graf.notifyClickOnNodeEventListeners();
+                graf.notifyDeleteNodeEventListeners();
             }
             else
             {

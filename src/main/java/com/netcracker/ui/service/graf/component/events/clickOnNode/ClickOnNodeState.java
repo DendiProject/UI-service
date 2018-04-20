@@ -11,24 +11,26 @@ package com.netcracker.ui.service.graf.component.events.clickOnNode;
  */
 public class ClickOnNodeState {
     public int nodesIdClick;
+    public boolean stateReady = false;
     
     public ClickOnNodeState()
     {
-        
+
     }
     
-    public ClickOnNodeState(int _nodesIdClick)
+    public ClickOnNodeState(int nodesIdClick)
     {
-        nodesIdClick = _nodesIdClick;
+        this.nodesIdClick = nodesIdClick;
     }
     
-    public int getNodesId()
+    public int getNodesIdClick()
     {
         return nodesIdClick;
     }
     
-    public void setNodesId(int  nodesId)
+    public void setNodesIdClick(int nodesIdClick)
     {
-        this.nodesIdClick = nodesId;
+        this.nodesIdClick = nodesIdClick;
+        stateReady = true;
     }
 }
