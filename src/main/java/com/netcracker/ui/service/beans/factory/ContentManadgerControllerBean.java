@@ -23,7 +23,7 @@ public class ContentManadgerControllerBean implements Product<ContentManadgerCon
     
     @Override
     public void setContent() {
-        ContentManadgerController controller = new ContentManadgerController("http://localhost:8082/");
+        ContentManadgerController controller = new ContentManadgerController("http://localhost:8085/");
         content = controller;
     }
 

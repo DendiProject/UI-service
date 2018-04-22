@@ -32,28 +32,27 @@ public class PostUserData {
     public PostUserData(String postUrl, UserDto userDto, String secureToken) {
         try {
             Gson gson = new Gson();
-            url = new URL(postUrl);
-            Map<String, Object> params = new LinkedHashMap<>();
-            params.put("access_token", secureToken);
-
-            StringBuilder postData = new StringBuilder();
-            for (Map.Entry<String, Object> param : params.entrySet()) {
-                postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
-                postData.append('=');
-                postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
-            }
-            byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+            url = new URL(postUrl + "?access_token=" + secureToken);
+            
+//            Map<String, Object> params = new LinkedHashMap<>();
+//            params.put("access_token", secureToken);
+//
+//            StringBuilder postData = new StringBuilder();
+//            for (Map.Entry<String, Object> param : params.entrySet()) {
+//                postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+//                postData.append('=');
+//                postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+//            }
+//            byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
             con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
-
-            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            con.setRequestProperty(postUrl, postUrl);
-            con.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
-            con.setDoOutput(true);
-            con.getOutputStream().write(postDataBytes);
+           
             
-            System.out.println(postDataBytes);
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            
+            con.setDoOutput(true);
+           
             
             wr = new OutputStreamWriter(con.getOutputStream());
             wr.write(gson.toJson(userDto));

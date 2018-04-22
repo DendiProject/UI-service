@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service.components;
+package com.netcracker.ui.service.content.handler;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -24,13 +24,11 @@ public class JWTHandler {
     public String createJWT(String issuer, String subject, String id, String email, String key) {
 
         JwtBuilder builder = Jwts.builder()
-                
+                .setId(id)
                 .setIssuer(issuer)
                 .setSubject(subject)
                 .setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(Date.from(Instant.now().plusSeconds(300)))
-                .claim("id", id)
-                .claim("email", email)
                 .signWith(SignatureAlgorithm.HS512, key);
 
         return builder.compact();

@@ -9,17 +9,19 @@ import com.google.common.net.MediaType;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.netcracker.ui.service.beans.factory.BeansFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.codec.binary.Base64;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -45,7 +47,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
-
+import java.util.Base64;
 
 /**
  *
@@ -56,14 +58,20 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
 
     private boolean start = true;
     
-    @Autowired
     MyTokenStore myTokenStore;
-    
-  @Override
-  public void onApplicationEvent(final ContextRefreshedEvent event) {
-     if (start){   
+
+    BeansFactory<MyTokenStore> bfTK = BeansFactory.getInstance();
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent e) {
+        if (start){   
         try {
-            String encoded = "Basic dWk6dWlwYXNz";
+            String client_id = "ui";
+            String client_secret = "uipass";
+            String client  = client_id + ":" + client_secret;
+            byte[] encodedBytes = Base64.getEncoder().encode(client.getBytes());   
+            String str = new String(encodedBytes, StandardCharsets.UTF_8);
+            String encoded = "Basic " + str ;
                        
             HttpClient httpclient = HttpClients.createDefault();
             HttpPost httppost = new HttpPost("http://localhost:8182/oauth/token");
@@ -82,15 +90,12 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
             HttpEntity entity = response.getEntity();
             
             if (entity != null) {
-                
                 InputStream instream = entity.getContent();
-                try {
-                    
-                    Gson gson = new Gson();
+                try {                  
                     String responseString = EntityUtils.toString(entity, "UTF-8");
                     JSONObject jsonObj = new JSONObject(responseString);
                     System.out.println("before get instance");
-                    MyTokenStore tokenStore =  myTokenStore.getInstance();
+                    myTokenStore = bfTK.getBean(MyTokenStore.class);
                     System.out.println("after get instance");
                     myTokenStore.setToken(jsonObj.get("access_token").toString());
                    
@@ -111,5 +116,5 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
         }
         start = false;
      }
-  }
+    }
 }

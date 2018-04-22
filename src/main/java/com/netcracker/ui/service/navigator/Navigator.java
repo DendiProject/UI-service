@@ -5,6 +5,8 @@
  */
 package com.netcracker.ui.service.navigator;
 
+
+import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 import java.util.ArrayList;
@@ -53,6 +55,8 @@ public class Navigator {
             if(viewsName == null || viewsName.equals(""))
             {
                 viewsName = views.get(0).name;
+                CookieHandler ch = new CookieHandler();
+                ch.guestEnter();
             }
         }
         

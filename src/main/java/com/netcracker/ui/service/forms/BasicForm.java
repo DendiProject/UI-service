@@ -7,6 +7,7 @@ package com.netcracker.ui.service.forms;
 
 import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinService;
+
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
@@ -14,10 +15,12 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.io.File;
 
+
 /**
  *
  * @author eliza
  */
+
 public class BasicForm extends Window 
 {
   

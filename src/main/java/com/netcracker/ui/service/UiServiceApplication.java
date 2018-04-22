@@ -7,6 +7,7 @@ import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.beans.factory.ContentManadgerControllerBean;
 import com.netcracker.ui.service.beans.factory.ObjectMapperBean;
 import com.netcracker.ui.service.beans.factory.RestTemplateBean;
+import com.netcracker.ui.service.beans.factory.TokenStoreBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -21,6 +22,7 @@ public class UiServiceApplication {
         bf.addBean(new ObjectMapperBean());
         bf.addBean(new RestTemplateBean());
         bf.addBean(new ContentManadgerControllerBean());
+        bf.addBean(new TokenStoreBean());
         SpringApplication.run(UiServiceApplication.class, args);
     }
 

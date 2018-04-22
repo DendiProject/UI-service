@@ -9,6 +9,9 @@ import com.netcracker.ui.service.forms.RegistrationForm;
 import com.netcracker.ui.service.forms.AuthorizationForm;
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.jarektoro.responsivelayout.ResponsiveRow;
+import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.components.MyTokenStore;
+import com.netcracker.ui.service.components.StartupHousekeeper;
 import com.netcracker.ui.service.content.handler.ContentManadgerController;
 import com.netcracker.ui.service.exception.ConcreteException;
 import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
@@ -45,6 +48,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Upload;
+import java.awt.FileDialog;
+import java.awt.Frame;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.web.client.ResourceAccessException;
 
 /**
@@ -53,12 +65,15 @@ import org.springframework.web.client.ResourceAccessException;
  */
 @Theme("centralViewTheme")
 @SpringUI
-public class UiServiceMainUI extends UI {
+public class UiServiceMainUI extends UI{
     
+    BeansFactory<ContentManadgerController> bfCMC = BeansFactory.getInstance();
+    ContentManadgerController contentManadgerController;
+
     @Override
     protected void init(VaadinRequest vaadinRequest){
         try
-        {
+        { 
             createMainLayout();        
         }
         catch(Exception ex)
@@ -220,11 +235,21 @@ public class UiServiceMainUI extends UI {
             
         });
         
-        MenusButton addIngredient = new MenusButton("Конфигуратор ингредиентов", "idconfigIngredient", new  HandlerForClickingTheButton(){
+        MenusButton addIngredient = new MenusButton("Загрузить картинку", "idconfigIngredient", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                AddIngredient addForm = new  AddIngredient();
-                addWindow(addForm);
+                
+                try {
+                    contentManadgerController = bfCMC.getBean(ContentManadgerController.class);
+                    String path = "C:\\Users\\1\\Documents\\1NETCRACKER PROJECT\\_____\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\slide1.png";
+                    contentManadgerController.addImage(path);
+                } catch (FileNotFoundException ex) {
+                    java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                System.out.print("we");
             }
 
         });
@@ -331,4 +356,7 @@ public class UiServiceMainUI extends UI {
         
         sliderRow.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(userPage);
     }
+     
+    
+  
 }

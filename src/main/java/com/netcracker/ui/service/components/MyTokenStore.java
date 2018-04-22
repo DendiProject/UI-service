@@ -6,6 +6,9 @@
 package com.netcracker.ui.service.components;
 
 import com.google.gson.Gson;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.spring.annotation.VaadinSessionScope;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -34,28 +37,19 @@ import org.springframework.boot.CommandLineRunner;
  * @author ArtemShevelyukhin
  */
 @Component
-public class MyTokenStore implements CommandLineRunner {
+public class MyTokenStore{
 
-    private static MyTokenStore instance;
     private  String token;
 
     @Autowired
     MyTokenStore myTokenStore;
 
-    @Override
-    public void run(String... strings) throws Exception {
-        instance = new MyTokenStore();
-    }
+    
 
     public MyTokenStore() {
         this.token = null;
     }
     
-    
-    public synchronized MyTokenStore getInstance() {
-
-        return instance;
-    }
 
     public void setToken(String token) {
         this.token = token;
