@@ -12,9 +12,9 @@ function() {
         {
             mygraf.draw(this.getState().nodes, this.getState().edges);
         }
-        if(this.getState().event === "DeleteEdge")
+        if(this.getState().event === "DeleteLastEdge")
         {
-            mygraf.deleteNode(this.getState().edges[this.getState().edges.length-1].from, this.getState().edges[this.getState().edges.length-1].to);
+            mygraf.deleteLastEdge(this.getState().edges[this.getState().edges.length-1].from, this.getState().edges[this.getState().edges.length-1].to);
         }
         this.getState().event = "";
     };

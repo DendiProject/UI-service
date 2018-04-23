@@ -5,11 +5,12 @@
  */
 package com.netcracker.ui.service.graf.component.events.editEdge;
 
+
 /**
  *
  * @author Artem
  */
-public class EditEdgeState {
+public class EditEdgeState{
     public int editableEdgesOldIdFrom;
     public int editableEdgesOldIdTo;
     public int editableEdgesNewIdFrom;

@@ -5,11 +5,12 @@
  */
 package com.netcracker.ui.service.graf.component.events.addNode;
 
+
 /**
  *
  * @author Artem
  */
-public class AddNodeState {
+public class AddNodeState{
     public int newNodesId;
     public String newNodesLable;
     public String newNodesImage;

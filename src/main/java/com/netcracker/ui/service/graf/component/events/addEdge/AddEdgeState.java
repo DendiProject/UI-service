@@ -5,11 +5,12 @@
  */
 package com.netcracker.ui.service.graf.component.events.addEdge;
 
+
 /**
  *
  * @author Artem
  */
-public class AddEdgeState {
+public class AddEdgeState{
     public int newEdgesFrom;
     public int newEdgesTo;
     public boolean stateReady = false;

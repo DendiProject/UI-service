@@ -8,11 +8,8 @@ package com.netcracker.ui.service.graf.component.events.clickOnNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.graf.component.Graf;
-import com.netcracker.ui.service.graf.component.Node;
-import com.netcracker.ui.service.graf.component.TestClass;
 import com.netcracker.ui.service.graf.component.events.BasicGrafEventHandler;
 import elemental.json.JsonArray;
-import java.util.ArrayList;
 
 /**
  *
@@ -40,7 +37,7 @@ public class ClickOnNodeEvent extends BasicGrafEventHandler{
                 //Оповещение слушателей клика по конкретной ноде
                 graf.notifyClickOnConcreteNodeEventListeners(state.nodesIdClick);
                 //Оповещаю всех слушателей
-                graf.notifyClickOnNodeEventListeners();
+                graf.notifyEventListeners(graf.getClickOnNodeListeners());
             }
             else
             {

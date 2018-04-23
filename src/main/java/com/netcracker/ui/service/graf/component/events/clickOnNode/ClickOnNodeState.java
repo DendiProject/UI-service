@@ -5,11 +5,12 @@
  */
 package com.netcracker.ui.service.graf.component.events.clickOnNode;
 
+
 /**
  *
  * @author Artem
  */
-public class ClickOnNodeState {
+public class ClickOnNodeState{
     public int nodesIdClick;
     public boolean stateReady = false;
     

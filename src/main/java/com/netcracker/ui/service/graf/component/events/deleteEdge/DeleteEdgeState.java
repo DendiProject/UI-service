@@ -5,11 +5,12 @@
  */
 package com.netcracker.ui.service.graf.component.events.deleteEdge;
 
+
 /**
  *
  * @author Artem
  */
-public class DeleteEdgeState {
+public class DeleteEdgeState{
     public int deleteEdgeFrom;
     public int deleteEdgeTo;
     public boolean stateReady = false;

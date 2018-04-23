@@ -8,6 +8,7 @@ package com.netcracker.ui.service.graf.component.events.addEdge;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.graf.component.Graf;
+import com.netcracker.ui.service.graf.component.eventTypes.EventType;
 import com.netcracker.ui.service.graf.component.events.BasicGrafEventHandler;
 import elemental.json.JsonArray;
 
@@ -41,17 +42,17 @@ public class AddEdgeEvent extends BasicGrafEventHandler{
                 
                 graf.addEdge(state.newEdgesFrom, state.newEdgesTo);
                 //Вначале нужно сделать запрос на GM для проверки возможности создания связи
-                if(false)
-                {
+                if(false){
                     //Оповещаю всех слушателей
-                    graf.notifyAddEdgeEventListeners();
+                    graf.notifyEventListeners(graf.getAddEdgeListeners());
                 }
                 //Если связь нельзя создать, то она удаляется
                 //Перед созданием связи нельзя проверить ее правильность из-за
                 //особенностей работы js
-                else
-                {
-                    graf.deleteEdge(state.newEdgesFrom, state.newEdgesTo);
+                else{
+                    //Иначе запрос на удаление на js, а js через изменение 
+                    //стейта удаление связи со стороны java
+                    graf.setEvent(EventType.deleteLastEdge);
                 }
             }
             else

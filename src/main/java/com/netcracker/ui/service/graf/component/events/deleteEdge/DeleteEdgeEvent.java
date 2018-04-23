@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.graf.component.Graf;
 import com.netcracker.ui.service.graf.component.events.BasicGrafEventHandler;
-import com.netcracker.ui.service.graf.component.events.addEdge.AddEdgeState;
 import elemental.json.JsonArray;
 
 /**
@@ -41,7 +40,7 @@ public class DeleteEdgeEvent extends BasicGrafEventHandler{
             {
                 graf.deleteEdge(state.deleteEdgeFrom, state.deleteEdgeTo);
                 //Оповещаю всех слушателей
-                graf.notifyDeleteEdgeEventListeners();
+                graf.notifyEventListeners(graf.getDeleteEdgeListeners());
             }
             else
             {

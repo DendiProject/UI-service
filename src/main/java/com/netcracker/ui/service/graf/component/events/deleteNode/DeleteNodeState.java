@@ -5,11 +5,12 @@
  */
 package com.netcracker.ui.service.graf.component.events.deleteNode;
 
+
 /**
  *
  * @author Artem
  */
-public class DeleteNodeState {
+public class DeleteNodeState{
     public int deleteNodesId;
     public boolean stateReady = false;
     private int numberOfNonEmptyFeelds = 0;

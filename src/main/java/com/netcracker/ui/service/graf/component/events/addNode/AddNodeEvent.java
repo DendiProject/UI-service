@@ -43,7 +43,7 @@ public class AddNodeEvent extends BasicGrafEventHandler{
             {
                 graf.addNode(state.newNodesImage, state.newNodesLable, state.newNodesId);
                 //Оповещаю всех слушателей
-                graf.notifyAddNodeEventListeners();
+                graf.notifyEventListeners(graf.getAddNodeListeners());
             }
             else
             {

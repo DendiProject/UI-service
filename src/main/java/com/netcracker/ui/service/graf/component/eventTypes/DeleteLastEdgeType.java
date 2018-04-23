@@ -9,10 +9,11 @@ package com.netcracker.ui.service.graf.component.eventTypes;
  *
  * @author Artem
  */
-public abstract class EventType {
-    public static InitEventType init = new InitEventType();
-    public static DeleteEdgeType deleteEdge = new DeleteEdgeType();
-    public static DeleteLastEdgeType deleteLastEdge = new DeleteLastEdgeType();
+public class DeleteLastEdgeType extends EventType{
+
+    @Override
+    public String getType() {
+        return "DeleteLastEdge";
+    }
     
-    public abstract String getType();
 }

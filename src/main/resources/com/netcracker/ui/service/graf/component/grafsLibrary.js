@@ -190,13 +190,22 @@ mylibrary.MyGraf = function (element) {
         }
     }
     //Функция вызова функции удаления ноды со стороны java по двум параметрам
-    this.deleteNode= function (from, to) {
+    this.deleteLastEdge= function (from, to) {
         var firstNode = network.getConnectedEdges(from);
         var secondNode = network.getConnectedEdges(to);
         for(var i=0; i<firstNode.length; i++){
             for(var j=0; j<secondNode.length; j++){
                 if(firstNode[i] === secondNode[j]){
+                    //Синхронизация состояния
+                    returnUnswer ={
+                        deleteEdgeFrom: network.getConnectedNodes(id)[0],
+                        deleteEdgeTo: network.getConnectedNodes(id)[1]
+                    };
+                    
                     network.body.data.edges.getDataSet().remove(firstNode[i],null);
+
+                    //Обновление состояния
+                    self.click();
                     return;
                 }
             }
