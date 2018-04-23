@@ -10,9 +10,9 @@ import com.netcracker.ui.service.forms.AuthorizationForm;
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.jarektoro.responsivelayout.ResponsiveRow;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
-import com.netcracker.ui.service.components.MyTokenStore;
+import com.netcracker.ui.service.components.SecurityTokenHandler;
 import com.netcracker.ui.service.components.StartupHousekeeper;
-import com.netcracker.ui.service.content.handler.ContentManadgerController;
+import com.netcracker.ui.service.content.handler.ContentManagerController;
 import com.netcracker.ui.service.exception.ConcreteException;
 import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
@@ -67,8 +67,8 @@ import org.springframework.web.client.ResourceAccessException;
 @SpringUI
 public class UiServiceMainUI extends UI{
     
-    BeansFactory<ContentManadgerController> bfCMC = BeansFactory.getInstance();
-    ContentManadgerController contentManadgerController;
+    BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
+    ContentManagerController contentManadgerController;
 
     @Override
     protected void init(VaadinRequest vaadinRequest){
@@ -240,7 +240,7 @@ public class UiServiceMainUI extends UI{
             public void onEventClickDo() {
                 
                 try {
-                    contentManadgerController = bfCMC.getBean(ContentManadgerController.class);
+                    contentManadgerController = bfCMC.getBean(ContentManagerController.class);
                     String path = "C:\\Users\\1\\Documents\\1NETCRACKER PROJECT\\_____\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\slide1.png";
                     contentManadgerController.addImage(path);
                 } catch (FileNotFoundException ex) {

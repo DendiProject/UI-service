@@ -6,3 +6,6 @@ server:
 security:
   basic:
     enabled: false
+service:
+    id: ui
+    secret: uipass

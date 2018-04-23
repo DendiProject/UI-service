@@ -6,7 +6,7 @@
 package com.netcracker.ui.service.beans.factory;
 
 import com.netcracker.ui.service.beans.factory.basic.objects.interfaces.Product;
-import com.netcracker.ui.service.components.MyTokenStore;
+import com.netcracker.ui.service.components.SecurityTokenHandler;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
@@ -15,9 +15,9 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
  *
  * @author ArtemShevelyukhin
  */
-public class TokenStoreBean implements Product<MyTokenStore> {
+public class TokenStoreBean implements Product<SecurityTokenHandler> {
     
-    private MyTokenStore tokenStore;
+    private SecurityTokenHandler tokenStore;
 
     public TokenStoreBean() {
         setContent();
@@ -25,13 +25,13 @@ public class TokenStoreBean implements Product<MyTokenStore> {
     
     
     @Override
-    public MyTokenStore getContent() {
+    public SecurityTokenHandler getContent() {
         return tokenStore;
     }
 
     @Override
     public void setContent() {
-        MyTokenStore store = new MyTokenStore();
+        SecurityTokenHandler store = new SecurityTokenHandler();
         tokenStore = store;
     }
     

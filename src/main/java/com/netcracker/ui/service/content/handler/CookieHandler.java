@@ -7,7 +7,7 @@ package com.netcracker.ui.service.content.handler;
 
 import com.netcracker.ui.service.UserDto;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
-import com.netcracker.ui.service.components.MyTokenStore;
+import com.netcracker.ui.service.components.SecurityTokenHandler;
 import com.netcracker.ui.service.components.PostUserData;
 import com.netcracker.ui.service.forms.RegistrationForm;
 import com.vaadin.server.VaadinService;
@@ -33,14 +33,14 @@ public class CookieHandler {
 
     private JWTHandler handler = new JWTHandler();
     
-    BeansFactory<MyTokenStore> bfTK = BeansFactory.getInstance();
-    MyTokenStore tokenStore;
+    BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
+    SecurityTokenHandler tokenStore;
     
     public void guestEnter() {
         try {
             Cookie myUserCookie = getCookieByName("userInfo");
             if (myUserCookie == null) {
-                tokenStore = bfTK.getBean(MyTokenStore.class);
+                tokenStore = bfTK.getBean(SecurityTokenHandler.class);
                 String secureToken = tokenStore.getToken();
                 UserDto userInfo = new UserDto();
                 userInfo.setEmail("guest");
@@ -114,7 +114,7 @@ public class CookieHandler {
         return result;
     }
 
-    private Cookie getCookieByName(String name) {
+    public Cookie getCookieByName(String name) {
         Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
 
         for (Cookie cookie : cookies) {

@@ -7,7 +7,7 @@ package com.netcracker.ui.service.receipe.view.basic.objects;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
-import com.netcracker.ui.service.content.handler.ContentManadgerController;
+import com.netcracker.ui.service.content.handler.ContentManagerController;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.DataConverter;
@@ -26,8 +26,8 @@ public class ReceipeDataConverter implements DataConverter{
             ObjectMapper mapper = bfOM.getBean(ObjectMapper.class);
             Receipe receipe = mapper.readValue(object.toString(),Receipe.class);
             
-            BeansFactory<ContentManadgerController> bfCMC = BeansFactory.getInstance();
-            ContentManadgerController controller = bfCMC.getBean(ContentManadgerController.class);
+            BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
+            ContentManagerController controller = bfCMC.getBean(ContentManagerController.class);
             //mapper = bf.getBean(ObjectMapper.class);
             for(int i=0; i<receipe.steps.size();i++)
             {

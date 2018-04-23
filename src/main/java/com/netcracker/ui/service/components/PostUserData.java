@@ -47,12 +47,8 @@ public class PostUserData {
 
             con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
-           
-            
             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            
             con.setDoOutput(true);
-           
             
             wr = new OutputStreamWriter(con.getOutputStream());
             wr.write(gson.toJson(userDto));

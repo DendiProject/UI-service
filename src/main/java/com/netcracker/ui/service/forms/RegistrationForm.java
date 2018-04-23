@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import com.netcracker.ui.service.UserDto;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.content.handler.CookieHandler;
-import com.netcracker.ui.service.components.MyTokenStore;
+import com.netcracker.ui.service.components.SecurityTokenHandler;
 import com.netcracker.ui.service.components.PostUserData;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.vaadin.data.validator.StringLengthValidator;
@@ -52,15 +52,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class RegistrationForm extends BasicForm {
     
     
-     CookieHandler cookieHandler = new CookieHandler();
+    CookieHandler cookieHandler = new CookieHandler();
     
     TextField email = new TextField("E-mail");
     PasswordField password = new PasswordField("Пароль");
     PasswordField password2 = new PasswordField("Повторите пароль");
     Button register = new Button("Зарегистрироваться");
 
-    BeansFactory<MyTokenStore> bfTK = BeansFactory.getInstance();
-    MyTokenStore tokenStore;
+    BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
+    SecurityTokenHandler tokenStore;
 
     public RegistrationForm() {
         super();
@@ -73,7 +73,7 @@ public class RegistrationForm extends BasicForm {
             try{
             if (password.getValue().equals(password2.getValue())) {
 
-                tokenStore = bfTK.getBean(MyTokenStore.class);
+                tokenStore = bfTK.getBean(SecurityTokenHandler.class);
                 String secureToken = tokenStore.getToken();
 
                 UserDto userInfo = new UserDto();

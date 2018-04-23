@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import com.netcracker.ui.service.components.MyTokenStore;
+import com.netcracker.ui.service.components.SecurityTokenHandler;
 import com.vaadin.ui.Window;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
@@ -57,8 +57,8 @@ public class AuthorizationForm extends BasicForm {
     
     private JWTHandler handler = new JWTHandler();
 
-    BeansFactory<MyTokenStore> bfTK = BeansFactory.getInstance();
-    MyTokenStore tokenStore;
+    BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
+    SecurityTokenHandler tokenStore;
     
     
     
@@ -72,7 +72,7 @@ public class AuthorizationForm extends BasicForm {
         
         enter.addClickListener(e -> {
             try {
-                tokenStore = bfTK.getBean(MyTokenStore.class);
+                tokenStore = bfTK.getBean(SecurityTokenHandler.class);
                 UserDto userInfo = new UserDto();
                 userInfo.setEmail(email.getValue());
                 userInfo.setPassword(password.getValue());

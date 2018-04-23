@@ -6,11 +6,14 @@
 package com.netcracker.ui.service.content.handler;
 
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.components.SecurityTokenHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import java.io.File;
 import static java.io.File.separator;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.regex.Pattern;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -35,10 +38,12 @@ import org.springframework.web.util.UriComponentsBuilder;
  *
  * @author Artem
  */
-public class ContentManadgerController {
+public class ContentManagerController {
     private String connectionUrl;
+    BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
+    SecurityTokenHandler tokenStore;
     
-    public ContentManadgerController(String connectionUrl)
+    public ContentManagerController(String connectionUrl)
     {
         this.connectionUrl = connectionUrl;
         //http://localhost:8082/
@@ -51,7 +56,9 @@ public class ContentManadgerController {
     
     public String addImage(String filePath) throws NotFoundBean, FileNotFoundException, IOException{
         try
-        {
+        {   
+            tokenStore = bfTK.getBean(SecurityTokenHandler.class);
+            CookieHandler cookieHandler = new CookieHandler();
             File file = new File(filePath);
             String[] subString = filePath.split(Pattern.quote("\\"));
             subString = subString[subString.length-1].split("\\.");
@@ -72,7 +79,13 @@ public class ContentManadgerController {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Accept=application/json", MediaType.APPLICATION_JSON_VALUE);
             headers.setContentType(MediaType.APPLICATION_JSON);
-
+            headers.add("userCookie", cookieHandler.getCookieByName("userInfo").getValue());
+            headers.add("service", "ui");
+            headers.add("secureToken", tokenStore.getToken());
+            
+            System.out.println("userCookie = " + cookieHandler.getCookieByName("userInfo").getValue());
+            System.out.println("uiSecureToken = " + tokenStore.getToken());
+            
             UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(connectionUrl + "node/addnodeimg").queryParams(parameters);
 
@@ -82,26 +95,28 @@ public class ContentManadgerController {
                 HttpMethod.POST, 
                 entity, 
                 String.class);       
-
+            System.out.println("**нода успешно добавлена на UI**");
             JSONObject result = new JSONObject(response.getBody());
             String id = result.getString("id");
 
-
-
-            //Запрос на добавление картинки по id
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(connectionUrl + "file/addfile/"+id);
+            HttpPost httppost = new HttpPost(connectionUrl + "file/addfile/" + id);
             //"src\\main\\webapp\\WEB-INF\\images\\slide1.png"
             MultipartEntity mpEntity = new MultipartEntity();
             ContentBody cbFile = new FileBody(file, "multipart/form-data");
             mpEntity.addPart("file", cbFile);
             httppost.setEntity(mpEntity);
+            httppost.addHeader("userCookie", cookieHandler.getCookieByName("userInfo").getValue());
+            httppost.addHeader("service", "ui");
+            httppost.addHeader("secureToken", tokenStore.getToken());
             HttpResponse response2 = httpclient.execute(httppost);
             httpclient.getConnectionManager().shutdown();
+            System.out.println(id);
             return id;
         }
-        catch(IOException | JSONException | RestClientException ex)
+        catch(IOException ex)
         {
+            System.out.println(ex);
             return "error";
         }
     }

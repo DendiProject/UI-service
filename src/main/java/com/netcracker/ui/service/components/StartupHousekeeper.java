@@ -48,6 +48,7 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import java.util.Base64;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  *
@@ -56,65 +57,65 @@ import java.util.Base64;
 @Component
 public class StartupHousekeeper implements ApplicationListener<ContextRefreshedEvent> {
 
-    private boolean start = true;
-    
-    MyTokenStore myTokenStore;
+  @Value("${service.id}")
+  String clientId;
+  @Value("${service.secret}")
+  String clientSecret;
+  private boolean start = true;
 
-    BeansFactory<MyTokenStore> bfTK = BeansFactory.getInstance();
+  SecurityTokenHandler tokenHandler;
+  BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
 
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent e) {
-        if (start){   
-        try {
-            String client_id = "ui";
-            String client_secret = "uipass";
-            String client  = client_id + ":" + client_secret;
-            byte[] encodedBytes = Base64.getEncoder().encode(client.getBytes());   
-            String str = new String(encodedBytes, StandardCharsets.UTF_8);
-            String encoded = "Basic " + str ;
-                       
-            HttpClient httpclient = HttpClients.createDefault();
-            HttpPost httppost = new HttpPost("http://localhost:8182/oauth/token");
-            
-            
-            httppost.addHeader("Content-Type", "application/x-www-form-urlencoded");
-            httppost.addHeader("Authorization", encoded);
-            httppost.addHeader("Cache-Control", "no-cache");
-            
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("grant_type", "client_credentials"));
-            params.add(new BasicNameValuePair("scope", "read")); 
-            httppost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-            System.out.println("TOKEN");
-            HttpResponse response = httpclient.execute(httppost);            
-            HttpEntity entity = response.getEntity();
-            
-            if (entity != null) {
-                InputStream instream = entity.getContent();
-                try {                  
-                    String responseString = EntityUtils.toString(entity, "UTF-8");
-                    JSONObject jsonObj = new JSONObject(responseString);
-                    System.out.println("before get instance");
-                    myTokenStore = bfTK.getBean(MyTokenStore.class);
-                    System.out.println("after get instance");
-                    myTokenStore.setToken(jsonObj.get("access_token").toString());
-                   
-                    System.out.println("json---  " + jsonObj);
-                    System.out.println(responseString);
-                    System.out.println("TokenStore  " + myTokenStore.getToken());
-                  
-                } finally {
-                    instream.close();
-                }
-            }
-            
-        } 
-        catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-             Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
+  @Override
+  public void onApplicationEvent(ContextRefreshedEvent e) {
+    if (start) {
+      try {
+
+        String client = clientId + ":" + clientSecret;
+        byte[] encodedBytes = Base64.getEncoder().encode(client.getBytes());
+        String str = new String(encodedBytes, StandardCharsets.UTF_8);
+        String encoded = "Basic " + str;
+
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpPost httppost = new HttpPost("http://localhost:8182/oauth/token");
+
+        httppost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        httppost.addHeader("Authorization", encoded);
+        httppost.addHeader("Cache-Control", "no-cache");
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("grant_type", "client_credentials"));
+        params.add(new BasicNameValuePair("scope", "read"));
+        httppost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+        System.out.println("TOKEN");
+        HttpResponse response = httpclient.execute(httppost);
+        HttpEntity entity = response.getEntity();
+
+        if (entity != null) {
+          InputStream instream = entity.getContent();
+          try {
+            String responseString = EntityUtils.toString(entity, "UTF-8");
+            JSONObject jsonObj = new JSONObject(responseString);
+            System.out.println("before get instance");
+            tokenHandler = bfTK.getBean(SecurityTokenHandler.class);
+            System.out.println("after get instance");
+            tokenHandler.setToken(jsonObj.get("access_token").toString());
+
+            System.out.println("json---  " + jsonObj);
+            System.out.println(responseString);
+            System.out.println("TokenStore  " + tokenHandler.getToken());
+
+          } finally {
+            instream.close();
+          }
         }
-        start = false;
-     }
+
+      } catch (UnsupportedEncodingException ex) {
+        Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
+      } catch (IOException ex) {
+        Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
+      }
+      start = false;
     }
+  }
 }

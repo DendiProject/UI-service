@@ -6,15 +6,15 @@
 package com.netcracker.ui.service.beans.factory;
 
 import com.netcracker.ui.service.beans.factory.basic.objects.interfaces.Product;
-import com.netcracker.ui.service.content.handler.ContentManadgerController;
+import com.netcracker.ui.service.content.handler.ContentManagerController;
 
 /**
  *
  * @author Artem
  */
-public class ContentManadgerControllerBean implements Product<ContentManadgerController>{
+public class ContentManadgerControllerBean implements Product<ContentManagerController>{
     
-    private ContentManadgerController content;
+    private ContentManagerController content;
     
     public ContentManadgerControllerBean()
     {
@@ -23,12 +23,12 @@ public class ContentManadgerControllerBean implements Product<ContentManadgerCon
     
     @Override
     public void setContent() {
-        ContentManadgerController controller = new ContentManadgerController("http://localhost:8085/");
+        ContentManagerController controller = new ContentManagerController("http://localhost:8085/");
         content = controller;
     }
 
     @Override
-    public ContentManadgerController getContent() {
+    public ContentManagerController getContent() {
         return content;
     }
     
