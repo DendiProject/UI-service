@@ -6,8 +6,6 @@ mylibrary.MyGraf = function (element) {
     var edges = null;
     var network = null;
     var self = this; // Can't use this inside the function
-    // randomly create some nodes and edges
-    //var data = getScaleFreeNetwork(25);
     var seed = 2;
     var xClick = 0;//координаты клика по рабочему полю
     var yClick = 0;//координаты клика по рабочему полю
@@ -92,7 +90,6 @@ mylibrary.MyGraf = function (element) {
         //создал здесь, потому что это событие нельзя на значить на простые типы, вроде int и string
         network.on("click", function (params) {
             var nodesId = params["nodes"];
-            //var edgesId = params["edges"];//id связи
             xClick = params.pointer.canvas.x;//координаты клика по рабочему полю
             yClick = params.pointer.canvas.y;//координаты клика по рабочему полю
             if(nodesId > 0)
@@ -106,74 +103,22 @@ mylibrary.MyGraf = function (element) {
             }
         });
     };
-    
-    
-    
-    /*var button =document.getElementById("mynetwork"); 
-        button.onclick = function(event) 
-        {
-            var target = event.target; // где был клик?
-            var action = target.getAttribute('class');
-            //Кнопка, если последние 3 символа - Btn
-            //Для начала проверяем длинну, чтобы не вылетало исключение
-            if(action !== null && action.length>4)//название хотя бы 1 символ, 3 символа на Btn
-            {
-                //В конце каждого id кнопки должны стоять символы Btn
-                var chekBtnSymbols = action.substr((action.length-3), 3);
-                if(chekBtnSymbols === 'Btn')//Если true, то вызываем событие
-                {     
-                    //Синхронизация состояния
-                    returnUnswer ={
-                        nodesIdClick: action
-                    };
-                    //Обновление состояния
-                    self.click();
-                }
-            }
-        };*/
-    
-    
-    // Style it
-    //element.style.border = "thin solid red";
-    //element.style.display = "inline-block";
 
     // Getter and setter for the value property
     this.getCurrentData= function () {
         //Данные на стороне java парсятся автоматически
         return returnUnswer;
     };
-  
-    function clearPopUp() {
-        document.getElementById('saveButton').onclick = null;
-        document.getElementById('cancelButton').onclick = null;
-        document.getElementById('network-popUp').style.display = 'none';
-    }
-    
-    function cancelEdit(callback) {
-        clearPopUp();
-        callback(null);
-    }
 
-    /*function saveData(data,callback) {
-        data.id = document.getElementById('node-id').value;
-        data.label = document.getElementById('node-label').value;
-        data.image = document.getElementById('node-image').value;
-        data.shape = "circularImage";
-        clearPopUp();
-        callback(data);
-        event = 'DataChange';
-        self.click();
-    }*/
-    
-    var addNodeBtn = document.getElementById("networkAddNode");
-    addNodeBtn.onclick = function(event) 
-    {
+
+    //Функции для работы с графом
+    function addNode(id, label, image) {
         //Создание в правильном формате новой ноды
         var newData =  {
-            id: 767686,
-            label: "newNode",
+            id: id,
+            label: label,
             shape: "circularImage",
-            image: "https://png.icons8.com/edit-property/nolan/64",
+            image: image,
             x: xClick,
             y: yClick
         };
@@ -189,15 +134,13 @@ mylibrary.MyGraf = function (element) {
         };
         //Обновление состояния
         self.click();
-    };
-    var addEdgeBtn = document.getElementById("networkAddEdge");
-    addEdgeBtn.onclick = function(event){
-        network.addEdgeMode();
-    };
+    }
     
-    var editEdgeBtn = document.getElementById("networkEditEdge");
-    editEdgeBtn.onclick = function(event) 
-    {
+    function addEdge() {
+         network.addEdgeMode();
+    }
+    
+    function editEdge(){
         var idEdge = 0;
         if(network.getSelectedEdges().length > 0)
         {
@@ -212,11 +155,10 @@ mylibrary.MyGraf = function (element) {
             
             network.editEdgeMode();
         }
-    };
-
-    var deleteElementBtn = document.getElementById("networkDeleteElement");
-    deleteElementBtn.onclick = function(event) 
-    {
+    }
+    
+    //Функция удаления выделенного элемента
+    function deleteElement(){
         //Вначале проверка на выделение ноды, она выделяется вместе со связью
         if(network.getSelectedNodes().length > 0)
         {
@@ -246,5 +188,44 @@ mylibrary.MyGraf = function (element) {
             //Обновление состояния
             self.click();
         }
+    }
+    //Функция вызова функции удаления ноды со стороны java по двум параметрам
+    this.deleteNode= function (from, to) {
+        var firstNode = network.getConnectedEdges(from);
+        var secondNode = network.getConnectedEdges(to);
+        for(var i=0; i<firstNode.length; i++){
+            for(var j=0; j<secondNode.length; j++){
+                if(firstNode[i] === secondNode[j]){
+                    network.body.data.edges.getDataSet().remove(firstNode[i],null);
+                    return;
+                }
+            }
+        }
+    };
+    
+    
+    
+    
+    //Кнопки для вызовов функций графа со стороны js
+    var addNodeBtn = document.getElementById("networkAddNode");
+    addNodeBtn.onclick = function(event){
+        addNode(767686,"newNode","https://png.icons8.com/edit-property/nolan/64");
+    };
+     
+    var addEdgeBtn = document.getElementById("networkAddEdge");
+    addEdgeBtn.onclick = function(event){
+        addEdge();
+    };
+    
+    var editEdgeBtn = document.getElementById("networkEditEdge");
+    editEdgeBtn.onclick = function(event) 
+    {
+        editEdge();
+    };
+
+    var deleteElementBtn = document.getElementById("networkDeleteElement");
+    deleteElementBtn.onclick = function(event) 
+    {
+        deleteElement();
     };
 };

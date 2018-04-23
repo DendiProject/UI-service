@@ -5,6 +5,7 @@
  */
 package com.netcracker.ui.service.graf.component;
 
+import com.netcracker.ui.service.graf.component.eventTypes.EventType;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
@@ -28,14 +29,8 @@ import com.netcracker.ui.service.graf.component.events.editEdge.EditEdgeEventLis
  *
  * @author Artem
  */
-@JavaScript({"grafsLibrary.js", "graf-connector.js","https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js","https://cdnjs.cloudflare.com/ajax/libs/vis/4.19.1/vis.js","exampleUtil.js","http://code.jquery.com/jquery-1.9.1.js"})
+@JavaScript({"grafsLibrary.js", "graf-connector.js","https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js","https://cdnjs.cloudflare.com/ajax/libs/vis/4.19.1/vis.js","http://code.jquery.com/jquery-1.9.1.js"})
 public class Graf extends AbstractJavaScriptComponent {
-    public interface ValueChangeListener extends Serializable {
-
-        void valueChange();
-    }
-    ArrayList<ValueChangeListener> listeners
-            = new ArrayList<ValueChangeListener>();
     
     //Массивы слушателей событий
     ArrayList<ClickOnNodeEventListener> clickOnNodeListeners;
@@ -63,30 +58,24 @@ public class Graf extends AbstractJavaScriptComponent {
             @Override
             public void call(JsonArray arguments) {                 
                 firstPartCheinOfHandlersEvent.handleEvent(arguments);
-                int i=0;
             }
         });
     
         getState().nodes = new ArrayList<>();
         getState().edges = new ArrayList<>();
+        setEvent(EventType.init);
         clickOnNodeListeners = new ArrayList<>();
     }
-
-
-    public void addValueChangeListener(
-            ValueChangeListener listener) {
-        listeners.add(listener);
+    
+    //Установка флага события, он обрабатывается и затем сбрасывается 
+    //на строне js
+    public void setEvent(EventType event)
+    {
+        getState().event = event.getType();
     }
     
-    
-    public void setValue(TestClass newData) {
-        getState().nodesId = newData.nodesId;
-        getState().event = newData.event;
-        getState().nodes = newData.getNodes();
-        getState().edges = newData.edges;
-    }
-    
-    
+    //Добавление ноды с обработчиком клика, вызывается
+    //через изменение стейта со стороны js
     public void addNode(String newNodesimageUrl, String newNodesLabel, 
             int newNodesId, HandlerForClickingTheNode handler) {
         Node node = new Node(newNodesimageUrl, newNodesId, newNodesLabel);
@@ -94,18 +83,21 @@ public class Graf extends AbstractJavaScriptComponent {
         getState().nodes.add(node);
     }
     
+    //Добавление ноды, вызывается через изменение стейта со стороны js
     public void addNode(String newNodesimageUrl, String newNodesLabel, 
             int newNodesId) {
         Node node = new Node(newNodesimageUrl, newNodesId, newNodesLabel);
         getState().nodes.add(node);
     }
     
+    //Добавление связи, вызывается через изменение стейта со стороны js
     public void addEdge(int idNodesConnectedFrom, 
             int idNodesConnectedTo) {
         Edge nodeConnection = new Edge(idNodesConnectedFrom, idNodesConnectedTo);
         getState().edges.add(nodeConnection);
     }
     
+    //Редактирование связи, вызывается через изменение стейта со стороны js
     public void editEdge(int editableEdgesOldIdFrom, int editableEdgesOldIdTo, 
             int editableEdgesNewIdFrom, int editableEdgesNewIdTo){
         for(int i = 0; i< getState().edges.size();i++)
@@ -120,6 +112,7 @@ public class Graf extends AbstractJavaScriptComponent {
         }
     }
     
+    //Удаление связи, вызывается через изменение стейта со стороны js
     public void deleteEdge(int deleteEdgeFrom, int deleteEdgeTo){
         for(int i = 0; i< getState().edges.size();i++)
         {
@@ -127,11 +120,13 @@ public class Graf extends AbstractJavaScriptComponent {
                     getState().edges.get(i).getTo() == deleteEdgeTo)
             {
                 getState().edges.remove(i);
+                setEvent(EventType.deleteEdge);
                 break;
             }
         }
     }
     
+    //Удаление ноды, вызывается через изменение стейта со стороны js
     public void deleteNode(int deleteNodesId){
         for(int i = 0; i< getState().nodes.size();i++)
         {
@@ -155,18 +150,11 @@ public class Graf extends AbstractJavaScriptComponent {
         getState().nodes = nodesCollection;
     }
     
-    
-    public ArrayList<Node> getNodesCollection()
-    {
-        return getState().nodes;
-    }
-    
-    
-    public void setNodesConnections(ArrayList<Edge> nodesConnections) {
+    public void setEdgesCollection(ArrayList<Edge> nodesConnections) {
         getState().edges = nodesConnections;
     }
     
-    
+    //Установка обработчика события клика по ноде на созданную ранее ноду
     public void setHandlerForClickingTheNode(int nodesId,
             HandlerForClickingTheNode handler) {
         for(int i=0; i<getState().nodes.size(); i++)
@@ -184,12 +172,12 @@ public class Graf extends AbstractJavaScriptComponent {
         }
     }
     
-    
+    //Добавление обработчика события клика по любой ноде
     public void addHandlerForClickingOnNode(ClickOnNodeEventListener handler) {
         clickOnNodeListeners.add(handler);
     }
     
-    
+    //Вызов соответствующих функций у слушателей события ClickOnNode
     public void notifyClickOnNodeEventListeners()
     {
         for(int i=0; i<clickOnNodeListeners.size(); i++)
@@ -198,6 +186,26 @@ public class Graf extends AbstractJavaScriptComponent {
         }
     }
     
+    //Вызов соответствующих функций у слушателей события ClickOnNode по 
+    //конкретной ноде
+    public void notifyClickOnConcreteNodeEventListeners(int nodesIdClick)
+    {
+        //Если существует обработчик, который создан для 
+        //этой ноды, то вызов его
+        for(int i=0; i<getState().nodes.size(); i++)
+        {
+            if(getState().nodes.get(i).getId() == nodesIdClick)
+            {        
+                if(getState().nodes.get(i).checkHandlerState())
+                {
+                    getState().nodes.get(i).onEventClickDo();
+                }
+                break;
+            }
+        }
+    }
+    
+    //Вызов соответствующих функций у слушателей события AddNode
     public void notifyAddNodeEventListeners()
     { 
         for(int i=0; i<addNodeListeners.size(); i++)
@@ -206,6 +214,7 @@ public class Graf extends AbstractJavaScriptComponent {
         }
     }
     
+    //Вызов соответствующих функций у слушателей события AddEdge
     public void notifyAddEdgeEventListeners()
     { 
         for(int i=0; i<addEdgeListeners.size(); i++)
@@ -214,6 +223,7 @@ public class Graf extends AbstractJavaScriptComponent {
         }
     }
     
+    //Вызов соответствующих функций у слушателей события EditEdge
     public void notifyEditEdgeEventListeners()
     { 
         for(int i=0; i<editEdgeListeners.size(); i++)
@@ -222,6 +232,7 @@ public class Graf extends AbstractJavaScriptComponent {
         }
     }
     
+    //Вызов соответствующих функций у слушателей события DeleteEdge
     public void notifyDeleteEdgeEventListeners()
     { 
         for(int i=0; i<deleteEdgeListeners.size(); i++)
@@ -230,6 +241,7 @@ public class Graf extends AbstractJavaScriptComponent {
         }
     }
     
+    //Вызов соответствующих функций у слушателей события DeleteNode
     public void notifyDeleteNodeEventListeners()
     { 
         for(int i=0; i<deleteNodeListeners.size(); i++)

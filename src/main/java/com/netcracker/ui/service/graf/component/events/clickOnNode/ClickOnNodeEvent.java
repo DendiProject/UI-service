@@ -37,21 +37,8 @@ public class ClickOnNodeEvent extends BasicGrafEventHandler{
 
             if(state.stateReady)
             {
-                ArrayList<Node> nodes = graf.getNodesCollection();
-
-                //Если существует обработчик, который создан для 
-                //этой ноды, то вызов его
-                for(int i=0; i<nodes.size(); i++)
-                {
-                    if(nodes.get(i).getId() == state.nodesIdClick)
-                    {        
-                        if(nodes.get(i).checkHandlerState())
-                        {
-                            nodes.get(i).onEventClickDo();
-                        }
-                        break;
-                    }
-                }
+                //Оповещение слушателей клика по конкретной ноде
+                graf.notifyClickOnConcreteNodeEventListeners(state.nodesIdClick);
                 //Оповещаю всех слушателей
                 graf.notifyClickOnNodeEventListeners();
             }

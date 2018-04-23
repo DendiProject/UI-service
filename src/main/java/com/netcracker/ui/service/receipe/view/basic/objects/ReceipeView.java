@@ -54,7 +54,7 @@ public class ReceipeView implements View{
         
         graf = new Graf();
         graf.setNodesCollection(receipe.steps);
-        graf.setNodesConnections(receipe.stepsConnections);
+        graf.setEdgesCollection(receipe.stepsConnections);
         ShortViewOfReceipeLayout.addComponent(graf,"panelWithGraf");
         //Пример добавления слушателя на клик по ЛЮБОЙ ноде
         /*graf.addHandlerForClickingOnNode(new ClickOnNodeEventListener() {
