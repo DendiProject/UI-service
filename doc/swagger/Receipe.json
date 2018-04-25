@@ -1,0 +1,241 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is an example of a data model for displaying a short recipe view.",
+    "version": "1.0.0",
+    "title": "ShortViewOfReceipe",
+    "contact": {
+      "email": "liza.gorovets@yandex.ru"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/v1",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/Receipe": {
+      "post": {
+        "description": "Add a new receipe",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "Receipe",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Receipe"
+            }
+          }
+        ],
+        "tags": [
+          "Receipe"
+        ],
+        "responses": {
+          "201": {
+            "description": "Returns the newly-added receipe",
+            "schema": {
+              "$ref": "#/definitions/Receipe"
+            },
+            "headers": {
+              "Location": {
+                "type": "string",
+                "description": "The URL of the newly-added receipe"
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "Display shortViewOfReceipe of the recipe with all parameters",
+        "parameters": [
+          {
+            "name": "receipeId",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Receipe"
+        ],
+        "responses": {
+          "200": {
+            "description": "Name and steps of receipe",
+            "schema": {
+              "$ref": "#/definitions/Receipe"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete receipe  with all parameters",
+        "parameters": [
+          {
+            "name": "receipeId",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Receipe"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/Receipe"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Modified receipe  with all parameters",
+        "parameters": [
+          {
+            "name": "Receipe",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Receipe"
+            }
+          }
+        ],
+        "tags": [
+          "Receipe"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/ListOfReceipes": {
+      "get": {
+        "description": "Display list of all receipes",
+        "parameters": [
+          {
+            "name": "tags",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true,
+            "collectionFormat": "csv"
+          }
+        ],
+        "tags": [
+          "ListOfTheReceipes"
+        ],
+        "responses": {
+          "200": {
+            "description": "Name and steps of receipe",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Receipe"
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Step": {
+      "type": "object",
+      "properties": {
+        "step_number": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number os step."
+        },
+        "destription": {
+          "type": "string",
+          "description": "Recipe step description."
+        },
+        "image_id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Image ID of step."
+        }
+      }
+    },
+    "Receipe": {
+      "type": "object",
+      "properties": {
+        "receipe_id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Unique identifier representing a specific receipe."
+        },
+        "receipe_name": {
+          "type": "string",
+          "description": "The name of receipe."
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Step"
+          }
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

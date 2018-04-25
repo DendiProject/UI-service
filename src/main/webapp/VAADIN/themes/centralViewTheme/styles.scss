@@ -1,5 +1,6 @@
 @import "../valo/valo.scss";
 @import "../vaadinwindow/styles.scss";
+@import "../shortViewOfRecipeTheme/styles.scss";
 
 @mixin centralViewTheme 
 {
@@ -9,36 +10,78 @@
     article, aside, details, figcaption, figure, 
     footer, header, hgroup, menu, nav, section 
     {
-            display: block;
+        display: block;
     }
     body 
     {
-            line-height: 1;
+        line-height: 1;
     }
     ol, ul 
     {
-            list-style: none;
+        list-style: none;
     }
     blockquote, q 
     {
-            quotes: none;
+        quotes: none;
     }
     blockquote:before, blockquote:after,
     q:before, q:after 
     {
-            content: '';
-            content: none;
+        content: '';
+        content: none;
     }
     table 
     {
-            border-collapse: collapse;
-            border-spacing: 0;
+        border-collapse: collapse;
+        border-spacing: 0;
     }
+    
+     /* Страница пользоватедя */
+   #userPicture{
+        width: 250px;
+        height: 250px;
+
+    }
+    #leftBlock{
+        float: left;
+        width: 25%
+    }
+    #mainBlock{
+        float: left;
+        margin-left: 50px;
+
+    }
+    #userPage{
+        margin: 2%;
+    }
+    .first-raw, .second-raw{
+        display: flex;
+        justify-content: center;
+    }
+    .input_fields{
+        margin-left: 10px;
+        margin-right: 10px;
+
+    }
+    button{
+        margin: 1%;
+        height: 1%;
+        width: 250px;
+    }
+    #save{
+        background-color: #00CED1;
+    }
+
+    #userinfo{
+        width: 600px;
+        height: 200px;
+    }
+
+
 
     /* Common */
     html, body 
     {
-            background:#eaeaea url(../img/bg.png) repeat;
             font-size:12px;
             font-family:"Open Sans", serif;
             min-width:960px;
@@ -91,7 +134,7 @@
     {
             -moz-animation:cycle 25s linear infinite;	
             -webkit-animation:cycle 25s linear infinite;
-            background: url(http://www.htmldrive.net/edit_media/2012/201205/20120529/CSS3-Slider/images/img_1.jpg);
+            //background: url(http://localhost:8081/images/2be975bc-7d92-4a42-b686-527a5cd6c950);
             webkit-background-size: cover; 
             moz-background-size: cover; 
             o-background-size: cover; 
@@ -102,7 +145,6 @@
     {
             -moz-animation:cycletwo 25s linear infinite;
             -webkit-animation:cycletwo 25s linear infinite;
-            background: url(http://www.htmldrive.net/edit_media/2012/201205/20120529/CSS3-Slider/images/img_2.jpg);
             webkit-background-size: cover; 
             moz-background-size: cover; 
             o-background-size: cover; 
@@ -113,7 +155,7 @@
     {
             -moz-animation:cyclethree 25s linear infinite;
             -webkit-animation:cyclethree 25s linear infinite;
-            background: url(http://www.htmldrive.net/edit_media/2012/201205/20120529/CSS3-Slider/images/img_3.jpg);
+            //background: url(http://localhost:8081/images/f7ffca16-f6c9-429e-a197-8d7d5c1b3828);
             webkit-background-size: cover; 
             moz-background-size: cover; 
             o-background-size: cover; 
@@ -124,7 +166,7 @@
     {
             -moz-animation:cyclefour 25s linear infinite;
             -webkit-animation:cyclefour 25s linear infinite;
-            background: url(http://www.htmldrive.net/edit_media/2012/201205/20120529/CSS3-Slider/images/img_4.jpg);
+            //background: url(http://localhost:8081/images/2be975bc-7d92-4a42-b686-527a5cd6c950);
             webkit-background-size: cover; 
             moz-background-size: cover; 
             o-background-size: cover; 
@@ -135,7 +177,7 @@
     {
             -moz-animation:cyclefive 25s linear infinite;
             -webkit-animation:cyclefive 25s linear infinite;
-            background: url(http://www.htmldrive.net/edit_media/2012/201205/20120529/CSS3-Slider/images/img_5.jpg);
+            //background: url(http://localhost:8081/images/75b6f221-8adc-4464-b430-345ea7201224);
             webkit-background-size: cover; 
             moz-background-size: cover; 
             o-background-size: cover; 
@@ -330,8 +372,6 @@
         
         
         //border: 1px solid black; 
-        position: absolute;
-        margin-top: -25px;
         height:7%;
         width:15%;
     }
@@ -371,27 +411,10 @@
 
 
         //border: 1px solid black;
-        position: absolute;
-        width:83.3%;
-    }
-    .search_recipes_button_div
-    {
-        display: -webkit-flex; 
-        display: flex;
-        justify-content: center;
-        flex-direction: row;
-        align-items: center;
-
-
-        //border: 1px solid red;
-        position: absolute;
-        right:0%;
-        top: 0px;
-        height:100%;
-        width:40%;
+        width:100%;
     }
     
-    
+    /*
     @media (min-width: 992px) and (max-width: 1200px)
     {
         input 
@@ -464,6 +487,6 @@
         {
             height:5.5%;
         }
-    }
+    }*/
 }
 @include centralViewTheme;

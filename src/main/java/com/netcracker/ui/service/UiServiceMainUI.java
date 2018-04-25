@@ -5,16 +5,34 @@
  */
 package com.netcracker.ui.service;
 
+import com.netcracker.ui.service.forms.RegistrationForm;
+import com.netcracker.ui.service.forms.AuthorizationForm;
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.jarektoro.responsivelayout.ResponsiveRow;
+import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.components.SecurityTokenHandler;
+import com.netcracker.ui.service.components.StartupHousekeeper;
+import com.netcracker.ui.service.content.handler.ContentManagerController;
+import com.netcracker.ui.service.exception.ConcreteException;
+import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
+import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
+import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
+import com.netcracker.ui.service.exception.receipe.view.ShortViewException;
 import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
 import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.netcracker.ui.service.navigator.Navigator;
 import com.netcracker.ui.service.navigator.View;
+import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeDataConverter;
+import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
+import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeStore;
+import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.Page;
+import com.vaadin.server.Page.Styles;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringUI;
@@ -22,11 +40,26 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import java.io.File;
 import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Upload;
+import java.awt.FileDialog;
+import java.awt.Frame;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.web.client.ResourceAccessException;
 
 /**
  *
@@ -34,24 +67,20 @@ import org.slf4j.LoggerFactory;
  */
 @Theme("centralViewTheme")
 @SpringUI
-public class UiServiceMainUI extends UI {
+public class UiServiceMainUI extends UI{
     
-    private ResponsiveLayout contentRowLayout;
-    private Navigator navigator;
-    
+    BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
+    ContentManagerController contentManadgerController;
+
     @Override
     protected void init(VaadinRequest vaadinRequest){
         try
-        {
-            contentRowLayout = createMainLayout();
-            reDraw("Main");
+        { 
+            createMainLayout();     
         }
-        catch(Exception ex)
+        catch(Exception exception)
         {
-            Logger logger = LoggerFactory.getLogger(UiServiceMainUI.class);
-            logger.info("This is an information message");
-            logger.error("this is a error message");
-            logger.warn("this is a warning message");
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
     }
     
@@ -61,9 +90,68 @@ public class UiServiceMainUI extends UI {
         BasicLayoutCreator mainLayer;
         mainLayer = new BasicLayoutCreator();
         ResponsiveLayout mainLayout = mainLayer.mainLayout;
+        mainLayout.setStyleName("teststyle");
+        
         mainLayout.setSizeFull();
-        mainLayout.setHeight("330%");
         setContent(mainLayout);
+        
+        //Создание и добавление видов в навигатор
+        ArrayList<View> newViews = new ArrayList<>();
+        
+        newViews.add(new View("Main") {
+            @Override
+            public void draw() {
+                mainLayer.contentRowLayout.removeAllComponents();
+                addSliderComponent(mainLayer.contentRowLayout);
+                addTopRecepiesComponent(mainLayer.contentRowLayout);
+            }
+        });
+
+        newViews.add(new View("Recept") {
+            @Override
+            public void draw() {               
+                MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+                parameters.add("receipe_id", "1"); 
+                ReceipeProxy proxy = new ReceipeProxy();
+                proxy.setConfig("http://localhost:8081/receipes/", parameters);
+
+                ReceipeDataConverter converter = new ReceipeDataConverter();
+                ReceipeStore store = new ReceipeStore(converter);
+
+                ReceipeView view = new ReceipeView(proxy, store);
+                try
+                {
+                    view.reload();
+                    mainLayer.contentRowLayout.removeAllComponents();
+                    mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
+                }
+                catch(Exception exception)
+                {
+                    ExceptionHandler.getInstance().runExceptionhandling(exception);
+                }
+            }
+        });
+        
+        newViews.add(new View("Search") {
+            @Override
+            public void draw() {
+                mainLayer.contentRowLayout.removeAllComponents();
+                mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Рецепты, удовлетворяющие условию поиска:"));
+            }
+        });
+        
+        newViews.add(new View("UserPage") {
+           @Override
+            public void draw() {
+                mainLayer.contentRowLayout.removeAllComponents();
+                addUserPageComponent(mainLayer.contentRowLayout);
+                
+            }
+        });
+        
+        Navigator navigator = new Navigator(getPage(),newViews);
+        
+        
         //Создаем подпункты меню
         ArrayList<MenusButton> mainSubMenus = new ArrayList<>();
         mainSubMenus.add(new MenusButton("Подпункт1","idsubMain1", new HandlerForClickingTheButton(){
@@ -83,7 +171,7 @@ public class UiServiceMainUI extends UI {
         MenusButton mainBtn = new MenusButton("Главная","idMain", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                reDraw("Main");
+                navigator.navigateTo("Main");
             }
             
         },mainSubMenus);
@@ -93,7 +181,7 @@ public class UiServiceMainUI extends UI {
         MenusButton recepsBtn = new MenusButton("Рецепты","idRecept", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                reDraw("Recept");
+                navigator.navigateTo("Recept");
             }
             
         });
@@ -101,12 +189,37 @@ public class UiServiceMainUI extends UI {
         MenusSearchBar search = new MenusSearchBar("idSearch", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                reDraw("Search");
+                navigator.navigateTo("Search");
             }
             
         });
         
-        MenusButton inBtn = new MenusButton("Вход","idIn", new  HandlerForClickingTheButton(){
+        MenusButton addIngredient = new MenusButton("Загрузить картинку", "idconfigIngredient", new  HandlerForClickingTheButton(){
+            @Override
+            public void onEventClickDo() {
+                
+                try {
+                    contentManadgerController = bfCMC.getBean(ContentManagerController.class);
+                    String path = "D:\\Files\\NetCracker\\GitHab\\merge\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\1.jpg";
+                    contentManadgerController.addImage(path);
+                    path = "D:\\Files\\NetCracker\\GitHab\\merge\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\s1.jpg";
+                    contentManadgerController.addImage(path);
+                    path = "D:\\Files\\NetCracker\\GitHab\\merge\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\s2.jpg";
+                    contentManadgerController.addImage(path);
+                    path = "D:\\Files\\NetCracker\\GitHab\\merge\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\s3.jpg";
+                    contentManadgerController.addImage(path);
+                } catch (FileNotFoundException ex) {
+                    java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                System.out.print("we");
+            }
+
+        });
+        
+        MenusButton registration = new MenusButton("Регистрация", "idregistration", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
                 RegistrationForm modalWindow = new RegistrationForm();
@@ -115,39 +228,32 @@ public class UiServiceMainUI extends UI {
 
         });
         
+        MenusButton signIn = new MenusButton("Войти", "idSignin", new  HandlerForClickingTheButton(){
+            @Override
+            public void onEventClickDo() {
+                AuthorizationForm modalWindow = new AuthorizationForm();
+                addWindow(modalWindow);
+            }
+
+        });
+        
+        MenusButton userPageBtn = new MenusButton("Профиль","iduserPage", new  HandlerForClickingTheButton(){
+            @Override
+            public void onEventClickDo() {
+               navigator.navigateTo("UserPage");
+            }
+
+        });
+        
         mainLayer.menu.addItem(mainBtn);
         mainLayer.menu.addItem(recepsBtn);
         mainLayer.menu.addItem(search);
-        mainLayer.menu.addItem(inBtn);
+        mainLayer.menu.addItem(addIngredient);
+        mainLayer.menu.addItem(registration);
+        mainLayer.menu.addItem(signIn);
+        //mainLayer.menu.addItem(userPageBtn);
         
-        //Создание и добавление видов в навигатор
-        navigator = new Navigator();
-        navigator.Views.add(new View("Main") {
-            @Override
-            public void draw() {
-                contentRowLayout.removeAllComponents();
-                addSliderComponent(contentRowLayout);
-                addTopRecepiesComponent(contentRowLayout);
-            }
-        });
-
-        navigator.Views.add(new View("Recept") {
-            @Override
-            public void draw() {
-                contentRowLayout.removeAllComponents();
-                contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Вы перешли на страницу с рецептами"));
-            }
-        });
         
-        navigator.Views.add(new View("Search") {
-            @Override
-            public void draw() {
-                contentRowLayout.removeAllComponents();
-                contentRowLayout.removeAllComponents();
-                contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Рецепты, удовлетворяющие условию поиска:"));
-            }
-        });
-
         return mainLayer.contentRowLayout;
     }
     
@@ -166,8 +272,6 @@ public class UiServiceMainUI extends UI {
         ResponsiveRow recipeTitle = contentRowLayout.addRow();
         CustomLayout  topRecipeTitleLayout = new CustomLayout("TopRecipeTitle");
         recipeTitle.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(topRecipeTitleLayout);
-        Button searchRecipesButton = new Button("Найти нужный рецепт");
-        topRecipeTitleLayout.addComponent(searchRecipesButton,"search_recipes_button");
         //Здесь можно разместить добавление рецептов либо фиксированно, например, топ 5, или
         //Задать количество по какому-либо другому параметру, например, по нажатию кнопки добавлять
         //еще несколько к имеющемуся списку
@@ -209,8 +313,15 @@ public class UiServiceMainUI extends UI {
         theDistanceBetweenBottomAndRecipes.addColumn().withDisplayRules(12, 12, 12, 12);
     }
     
-    public void reDraw(String viewsName)
-    {
-        navigator.drawView(viewsName);
+     private void addUserPageComponent(ResponsiveLayout contentRowLayout){
+        
+        ResponsiveRow sliderRow = contentRowLayout.addRow();
+        
+        CustomLayout userPage = new CustomLayout("UserPageLayout");
+        
+        sliderRow.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(userPage);
     }
+     
+    
+  
 }

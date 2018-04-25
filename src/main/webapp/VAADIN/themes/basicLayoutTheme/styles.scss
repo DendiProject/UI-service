@@ -7,54 +7,42 @@
     /*Общие стили*/
     .v-app 
     {
-        background: url(https://look.com.ua/pic/201209/1680x1050/look.com.ua-14073.jpg);
         webkit-background-size: cover; 
         moz-background-size: cover; 
         o-background-size: cover; 
         background-size: 100% 100%;
         background-repeat: no-repeat;
     }
-    .backgroundContentRow
-    {
-        background-color: white;
-        width: 100%;
-    }
     .main_layout
     {		
-        margin:0px auto 90px auto;
-        width: 1200px;
+        margin:-25px auto 0px auto;
+        width: 80%;
+        height: 100%;
+
+        display: -webkit-flex; 
+        display: flex;
+        flex-direction:column;
+        justify-content: space-between;
+        align-items:center;
+        //border: solid 5px red;
     }
     .navigate_row
     {
-        width: inherit;
         background-color: white;
-        position: fixed;
-        z-index: 9999;
-        height: 100px;
-        top: 0px;
-        
-        display: -webkit-flex; 
-        display: flex;
-        justify-content: space-between;
-        align-items:center;
+        height: 20%;
+        width: 100%;
+        //border: solid 5px green;
     }
     .content_row
     {
         width: 100%;
-        margin-top: 91px;
         background-color: white;
+        overflow-y: auto;
+        //border: solid 5px blue;
     }
-    .left_allign_navigate_row_components
+    .allign_navigate_row_components
     {
         width: 100%;
-        display: -webkit-flex; 
-        display: flex;
-        justify-content: space-around;
-        align-items:center;
-    }
-    .right_allign_navigate_row_components
-    {
-        width: 37%;
         display: -webkit-flex; 
         display: flex;
         justify-content: space-around;
@@ -71,14 +59,14 @@
     
     /* Стили строки поиска */
     * {box-sizing: border-box;}
-    form 
+    .navigate_row form 
     {
         width: auto;
         height: 50px;
         float: right;
         margin-right: 30px;
     }
-    input 
+    .navigate_row input 
     {
         width: 250px;
         height: 42px;
@@ -90,21 +78,21 @@
         transition: .3s linear;
         top: 6px;
     }
-    input:focus 
+    .navigate_row input:focus 
     {
         width: 280px;
     }
-    button 
+    .navigate_row .buttonSearch 
     {
         width: 42px;
         height: 42px;
         background: none;
         border: none;
         position: absolute;
-        top: 4px;
-        right: 25px;
+        top: 17px;
+        right: 20px;
     }
-    button:before
+    .navigate_row .buttonSearch:before
     {
         content: "\f002";
         font-family: FontAwesome;
@@ -158,6 +146,7 @@
     }
     #colorNav li ul li{
             background-color:#313131;
+            z-index: 9999;
     }
 
     #colorNav li ul li a{
@@ -210,8 +199,9 @@
     
     
     
+    /*
     
-    /*Медиа-запросы*/
+    
     @media (min-width: 992px) and (max-width: 1200px)
     {
         input 
@@ -274,6 +264,6 @@
         {
             width: 82.6%;
         }
-    }
+    }*/
 }
 @include basicLayoutTheme;

@@ -16,7 +16,7 @@ public class MenusSearchBar extends MenusItem
     public MenusSearchBar(String id, HandlerForClickingTheButton handler){
         setHandlerForClickingTheButton(handler);
         this.id = id;
-        String template = "<div><nav id='colorNav'><ul><li><form><input type='text' placeholder='Искать здесь...'><button type='submit' id='"+id+"Btn'></button></form></li></ul></nav></div></div>";
+        String template = "<div><nav id='colorNav'><ul><li><form><input type='text' placeholder='Искать здесь...'><div class='buttonSearch' id='"+id+"Btn'></div></form></li></ul></nav></div></div>";
         setTemplateContents(template);
     }
 }

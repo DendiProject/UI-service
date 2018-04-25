@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * Используется для взаимодействия с js
  * @author Artem
  */
-@JavaScript({"mylibrary.js", "mycomponent-connector.js"})
+@JavaScript({"menusLibrary.js", "menu-connector.js"})
 public class EventHandlerOfTheMenu extends AbstractJavaScriptComponent{
 
     public interface ValueChangeListener extends Serializable{

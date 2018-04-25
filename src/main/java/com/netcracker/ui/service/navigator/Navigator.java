@@ -5,6 +5,10 @@
  */
 package com.netcracker.ui.service.navigator;
 
+
+import com.netcracker.ui.service.content.handler.CookieHandler;
+import com.vaadin.server.Page;
+import com.vaadin.ui.Notification;
 import java.util.ArrayList;
 
 /**
@@ -12,21 +16,68 @@ import java.util.ArrayList;
  * @author Artem
  */
 public class Navigator {
-    public ArrayList<View> Views;
-    
+    private ArrayList<View> views;
+    Page currentPage;
+    String newCurrentPage;
     public Navigator()
     {
-        Views = new ArrayList<View>();
+        
+    }
+    public Navigator(Page newcurrentPage, ArrayList<View> newViews)
+    {
+        views = newViews;
+        currentPage = newcurrentPage;
+        
+        String currentPath = currentPage.getUriFragment();
+        if(views.size()>0)
+        {
+            drawView(currentPath);
+        }
+        else
+        {
+            Notification.show("Пустой набор видов");
+        }
+        
+        currentPage.addUriFragmentChangedListener(
+            new Page.UriFragmentChangedListener() {
+                public void uriFragmentChanged(
+                    Page.UriFragmentChangedEvent source) {
+                        drawView(newCurrentPage);
+                }
+            });
     }
     
-    public void drawView(String viewsName)
+    private void drawView(String viewsName)
     {
-        for(int i=0; i<Views.size(); i++)
+        if(views.size()>0)
         {
-            if(Views.get(i).name.equals(viewsName))
+            //Если путо, то отобразить дефолтный вид (считаю дефолтным первый вид)
+            if(viewsName == null || viewsName.equals(""))
             {
-                Views.get(i).draw();
+                viewsName = views.get(0).name;
+                CookieHandler ch = new CookieHandler();
+                ch.guestEnter();
             }
         }
+        
+        for(int i=0; i<views.size(); i++)
+        {
+            if(views.get(i).name.equals(viewsName))
+            {
+                views.get(i).draw();
+                break;
+            }
+        }
+    }
+    
+    public void addView(View view)
+    {
+        views.add(view);
+    }
+    
+    public void navigateTo(String path)
+    {
+        newCurrentPage = path;
+        currentPage.setUriFragment(path);
     }
 }

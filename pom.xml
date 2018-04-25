@@ -5,7 +5,6 @@
     <artifactId>ui-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>ui-service</name>
     <description>Dendi Project ui-service</description>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -92,8 +91,75 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.5</version>
-        </dependency>   
+        </dependency>
+        <dependency>
+            <groupId>org.vaadin.addon</groupId>
+            <artifactId>visjs-addon</artifactId>
+            <version>2.0.0.3</version>
+            <type>jar</type>
+        </dependency>	
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+            <version>1.4.2.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20140107</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.9</version>
+        </dependency>
+        <dependency>  
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>4.3.13.RELEASE</version>
+              <scope>test</scope>
+              <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.5.2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>2.0.14.RELEASE</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>javax.ejb</groupId>
+            <artifactId>javax.ejb-api</artifactId>
+            <version>3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-spring</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.vaadin.addons</groupId>
+            <artifactId>cssinject</artifactId>
+            <version>2.0.3</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
+    
     <repositories>
         <repository>
             <id>vaadin-addons</id>
@@ -126,6 +192,8 @@
                         <goals>
                             <goal>update-theme</goal>
                             <goal>compile-theme</goal>
+                            <goal>update-widgetset</goal>
+                            <goal>compile</goal>
                             <!--
                             <goal>clean</goal>
                             <goal>resources</goal>
@@ -159,6 +227,7 @@
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
+                <version>2.2.4</version>
                 <configuration>
                     <verbose>true</verbose>
                     <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
@@ -171,7 +240,7 @@
                     </excludeProperties>
                 </configuration>
             </plugin>
-			<plugin>
+            <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>${asciidoctor.maven.plugin.version}</version>
@@ -232,28 +301,28 @@
                             </attributes>
                         </configuration>
                     </execution>
-					<execution>
-								    <id>asciidoc-to-html</id>
-								    <phase>generate-resources</phase>
-								    <goals>
-										<goal>process-asciidoc</goal>
-								    </goals>
-								    <configuration>
-                            	    	<backend>html5</backend>
-                            			<sourceHighlighter>coderay</sourceHighlighter>
-										<attributes>
-			                                <linkcss>true</linkcss>
-			                                <imagesdir>./images</imagesdir>
-											<toc>left</toc>
-			                                <icons>font</icons>
-			                                <sectanchors>true</sectanchors>
-			                                <!-- set the idprefix to blank -->
-			                                <idprefix/>
-			                                <idseparator>-</idseparator>
-			                                <docinfo1>true</docinfo1>
-			                            </attributes>
-									</configuration>
-							    </execution>
+                    <execution>
+                        <id>asciidoc-to-html</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>html5</backend>
+                            <sourceHighlighter>coderay</sourceHighlighter>
+                            <attributes>
+                                <linkcss>true</linkcss>
+                                <imagesdir>./images</imagesdir>
+                                <toc>left</toc>
+                                <icons>font</icons>
+                                <sectanchors>true</sectanchors>
+                                <!-- set the idprefix to blank -->
+                                <idprefix/>
+                                <idseparator>-</idseparator>
+                                <docinfo1>true</docinfo1>
+                            </attributes>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

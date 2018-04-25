@@ -3,3 +3,17 @@ spring:
     name: user-service
 server:
     port: 8081
+security:
+  basic:
+    enabled: false
+service:
+    id: ui
+    secret: uipass
+zuul:
+    routes:
+      images:
+        path: /images/**
+        url: http://localhost:8082/file/getfile/
+      receipes:
+        path: /receipes/**
+        url: http://localhost:8083/v1/Receipe/

@@ -26,8 +26,8 @@ public class Menu extends CustomLayout{
     public Menu(){
         EventHandlerOfTheMenu eventHandlerOfTheMenu = new EventHandlerOfTheMenu();
         menusItems = new ArrayList<MenusItem>();
-        //Создал основной шаблон, пока это выравнивание по левому краю на всю ширину с равномерным распределением
-        setTemplateContents("<div class='left_allign_navigate_row_components' id='left_allign_navigate_row_components'></div>");
+        //Создал основной шаблон
+        setTemplateContents("<div class='allign_navigate_row_components' id='allign_navigate_row_components'></div>");
         this.addComponent(eventHandlerOfTheMenu);
         
         //Добавление обработчика событий нажатия на клавиши меню
