@@ -76,12 +76,9 @@ public class UiServiceMainUI extends UI{
         { 
             createMainLayout();        
         }
-        catch(Exception ex)
+        catch(Exception exception)
         {
-            Logger logger = LoggerFactory.getLogger(UiServiceMainUI.class);
-            logger.info("This is an information message");
-            logger.error("this is a error message");
-            logger.warn("this is a warning message");
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
     }
     
@@ -108,53 +105,11 @@ public class UiServiceMainUI extends UI{
 
         newViews.add(new View("Recept") {
             @Override
-            public void draw() {
-                //Далее код, в котором могут вылететь исключения: 
-                //ConnectionErrorException,ConvertDataException,
-                //ShortViewException,ResourceAccessException
-                //имеет смысл создать соответсвующие обработчики
-                ExceptionHandler ex = ExceptionHandler.getInstance();
-                
-                ConcreteException connectionErrorException = 
-                        new ConcreteException(new ConcreteExceptionHandler() {
-                            @Override
-                            public void handling() {
-                                throw new UnsupportedOperationException("Not supported yet.");
-                            }
-                        }, ConnectionErrorException.class);
-                ex.addException(connectionErrorException);
-                
-                ConcreteException convertDataException = 
-                        new ConcreteException(new ConcreteExceptionHandler() {
-                            @Override
-                            public void handling() {
-                                throw new UnsupportedOperationException("Not supported yet.");
-                            }
-                        }, ConvertDataException.class);
-                ex.addException(convertDataException);
-                
-                ConcreteException shortViewException = 
-                                new ConcreteException(new ConcreteExceptionHandler() {
-                            @Override
-                            public void handling() {
-                                throw new UnsupportedOperationException("Not supported yet.");
-                            }
-                }, ShortViewException.class);
-                ex.addException(shortViewException);
-                
-                ConcreteException resourceAccessException = 
-                                new ConcreteException(new ConcreteExceptionHandler() {
-                            @Override
-                            public void handling() {
-                                throw new UnsupportedOperationException("Not supported yet.");
-                            }
-                }, ResourceAccessException.class);
-                ex.addException(resourceAccessException);
-                        
-                
+            public void draw() {               
                 MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
                 parameters.add("receipe_id", "1"); 
-                ReceipeProxy proxy = new ReceipeProxy("http://localhost:8083/v1/Receipe", parameters);
+                ReceipeProxy proxy = new ReceipeProxy();
+                proxy.setConfig("http://localhost:8081/receipes/", parameters);
 
                 ReceipeDataConverter converter = new ReceipeDataConverter();
                 ReceipeStore store = new ReceipeStore(converter);
@@ -286,7 +241,7 @@ public class UiServiceMainUI extends UI{
         mainLayer.menu.addItem(addIngredient);
         mainLayer.menu.addItem(registration);
         mainLayer.menu.addItem(signIn);
-        mainLayer.menu.addItem(userPageBtn);
+        //mainLayer.menu.addItem(userPageBtn);
         
         
         return mainLayer.contentRowLayout;

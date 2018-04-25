@@ -27,13 +27,12 @@ public class ReceipeProxy  implements Proxy{
     public MultiValueMap<String, String> parameters;
     
     private RestTemplate restTemplate;
-    
-    public ReceipeProxy(String connectionUrl, MultiValueMap<String, String> parameters)
+   
+    public void setConfig(String connectionUrl, MultiValueMap<String, String> parameters)
     {
         this.connectionUrl = connectionUrl;
         this.parameters = parameters;
     }
-   
     //Проверка прав пользователя
     @Override
     public Boolean connect() throws ConnectionErrorException{

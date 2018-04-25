@@ -36,7 +36,9 @@ public class ReceipeDataConverter implements DataConverter{
             return receipe;
         }
         catch (IOException ex) {
-            throw new ConvertDataException("ReceipeDataConverter cannot convert the data.");
+            ConvertDataException exception = new ConvertDataException("ReceipeDataConverter cannot convert the data.");
+            exception.initCause(ex);
+            throw exception;
         }
     }
 

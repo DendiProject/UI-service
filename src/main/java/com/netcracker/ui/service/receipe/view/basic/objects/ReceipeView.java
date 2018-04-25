@@ -10,13 +10,11 @@ import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.graf.component.Graf;
-import com.netcracker.ui.service.graf.component.HandlerForClickingTheNode;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.Notification;
 
 /**
  *
@@ -51,35 +49,25 @@ public class ReceipeView implements View{
         contentRowLayout.setHeight("100%");
         contentRowLayout.addComponent(ShortViewOfReceipeLayout);
         
-        graf = new Graf(new Graf.ValueChangeListener() 
-        {
-            @Override
-            public void valueChange() {
-                int a =0;
-                /*for(int i=0;i<getState().nodes.size();i++)
-                {
-                    if(getState().nodes.get(i).getId() == clickedNodeIs)
-                    {
-                        if(getState().nodes.get(i).checkHandlerState())
-                        {
-                            getState().nodes.get(i).onEventClickDo();
-                        }
-                        break;
-                    }
-                }*/
-            }
-        });
+        graf = new Graf();
         graf.setNodesCollection(receipe.steps);
-        graf.setNodesConnections(receipe.stepsConnections);
+        graf.setEdgesCollection(receipe.stepsConnections);
         ShortViewOfReceipeLayout.addComponent(graf,"panelWithGraf");
-        
+        //Пример добавления слушателя на клик по ЛЮБОЙ ноде
+        /*graf.addHandlerForClickingOnNode(new ClickOnNodeEventListener() {
+            @Override
+            public void onEventDo() {
+                Notification.show("Все получилось!!!!!!");
+            }
+        });*/
+        //Пример добавления слушателя на клик по КОНКРЕТНОЙ ноде
+        /*
         graf.setHandlerForClickingTheNode(1, new HandlerForClickingTheNode(){
-                                @Override
-                                public void onEventClickDo() {
-                                    Notification.show("Value: " + "первый");
-                                }
-                            });
-        
+            @Override
+            public void onEventClickDo() {
+                Notification.show("Value: " + "первый");
+            }
+        });*/
         return contentRowLayout;
     }
     
