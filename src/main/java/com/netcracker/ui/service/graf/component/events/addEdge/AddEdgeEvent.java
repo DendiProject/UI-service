@@ -11,6 +11,7 @@ import com.netcracker.ui.service.graf.component.Graf;
 import com.netcracker.ui.service.graf.component.eventTypes.EventType;
 import com.netcracker.ui.service.graf.component.events.BasicGrafEventHandler;
 import elemental.json.JsonArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -43,6 +44,9 @@ public class AddEdgeEvent extends BasicGrafEventHandler{
                 graf.addEdge(state.newEdgesFrom, state.newEdgesTo);
                 //Вначале нужно сделать запрос на GM для проверки возможности создания связи
                 if(false){
+                    //JSONObject eventStateInJSONFormat = new JSONObject();
+                    //eventStateInJSONFormat = arguments.toJson();
+                    graf.setEvent(EventType.addEdge, arguments.toJson());
                     //Оповещаю всех слушателей
                     graf.notifyEventListeners(graf.getAddEdgeListeners());
                 }
@@ -50,9 +54,12 @@ public class AddEdgeEvent extends BasicGrafEventHandler{
                 //Перед созданием связи нельзя проверить ее правильность из-за
                 //особенностей работы js
                 else{
-                    //Иначе запрос на удаление на js, а js через изменение 
-                    //стейта удаление связи со стороны java
-                    graf.setEvent(EventType.deleteLastEdge);
+                    //Иначе уведомление пользователя о том, что связь не может 
+                    //быть создана
+                    //JSONObject eventStateInJSONFormat = new JSONObject();
+                    //eventStateInJSONFormat.put("deleteEdgeFrom", state.newEdgesFrom);
+                    //eventStateInJSONFormat.put("deleteEdgeTo", state.newEdgesTo);
+                    //graf.setEvent(EventType.deleteEdge, eventStateInJSONFormat.toString());
                 }
             }
             else

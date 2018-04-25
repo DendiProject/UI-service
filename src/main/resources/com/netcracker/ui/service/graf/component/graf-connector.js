@@ -12,9 +12,15 @@ function() {
         {
             mygraf.draw(this.getState().nodes, this.getState().edges);
         }
-        if(this.getState().event === "DeleteLastEdge")
+        if(this.getState().event === "DeleteEdge")
         {
-            mygraf.deleteLastEdge(this.getState().edges[this.getState().edges.length-1].from, this.getState().edges[this.getState().edges.length-1].to);
+            var state = JSON.parse(this.getState().eventStateInJSONFormat);
+            mygraf.deleteEdge(state.deleteEdgeFrom, state.deleteEdgeTo);
+        }
+        if(this.getState().event==="AddEdge")
+        {
+            var state = JSON.parse(this.getState().eventStateInJSONFormat);
+            mygraf.addEdgeSideJAVA(state[0].newEdgesFrom, state[0].newEdgesTo);
         }
         this.getState().event = "";
     };

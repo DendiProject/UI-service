@@ -64,8 +64,14 @@ public class Graf extends AbstractJavaScriptComponent {
         clickOnNodeListeners = new ArrayList<>();
     }
     
-    //Установка флага события, он обрабатывается и затем сбрасывается 
-    //на строне js
+    //Установка флага события, он обрабатывается на js и затем сбрасывается 
+    //на строне js. Через эту функцию осуществляется манипулирование графом со 
+    //стороны java
+    public void setEvent(EventType event, String eventStateInJSONFormat)
+    {
+        getState().event = event.getType();
+        getState().eventStateInJSONFormat = eventStateInJSONFormat;
+    }
     public void setEvent(EventType event)
     {
         getState().event = event.getType();
@@ -148,7 +154,8 @@ public class Graf extends AbstractJavaScriptComponent {
         }
     }
     
-    //Удаление ноды, вызывается через изменение стейта со стороны js
+    //Удаление ноды из стейта на стороне js после ее удаления с рабочего поля 
+    //на стороне js, вызывается через изменение стейта со стороны js
     public void deleteNode(int deleteNodesId){
         for(int i = 0; i< getState().nodes.size();i++)
         {

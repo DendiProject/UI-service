@@ -45,7 +45,7 @@ mylibrary.MyGraf = function (element) {
                             //Обновление состояния
                             self.click();
                             
-                            callback(data);
+                            //callback(data);
                         }
                     }
                     else {
@@ -57,7 +57,7 @@ mylibrary.MyGraf = function (element) {
                         //Обновление состояния
                         self.click();
                         
-                        callback(data);
+                        //callback(data);
                     }
                 },
                 editEdge: function (data, callback) {
@@ -136,9 +136,25 @@ mylibrary.MyGraf = function (element) {
         self.click();
     }
     
-    function addEdge() {
-         network.addEdgeMode();
+    //Функция добавления связи, вызывает соответствующий режим vis 
+    //js, который, после считывания нужных данных, через изменение стейта
+    //оповещает java и, следуя своей логике, java вызовет метод добавления 
+    //конкретной связи на стороне js 
+    function addEdgeSideJS() {
+        network.addEdgeMode();
     }
+    //Вызов функции добавления ноды со стороны Java
+    this.addEdgeSideJAVA= function (from, to) {
+        addEdge(from, to);
+    };
+    function addEdge(from, to) {
+        var finalizedData ={
+            from: from,
+            to: to
+        };
+        network.body.data.edges.getDataSet().add(finalizedData)
+    }
+    
     
     function editEdge(){
         var idEdge = 0;
@@ -158,7 +174,7 @@ mylibrary.MyGraf = function (element) {
     }
     
     //Функция удаления выделенного элемента
-    function deleteElement(){
+    function deleteSelectedElement(){
         //Вначале проверка на выделение ноды, она выделяется вместе со связью
         if(network.getSelectedNodes().length > 0)
         {
@@ -190,7 +206,7 @@ mylibrary.MyGraf = function (element) {
         }
     }
     //Функция вызова функции удаления ноды со стороны java по двум параметрам
-    this.deleteLastEdge= function (from, to) {
+    this.deleteEdge= function (from, to) {
         var firstNode = network.getConnectedEdges(from);
         var secondNode = network.getConnectedEdges(to);
         for(var i=0; i<firstNode.length; i++){
@@ -223,7 +239,7 @@ mylibrary.MyGraf = function (element) {
      
     var addEdgeBtn = document.getElementById("networkAddEdge");
     addEdgeBtn.onclick = function(event){
-        addEdge();
+        addEdgeSideJS();
     };
     
     var editEdgeBtn = document.getElementById("networkEditEdge");
@@ -235,6 +251,6 @@ mylibrary.MyGraf = function (element) {
     var deleteElementBtn = document.getElementById("networkDeleteElement");
     deleteElementBtn.onclick = function(event) 
     {
-        deleteElement();
+        deleteSelectedElement();
     };
 };
