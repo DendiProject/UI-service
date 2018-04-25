@@ -31,6 +31,8 @@ import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeStore;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.Page;
+import com.vaadin.server.Page.Styles;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringUI;
@@ -74,7 +76,7 @@ public class UiServiceMainUI extends UI{
     protected void init(VaadinRequest vaadinRequest){
         try
         { 
-            createMainLayout();        
+            createMainLayout();     
         }
         catch(Exception exception)
         {
@@ -88,6 +90,8 @@ public class UiServiceMainUI extends UI{
         BasicLayoutCreator mainLayer;
         mainLayer = new BasicLayoutCreator();
         ResponsiveLayout mainLayout = mainLayer.mainLayout;
+        mainLayout.setStyleName("teststyle");
+        
         mainLayout.setSizeFull();
         setContent(mainLayout);
         
@@ -196,7 +200,13 @@ public class UiServiceMainUI extends UI{
                 
                 try {
                     contentManadgerController = bfCMC.getBean(ContentManagerController.class);
-                    String path = "C:\\Users\\1\\Documents\\1NETCRACKER PROJECT\\_____\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\slide1.png";
+                    String path = "D:\\Files\\NetCracker\\GitHab\\merge\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\1.jpg";
+                    contentManadgerController.addImage(path);
+                    path = "D:\\Files\\NetCracker\\GitHab\\merge\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\s1.jpg";
+                    contentManadgerController.addImage(path);
+                    path = "D:\\Files\\NetCracker\\GitHab\\merge\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\s2.jpg";
+                    contentManadgerController.addImage(path);
+                    path = "D:\\Files\\NetCracker\\GitHab\\merge\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\s3.jpg";
                     contentManadgerController.addImage(path);
                 } catch (FileNotFoundException ex) {
                     java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
