@@ -13,37 +13,33 @@ import java.io.Serializable;
  */
 public class Edge  implements Serializable
 {
-    private int from;
-    private int to;
+    private String startNodeId;
+    private String endNodeId;
     
     public Edge()
     {
         
     }
     
-    public Edge(int from, int to)
+    public Edge(String _startNodeId, String _endNodeId)
     {
-        this.from = from;
-        this.to = to;
+        startNodeId = _startNodeId;
+        endNodeId = _endNodeId;
     }
-    
-    public int getFrom()
-    {
-        return from;
+
+    public String getStartNodeId() {
+        return startNodeId;
     }
-    
-    public void setFrom(int from)
-    {
-        this.from = from;
+
+    public void setStartNodeId(String startNodeId) {
+        this.startNodeId = startNodeId;
     }
-    
-    public int getTo()
-    {
-        return to;
+
+    public String getEndNodeId() {
+        return endNodeId;
     }
-    
-    public void setTo(int to)
-    {
-        this.to = to;
+
+    public void setEndNodeId(String endNodeId) {
+        this.endNodeId = endNodeId;
     }
 }

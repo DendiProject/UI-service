@@ -11,8 +11,8 @@ mylibrary.MyGraf = function (element) {
     var yClick = 0;//координаты клика по рабочему полю
     var returnUnswer;//Содержит данные об обновлении стейта
 
-    this.draw = function (nodesBuf, nodesConnectionsBuf) {
-        nodes = [];
+    this.draw = function (newstate) {
+        /*nodes = [];
         edges = [];
         for (var i = 0; i < nodesBuf.length; i++) 
         {
@@ -21,10 +21,11 @@ mylibrary.MyGraf = function (element) {
         for (var i = 0; i < nodesConnectionsBuf.length; i++) 
         {
             edges.push({from: nodesConnectionsBuf[i].from, to: nodesConnectionsBuf[i].to, length: 100});
-        }
+        }*/
+        var state = JSON.parse(newstate);
         var data = {
-            nodes: nodes,
-            edges: edges
+            nodes: state.nodes,
+            edges: state.edges
         };
         // create a network
         var container = document.getElementById('mynetwork');

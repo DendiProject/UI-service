@@ -11,7 +11,7 @@ package com.netcracker.ui.service.graf.component.events.addNode;
  * @author Artem
  */
 public class AddNodeState{
-    public int newNodesId;
+    public String newNodesId;
     public String newNodesLable;
     public String newNodesImage;
     public int newNodesX;
@@ -24,7 +24,7 @@ public class AddNodeState{
         
     }
     
-    public AddNodeState(int _newNodesId, String _newNodesLable, 
+    public AddNodeState(String _newNodesId, String _newNodesLable, 
             String _newNodesImage, int _newNodesX, int _newNodesY)
     {
         newNodesId = _newNodesId;
@@ -35,12 +35,12 @@ public class AddNodeState{
         stateReady = true;
     }
     
-    public int getNewNodesId()
+    public String getNewNodesId()
     {
         return newNodesId;
     }
     
-    public void setNewNodesId(int  newNodesId)
+    public void setNewNodesId(String  newNodesId)
     {
         this.newNodesId = newNodesId;
         checkState();

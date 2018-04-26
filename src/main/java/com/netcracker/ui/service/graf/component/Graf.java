@@ -18,6 +18,8 @@ import com.netcracker.ui.service.graf.component.events.clickOnNode.ClickOnNodeEv
 import com.netcracker.ui.service.graf.component.events.deleteEdge.DeleteEdgeEvent;
 import com.netcracker.ui.service.graf.component.events.deleteNode.DeleteNodeEvent;
 import com.netcracker.ui.service.graf.component.events.editEdge.EditEdgeEvent;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -36,6 +38,7 @@ public class Graf extends AbstractJavaScriptComponent {
     private ArrayList<EventListener> editEdgeListeners;
     private ArrayList<EventListener> deleteEdgeListeners;
     private ArrayList<EventListener> deleteNodeListeners;
+    private ArrayList<EventListener> initNodeListeners;
     
     public Graf() {
         //Конфигурирование цепочки обработчиков событий
@@ -60,7 +63,6 @@ public class Graf extends AbstractJavaScriptComponent {
     
         getState().nodes = new ArrayList<>();
         getState().edges = new ArrayList<>();
-        setEvent(EventType.init);
         clickOnNodeListeners = new ArrayList<>();
     }
     
@@ -72,11 +74,6 @@ public class Graf extends AbstractJavaScriptComponent {
         getState().event = event.getType();
         getState().eventStateInJSONFormat = eventStateInJSONFormat;
     }
-    public void setEvent(EventType event)
-    {
-        getState().event = event.getType();
-    }
-    
     
     public ArrayList<EventListener> getClickOnNodeListeners() {
         return clickOnNodeListeners;
@@ -102,10 +99,14 @@ public class Graf extends AbstractJavaScriptComponent {
         return deleteNodeListeners;
     }
     
+    public ArrayList<EventListener> getInitListeners(){
+        return initNodeListeners;
+    }
+    
     //Добавление ноды с обработчиком клика, вызывается
     //через изменение стейта со стороны js
     public void addNode(String newNodesimageUrl, String newNodesLabel, 
-            int newNodesId, HandlerForClickingTheNode handler) {
+            String newNodesId, HandlerForClickingTheNode handler) {
         Node node = new Node(newNodesimageUrl, newNodesId, newNodesLabel);
         node.setHandlerForClickingTheNode(handler);
         getState().nodes.add(node);
@@ -113,42 +114,42 @@ public class Graf extends AbstractJavaScriptComponent {
     
     //Добавление ноды, вызывается через изменение стейта со стороны js
     public void addNode(String newNodesimageUrl, String newNodesLabel, 
-            int newNodesId) {
+            String newNodesId) {
         Node node = new Node(newNodesimageUrl, newNodesId, newNodesLabel);
         getState().nodes.add(node);
     }
     
     //Добавление связи, вызывается через изменение стейта со стороны js
-    public void addEdge(int idNodesConnectedFrom, 
-            int idNodesConnectedTo) {
+    public void addEdge(String idNodesConnectedFrom, 
+            String idNodesConnectedTo) {
         Edge nodeConnection = new Edge(idNodesConnectedFrom, idNodesConnectedTo);
         getState().edges.add(nodeConnection);
     }
     
     //Редактирование связи, вызывается через изменение стейта со стороны js
-    public void editEdge(int editableEdgesOldIdFrom, int editableEdgesOldIdTo, 
-            int editableEdgesNewIdFrom, int editableEdgesNewIdTo){
+    public void editEdge(String editableEdgesOldIdFrom, String editableEdgesOldIdTo, 
+            String editableEdgesNewIdFrom, String editableEdgesNewIdTo){
         for(int i = 0; i< getState().edges.size();i++)
         {
-            if(getState().edges.get(i).getFrom() == editableEdgesOldIdFrom & 
-                    getState().edges.get(i).getTo() == editableEdgesOldIdTo)
+            if(getState().edges.get(i).getStartNodeId() == editableEdgesOldIdFrom & 
+                    getState().edges.get(i).getEndNodeId() == editableEdgesOldIdTo)
             {
-                getState().edges.get(i).setFrom(editableEdgesNewIdFrom);
-                getState().edges.get(i).setTo(editableEdgesNewIdTo);
+                getState().edges.get(i).setStartNodeId(editableEdgesNewIdFrom);
+                getState().edges.get(i).setEndNodeId(editableEdgesNewIdTo);
                 break;
             }
         }
     }
     
     //Удаление связи, вызывается через изменение стейта со стороны js
-    public void deleteEdge(int deleteEdgeFrom, int deleteEdgeTo){
+    public void deleteEdge(String deleteEdgeFrom, String deleteEdgeTo){
         for(int i = 0; i< getState().edges.size();i++)
         {
-            if(getState().edges.get(i).getFrom() == deleteEdgeFrom & 
-                    getState().edges.get(i).getTo() == deleteEdgeTo)
+            if(getState().edges.get(i).getStartNodeId() == deleteEdgeFrom & 
+                    getState().edges.get(i).getEndNodeId() == deleteEdgeTo)
             {
                 getState().edges.remove(i);
-                setEvent(EventType.deleteEdge);
+                setEvent(EventType.deleteEdge,"");
                 break;
             }
         }
@@ -156,16 +157,16 @@ public class Graf extends AbstractJavaScriptComponent {
     
     //Удаление ноды из стейта на стороне js после ее удаления с рабочего поля 
     //на стороне js, вызывается через изменение стейта со стороны js
-    public void deleteNode(int deleteNodesId){
+    public void deleteNode(String deleteNodesId){
         for(int i = 0; i< getState().nodes.size();i++)
         {
-            if(getState().nodes.get(i).getId() == deleteNodesId)
+            if(getState().nodes.get(i).getNodeId() == deleteNodesId)
             {
                 //Удаление связей этой ноды
                 for(int j=0; j<getState().edges.size();j++)
                 {
-                    if(getState().edges.get(j).getFrom() == deleteNodesId | 
-                            getState().edges.get(j).getTo() == deleteNodesId){
+                    if(getState().edges.get(j).getStartNodeId() == deleteNodesId | 
+                            getState().edges.get(j).getEndNodeId() == deleteNodesId){
                         getState().edges.remove(j);
                     }
                 }
@@ -175,20 +176,53 @@ public class Graf extends AbstractJavaScriptComponent {
         }
     }
     
-    public void setNodesCollection(ArrayList<Node> nodesCollection) {
+    public void setInitCollections(ArrayList<Node> nodesCollection, 
+            ArrayList<Edge> edgesCollection) {
         getState().nodes = nodesCollection;
+        getState().edges = edgesCollection;
+        setEvent(EventType.init,
+                convertInitDataToRighFormat(nodesCollection, edgesCollection));
     }
     
-    public void setEdgesCollection(ArrayList<Edge> nodesConnections) {
-        getState().edges = nodesConnections;
+    //Вернет строку в Json формате, с именами переменных, требуемых на 
+    //стороне JS  
+    private String convertInitDataToRighFormat(ArrayList<Node> nodesCollection, 
+            ArrayList<Edge> edgesCollection)
+    {
+        JSONObject result =new JSONObject();
+        JSONArray nodes = new JSONArray();
+        JSONArray edges = new JSONArray();
+        
+        for(int i=0; i<nodesCollection.size(); i++)
+        {
+            JSONObject node = new JSONObject();
+            node.put("id", nodesCollection.get(i).getNodeId());
+            node.put("label", "");
+            node.put("shape", "circularImage");
+            node.put("image", nodesCollection.get(i).getPictureId());
+            nodes.put(i, node);
+        }
+        
+        for(int i=0; i<edgesCollection.size(); i++)
+        {
+            JSONObject edge = new JSONObject();
+            edge.put("from", edgesCollection.get(i).getStartNodeId());
+            edge.put("to", edgesCollection.get(i).getEndNodeId());
+            edges.put(i, edge);
+        }
+        
+        result.put("nodes", nodes);
+        result.put("edges", edges);
+        
+        return result.toString();
     }
     
     //Установка обработчика события клика по ноде на созданную ранее ноду
-    public void setHandlerForClickingTheNode(int nodesId,
+    public void setHandlerForClickingTheNode(String nodesId,
             HandlerForClickingTheNode handler) {
         for(int i=0; i<getState().nodes.size(); i++)
         {
-            if(getState().nodes.get(i).getId() == nodesId)
+            if(getState().nodes.get(i).getNodeId() == nodesId)
             {
                 getState().nodes.get(i).setHandlerForClickingTheNode(handler);
                 break;
@@ -217,13 +251,13 @@ public class Graf extends AbstractJavaScriptComponent {
     
     //Вызов соответствующих функций у слушателей события ClickOnNode по 
     //конкретной ноде
-    public void notifyClickOnConcreteNodeEventListeners(int nodesIdClick)
+    public void notifyClickOnConcreteNodeEventListeners(String nodesIdClick)
     {
         //Если существует обработчик, который создан для 
         //этой ноды, то вызов его
         for(int i=0; i<getState().nodes.size(); i++)
         {
-            if(getState().nodes.get(i).getId() == nodesIdClick)
+            if(getState().nodes.get(i).getNodeId() == nodesIdClick)
             {        
                 if(getState().nodes.get(i).checkHandlerState())
                 {

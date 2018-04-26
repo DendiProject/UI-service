@@ -111,9 +111,13 @@ public class UiServiceMainUI extends UI{
             @Override
             public void draw() {               
                 MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-                parameters.add("receipe_id", "1"); 
+                //parameters.add("receipe_id", "1"); 
+                //ReceipeProxy proxy = new ReceipeProxy();
+                //proxy.setConfig("http://localhost:8081/receipes/", parameters);
+                parameters.add("receipeId", "12345");
+                parameters.add("userId","1111");
                 ReceipeProxy proxy = new ReceipeProxy();
-                proxy.setConfig("http://localhost:8081/receipes/", parameters);
+                proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters);
 
                 ReceipeDataConverter converter = new ReceipeDataConverter();
                 ReceipeStore store = new ReceipeStore(converter);

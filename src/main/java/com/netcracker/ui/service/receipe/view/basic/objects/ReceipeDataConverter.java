@@ -29,9 +29,9 @@ public class ReceipeDataConverter implements DataConverter{
             BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
             ContentManagerController controller = bfCMC.getBean(ContentManagerController.class);
             //mapper = bf.getBean(ObjectMapper.class);
-            for(int i=0; i<receipe.steps.size();i++)
+            for(int i=0; i<receipe.nodes.size();i++)
             {
-                receipe.steps.get(i).setImage(controller.getImage(receipe.steps.get(i).getImage()));
+                receipe.nodes.get(i).setPictureId(controller.getImage(receipe.nodes.get(i).getPictureId()));
             }
             return receipe;
         }

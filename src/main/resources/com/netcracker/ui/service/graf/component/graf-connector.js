@@ -10,7 +10,7 @@ function() {
         //mycomponent.draw(this.getState().newNodesimageUrl, this.getState().newNodesLabel, this.getState().idNodesConnectedFrom, this.getState().idNodesConnectedTo, this.getState().newNodesId);
         if(this.getState().event === "Initialize")
         {
-            mygraf.draw(this.getState().nodes, this.getState().edges);
+            mygraf.draw(this.getState().eventStateInJSONFormat);
         }
         if(this.getState().event === "DeleteEdge")
         {

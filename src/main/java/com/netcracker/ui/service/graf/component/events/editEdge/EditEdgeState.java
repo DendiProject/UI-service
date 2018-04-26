@@ -11,10 +11,10 @@ package com.netcracker.ui.service.graf.component.events.editEdge;
  * @author Artem
  */
 public class EditEdgeState{
-    public int editableEdgesOldIdFrom;
-    public int editableEdgesOldIdTo;
-    public int editableEdgesNewIdFrom;
-    public int editableEdgesNewIdTo;
+    public String editableEdgesOldIdFrom;
+    public String editableEdgesOldIdTo;
+    public String editableEdgesNewIdFrom;
+    public String editableEdgesNewIdTo;
     public boolean stateReady = false;
     private int numberOfNonEmptyFeelds = 0;
     
@@ -23,8 +23,8 @@ public class EditEdgeState{
         
     }
     
-    public EditEdgeState(int _editableEdgesOldIdFrom, int _editableEdgesOldIdTo, 
-            int _editableEdgesNewIdFrom, int _editableEdgesNewIdTo)
+    public EditEdgeState(String _editableEdgesOldIdFrom, String _editableEdgesOldIdTo, 
+            String _editableEdgesNewIdFrom, String _editableEdgesNewIdTo)
     {
         editableEdgesOldIdFrom = _editableEdgesOldIdFrom;
         editableEdgesOldIdTo = _editableEdgesOldIdTo;
@@ -32,45 +32,45 @@ public class EditEdgeState{
         editableEdgesNewIdTo = _editableEdgesNewIdTo;
     }
     
-    public int getEditableEdgesOldIdFrom()
+    public String getEditableEdgesOldIdFrom()
     {
         return editableEdgesOldIdFrom;
     }
     
-    public void setEditableEdgesOldIdFrom(int editableEdgesOldIdFrom)
+    public void setEditableEdgesOldIdFrom(String editableEdgesOldIdFrom)
     {
         this.editableEdgesOldIdFrom = editableEdgesOldIdFrom;
         checkState();
     }
 
-    public int getEditableEdgesOldIdTo()
+    public String getEditableEdgesOldIdTo()
     {
         return editableEdgesOldIdTo;
     }
     
-    public void setEditableEdgesOldIdTo(int editableEdgesOldIdTo)
+    public void setEditableEdgesOldIdTo(String editableEdgesOldIdTo)
     {
         this.editableEdgesOldIdTo = editableEdgesOldIdTo;
         checkState();
     }
     
-    public int getEditableEdgesNewIdFrom()
+    public String getEditableEdgesNewIdFrom()
     {
         return editableEdgesNewIdFrom;
     }
     
-    public void setEditableEdgesNewIdFrom(int editableEdgesNewIdFrom)
+    public void setEditableEdgesNewIdFrom(String editableEdgesNewIdFrom)
     {
         this.editableEdgesNewIdFrom = editableEdgesNewIdFrom;
         checkState();
     }
     
-    public int getEditableEdgesNewIdTo()
+    public String getEditableEdgesNewIdTo()
     {
         return editableEdgesNewIdTo;
     }
     
-    public void setEditableEdgesNewIdTo(int editableEdgesNewIdTo)
+    public void setEditableEdgesNewIdTo(String editableEdgesNewIdTo)
     {
         this.editableEdgesNewIdTo = editableEdgesNewIdTo;
         checkState();
