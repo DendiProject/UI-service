@@ -198,31 +198,6 @@ public class UiServiceMainUI extends UI{
             
         });
         
-        MenusButton addIngredient = new MenusButton("Загрузить картинку", "idconfigIngredient", new  HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-                
-                try {
-                    contentManadgerController = bfCMC.getBean(ContentManagerController.class);
-                    String path = "D:\\Files\\NetCracker\\GitHab\\merge\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\1.jpg";
-                    contentManadgerController.addImage(path);
-                    path = "D:\\Files\\NetCracker\\GitHab\\merge\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\s1.jpg";
-                    contentManadgerController.addImage(path);
-                    path = "D:\\Files\\NetCracker\\GitHab\\merge\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\s2.jpg";
-                    contentManadgerController.addImage(path);
-                    path = "D:\\Files\\NetCracker\\GitHab\\merge\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\s3.jpg";
-                    contentManadgerController.addImage(path);
-                } catch (FileNotFoundException ex) {
-                    java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-                System.out.print("we");
-            }
-
-        });
-        
         MenusButton registration = new MenusButton("Регистрация", "idregistration", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
@@ -252,7 +227,6 @@ public class UiServiceMainUI extends UI{
         mainLayer.menu.addItem(mainBtn);
         mainLayer.menu.addItem(recepsBtn);
         mainLayer.menu.addItem(search);
-        mainLayer.menu.addItem(addIngredient);
         mainLayer.menu.addItem(registration);
         mainLayer.menu.addItem(signIn);
         //mainLayer.menu.addItem(userPageBtn);
