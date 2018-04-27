@@ -6,6 +6,9 @@
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
+import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
+import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
@@ -15,6 +18,8 @@ import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
 import com.vaadin.ui.CustomLayout;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *

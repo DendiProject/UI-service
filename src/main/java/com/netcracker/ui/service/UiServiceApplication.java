@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.beans.factory.ButtonsClickListenerBean;
 import com.netcracker.ui.service.beans.factory.ContentManadgerControllerBean;
 import com.netcracker.ui.service.beans.factory.ObjectMapperBean;
 import com.netcracker.ui.service.beans.factory.RestTemplateBean;
@@ -29,6 +30,7 @@ public class UiServiceApplication {
 
     public static void main(String[] args) {
         BeansFactory bf = BeansFactory.getInstance();
+        bf.addBean(new ButtonsClickListenerBean());
         bf.addBean(new ObjectMapperBean());
         bf.addBean(new RestTemplateBean());
         bf.addBean(new ContentManadgerControllerBean());

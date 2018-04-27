@@ -5,7 +5,11 @@
  */
 package com.netcracker.ui.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarektoro.responsivelayout.ResponsiveLayout;
+import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
 import com.netcracker.ui.service.menu.component.Menu;
 import com.vaadin.server.Page;
@@ -19,7 +23,8 @@ public class BasicLayoutCreator{
     public ResponsiveLayout mainLayout;
     public ResponsiveLayout contentRowLayout;
     public Menu menu;
-    public BasicLayoutCreator() throws MenuComponentException
+    
+    public BasicLayoutCreator() throws MenuComponentException, NotFoundBean
     {
         contentRowLayout = new ResponsiveLayout();
         mainLayout = new ResponsiveLayout();
@@ -59,5 +64,9 @@ public class BasicLayoutCreator{
 "            o-background-size: cover; \n" +
 "            background-size: 100% 100%;\n" +
 "            background-repeat: no-repeat;}}");
+        
+        BeansFactory<ButtonsClickListener> bf = BeansFactory.getInstance();
+        ButtonsClickListener clickListener = bf.getBean(ButtonsClickListener.class);
+        mainCustomLayout.addComponent(clickListener);
     }
 }

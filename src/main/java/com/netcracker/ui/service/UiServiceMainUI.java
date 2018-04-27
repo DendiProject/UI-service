@@ -10,12 +10,15 @@ import com.netcracker.ui.service.forms.AuthorizationForm;
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.jarektoro.responsivelayout.ResponsiveRow;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
+import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
 import com.netcracker.ui.service.components.SecurityTokenHandler;
 import com.netcracker.ui.service.components.StartupHousekeeper;
 import com.netcracker.ui.service.content.handler.ContentManagerController;
 import com.netcracker.ui.service.exception.ConcreteException;
 import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
@@ -84,7 +87,7 @@ public class UiServiceMainUI extends UI{
         }
     }
     
-    private ResponsiveLayout createMainLayout() throws MenuComponentException
+    private ResponsiveLayout createMainLayout() throws MenuComponentException, NotFoundBean
     {
         setSizeFull();//Пользовательский интерфейс на весь экран
         BasicLayoutCreator mainLayer;
@@ -149,7 +152,6 @@ public class UiServiceMainUI extends UI{
             public void draw() {
                 mainLayer.contentRowLayout.removeAllComponents();
                 addUserPageComponent(mainLayer.contentRowLayout);
-                
             }
         });
         
@@ -231,7 +233,36 @@ public class UiServiceMainUI extends UI{
         mainLayer.menu.addItem(signIn);
         //mainLayer.menu.addItem(userPageBtn);
         
-        
+        BeansFactory<ButtonsClickListener> bf = BeansFactory.getInstance();
+        ButtonsClickListener clickListener;
+        try {
+            clickListener = bf.getBean(ButtonsClickListener.class);
+            clickListener.addButtonClickListener(new ClickListener() {
+                @Override
+                public String getId() {
+                    return "addReceipePartsBtn";
+                }
+
+                @Override
+                public void onEventDo() {
+                    AuthorizationForm modalWindow = new AuthorizationForm();
+                    addWindow(modalWindow);
+                }
+            });
+            clickListener.addButtonClickListener(new ClickListener() {
+                @Override
+                public String getId() {
+                    return "addReceipeResoursesBtn";
+                }
+
+                @Override
+                public void onEventDo() {
+                    int i=0;
+                }
+            });
+        } catch (Exception ex) {
+            
+        }
         return mainLayer.contentRowLayout;
     }
     
