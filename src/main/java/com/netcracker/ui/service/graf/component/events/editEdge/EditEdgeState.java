@@ -15,6 +15,7 @@ public class EditEdgeState{
     public String editableEdgesOldIdTo;
     public String editableEdgesNewIdFrom;
     public String editableEdgesNewIdTo;
+    public String idEditableEdge;
     public boolean stateReady = false;
     private int numberOfNonEmptyFeelds = 0;
     
@@ -30,6 +31,14 @@ public class EditEdgeState{
         editableEdgesOldIdTo = _editableEdgesOldIdTo;
         editableEdgesNewIdFrom = _editableEdgesNewIdFrom;
         editableEdgesNewIdTo = _editableEdgesNewIdTo;
+    }
+
+    public String getIdEditableEdge() {
+        return idEditableEdge;
+    }
+
+    public void setIdEditableEdge(String idEditableEdge) {
+        this.idEditableEdge = idEditableEdge;
     }
     
     public String getEditableEdgesOldIdFrom()

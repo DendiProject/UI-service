@@ -13,6 +13,9 @@ public abstract class EventType {
     public static InitEventType init = new InitEventType();
     public static DeleteEdgeType deleteEdge = new DeleteEdgeType();
     public static AddEdgeType addEdge = new AddEdgeType();
+    public static EditEdgeType editEdge = new EditEdgeType();
+    public static AddNodeType addNode = new AddNodeType();
+    public static DeleteNodeType deleteNode = new DeleteNodeType();
     
     public abstract String getType();
 }

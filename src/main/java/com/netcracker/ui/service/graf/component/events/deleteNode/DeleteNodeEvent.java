@@ -8,6 +8,7 @@ package com.netcracker.ui.service.graf.component.events.deleteNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.graf.component.Graf;
+import com.netcracker.ui.service.graf.component.eventTypes.EventType;
 import com.netcracker.ui.service.graf.component.events.BasicGrafEventHandler;
 import elemental.json.JsonArray;
 
@@ -38,9 +39,17 @@ public class DeleteNodeEvent extends BasicGrafEventHandler{
             state = mapper.readValue(arguments.getObject(0).toString(),DeleteNodeState.class);
             if(state.stateReady)
             {
-                graf.deleteNode(state.deleteNodesId);
-                //Оповещаю всех слушателей
-                graf.notifyEventListeners(graf.getDeleteNodeListeners());
+                //Вначале нужно сделать запрос на GM для проверки возможности удаления ноды
+                if(true){
+                    graf.deleteNode(state.deleteNodesId);
+                    graf.setEvent(EventType.deleteNode, arguments.toJson());
+                    //Оповещаю всех слушателей
+                    graf.notifyEventListeners(graf.getDeleteNodeListeners());
+                }
+                else{
+                    //Иначе уведомление пользователя о том, что нода не может 
+                    //быть удалена
+                }
             }
             else
             {

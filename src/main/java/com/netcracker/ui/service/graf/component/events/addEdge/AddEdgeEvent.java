@@ -40,19 +40,15 @@ public class AddEdgeEvent extends BasicGrafEventHandler{
             state = mapper.readValue(arguments.getObject(0).toString(),AddEdgeState.class);
             if(state.stateReady)
             {
-                
-                graf.addEdge(state.newEdgesFrom, state.newEdgesTo);
                 //Вначале нужно сделать запрос на GM для проверки возможности создания связи
                 if(false){
+                    graf.addEdge(state.newEdgesFrom, state.newEdgesTo);
                     //JSONObject eventStateInJSONFormat = new JSONObject();
                     //eventStateInJSONFormat = arguments.toJson();
                     graf.setEvent(EventType.addEdge, arguments.toJson());
                     //Оповещаю всех слушателей
                     graf.notifyEventListeners(graf.getAddEdgeListeners());
                 }
-                //Если связь нельзя создать, то она удаляется
-                //Перед созданием связи нельзя проверить ее правильность из-за
-                //особенностей работы js
                 else{
                     //Иначе уведомление пользователя о том, что связь не может 
                     //быть создана

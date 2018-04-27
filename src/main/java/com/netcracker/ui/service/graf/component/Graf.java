@@ -208,6 +208,7 @@ public class Graf extends AbstractJavaScriptComponent {
             JSONObject edge = new JSONObject();
             edge.put("from", edgesCollection.get(i).getStartNodeId());
             edge.put("to", edgesCollection.get(i).getEndNodeId());
+            edge.put("arrows", "to");
             edges.put(i, edge);
         }
         
