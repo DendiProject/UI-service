@@ -41,7 +41,7 @@ public class AddEdgeEvent extends BasicGrafEventHandler{
             if(state.stateReady)
             {
                 //Вначале нужно сделать запрос на GM для проверки возможности создания связи
-                if(false){
+                if(true){
                     graf.addEdge(state.newEdgesFrom, state.newEdgesTo);
                     //JSONObject eventStateInJSONFormat = new JSONObject();
                     //eventStateInJSONFormat = arguments.toJson();

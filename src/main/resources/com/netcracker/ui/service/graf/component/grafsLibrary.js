@@ -45,6 +45,7 @@ mylibrary.MyGraf = function (element) {
                             };
                             //Обновление состояния
                             self.click();
+                            network.disableEditMode();
                         }
                     }
                     else {
@@ -55,6 +56,7 @@ mylibrary.MyGraf = function (element) {
                         };
                         //Обновление состояния
                         self.click();
+                        network.disableEditMode();
                     }
                 },
                 editEdge: function (data, callback) {
@@ -67,6 +69,7 @@ mylibrary.MyGraf = function (element) {
                             returnUnswer.editableEdgesNewIdTo = data.to;
                             //Обновление состояния
                             self.click();
+                            network.disableEditMode();
                         }
                     }
                     else {
@@ -75,6 +78,7 @@ mylibrary.MyGraf = function (element) {
                         returnUnswer.editableEdgesNewIdTo = data.to;
                         //Обновление состояния
                         self.click();
+                        network.disableEditMode();
                     }
                 }
             }
@@ -152,7 +156,8 @@ mylibrary.MyGraf = function (element) {
     function addEdge(from, to) {
         var finalizedData ={
             from: from,
-            to: to
+            to: to,
+            arrows: "to"
         };
         network.body.data.edges.getDataSet().add(finalizedData)
     }
