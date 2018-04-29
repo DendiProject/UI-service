@@ -29,6 +29,7 @@ public class UiServiceApplication {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder)
     {
+      
         return builder.build();
     }
      

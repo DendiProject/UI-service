@@ -1,11 +1,14 @@
 spring:
   application:
     name: user-service
+idp:
+  url: localhost:8181
 server:
-    port: 8082
+    port: 8081
 security:
   basic:
     enabled: false
 service:
-    id: ui
-    secret: uipass
+  id: ui
+  secret: uipass
+

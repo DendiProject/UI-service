@@ -6,14 +6,13 @@
 package com.netcracker.ui.service.content.handler;
 
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.components.RestFilter;
 import com.netcracker.ui.service.components.SecurityTokenHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import java.io.File;
-import static java.io.File.separator;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.Collections;
 import java.util.regex.Pattern;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -22,7 +21,6 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -30,7 +28,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -76,15 +73,10 @@ public class ContentManagerController {
             //Запрос на получение id для новой картинки
             BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
             RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
+            restTemplate.setInterceptors(Collections.singletonList(new RestFilter()));
             HttpHeaders headers = new HttpHeaders();
             headers.set("Accept=application/json", MediaType.APPLICATION_JSON_VALUE);
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.add("userCookie", cookieHandler.getCookieByName("userInfo").getValue());
-            headers.add("service", "ui");
-            headers.add("secureToken", tokenStore.getToken());
-            
-            System.out.println("userCookie = " + cookieHandler.getCookieByName("userInfo").getValue());
-            System.out.println("uiSecureToken = " + tokenStore.getToken());
             
             UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(connectionUrl + "node/addnodeimg").queryParams(parameters);

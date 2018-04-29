@@ -13,6 +13,9 @@ import com.vaadin.spring.annotation.VaadinSessionScope;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -52,7 +55,9 @@ public class SecurityTokenHandler {
   String clientId;
   @Value("${service.secret}")
   String clientSecret;
-
+  @Value("${idp.url}")
+  String idpURL;
+          
   public SecurityTokenHandler() {
     this.token = null;
   }
@@ -75,7 +80,7 @@ public class SecurityTokenHandler {
       String encoded = "Basic " + str;
 
       HttpClient httpclient = HttpClients.createDefault();
-      HttpPost httppost = new HttpPost("http://localhost:8182/oauth/token");
+      HttpPost httppost = new HttpPost("http://"+idpURL+"/oauth/token");
 
       httppost.addHeader("Content-Type", "application/x-www-form-urlencoded");
       httppost.addHeader("Authorization", encoded);
@@ -112,5 +117,27 @@ public class SecurityTokenHandler {
       Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
+  
+  public int verifySecureToken(String secureToken) {
+    int res = 0;
+    try {
+      URL url = new URL(
+              "http://"+idpURL+"/idpsecure/verifyToken" + "?access_token=" + tokenHandler.getToken());
+      HttpURLConnection con = (HttpURLConnection) url.openConnection();
+      con.setRequestMethod("POST");
+      con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+      con.setRequestProperty("secureToken", secureToken);
+      con.setDoOutput(true);
 
+      int responseCode = con.getResponseCode();
+      System.out.println("responseCode =  " + responseCode);
+      res = con.getResponseCode();
+
+    } catch (MalformedURLException ex) {
+      Logger.getLogger(SecurityTokenHandler.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IOException ex) {
+      Logger.getLogger(SecurityTokenHandler.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return res;
+  }
 }

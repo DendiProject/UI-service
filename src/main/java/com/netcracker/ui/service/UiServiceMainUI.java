@@ -74,7 +74,8 @@ public class UiServiceMainUI extends UI{
     protected void init(VaadinRequest vaadinRequest){
         try
         { 
-            createMainLayout();        
+            createMainLayout();   
+            
         }
         catch(Exception ex)
         {
