@@ -11,4 +11,11 @@ security:
 service:
   id: ui
   secret: uipass
-
+zuul:
+  routes:
+    images:
+      path: /file/getfile/**
+      url: http://localhost:8082/file/getfile/
+     # receipes:
+     # path: /receipes/**
+     # url: http://localhost:8083/v1/Receipe
