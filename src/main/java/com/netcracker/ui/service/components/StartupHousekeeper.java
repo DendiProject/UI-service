@@ -61,6 +61,8 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
   String clientId;
   @Value("${service.secret}")
   String clientSecret;
+  @Value("${idp.url}")
+  String idpURL;
   private boolean start = true;
 
   SecurityTokenHandler tokenHandler;
@@ -77,7 +79,7 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
         String encoded = "Basic " + str;
 
         HttpClient httpclient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost("http://localhost:8182/oauth/token");
+        HttpPost httppost = new HttpPost("http://"+idpURL+"/oauth/token");
 
         httppost.addHeader("Content-Type", "application/x-www-form-urlencoded");
         httppost.addHeader("Authorization", encoded);

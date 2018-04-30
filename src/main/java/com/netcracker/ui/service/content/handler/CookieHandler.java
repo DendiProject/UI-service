@@ -22,15 +22,18 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
  *
  * @author ArtemShevelyukhin
  */
-
+@Component
 public class CookieHandler {
-
+  
+  
+  
     private JWTHandler handler = new JWTHandler();
     
     BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
@@ -46,7 +49,7 @@ public class CookieHandler {
                 userInfo.setEmail("guest");
                 userInfo.setPassword("guestpass");
                 PostUserData postRequest = new PostUserData(
-                        "http://localhost:8182/idpsecure/authorization", userInfo, secureToken);
+                        "http://localhost:8181/idpsecure/authorization", userInfo, secureToken);
                 System.out.println(postRequest.con.getResponseCode());
                 if (postRequest.con.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
@@ -115,8 +118,8 @@ public class CookieHandler {
     }
 
     public Cookie getCookieByName(String name) {
+    
         Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
-
         for (Cookie cookie : cookies) {
             if (name.equals(cookie.getName())) {
                 return cookie;

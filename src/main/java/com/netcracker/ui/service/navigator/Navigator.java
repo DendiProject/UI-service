@@ -10,6 +10,7 @@ import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Используется для навигации между видами
@@ -19,6 +20,7 @@ public class Navigator {
     private ArrayList<View> views;
     Page currentPage;
     String newCurrentPage;
+    
     public Navigator()
     {
         

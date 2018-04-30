@@ -225,7 +225,24 @@ public class UiServiceMainUI extends UI{
             }
 
         });
-        
+        MenusButton addIngredient = new MenusButton("Загрузить картинку", "idconfigIngredient", new HandlerForClickingTheButton() {
+      @Override
+      public void onEventClickDo() {
+
+        try {
+          contentManadgerController = bfCMC.getBean(ContentManagerController.class);
+          String path = "C:\\Users\\1\\Documents\\1NETCRACKER PROJECT\\_____\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\slide1.png";
+          contentManadgerController.addImage(path);
+        } catch (FileNotFoundException ex) {
+          java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+          java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        System.out.print("addIngredient");
+      }
+
+    });
         mainLayer.menu.addItem(mainBtn);
         mainLayer.menu.addItem(recepsBtn);
         mainLayer.menu.addItem(search);
@@ -314,7 +331,7 @@ public class UiServiceMainUI extends UI{
             topRecipeLayout.addComponent(workingTimesLable,"working_times_lable");
             Button addRecipeToFavoritesButton = new Button("Добавить в избранное");
             topRecipeLayout.addComponent(addRecipeToFavoritesButton,"add_recipe_to_favorites_button");
-        }
+  }
 
         //Задание отступа до коцна страницы
         ResponsiveRow theDistanceBetweenBottomAndRecipes = contentRowLayout.addRow();
@@ -329,8 +346,5 @@ public class UiServiceMainUI extends UI{
         CustomLayout userPage = new CustomLayout("UserPageLayout");
         
         sliderRow.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(userPage);
-    }
-     
-    
-  
+    } 
 }
