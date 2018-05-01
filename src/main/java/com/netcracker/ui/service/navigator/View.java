@@ -5,6 +5,9 @@
  */
 package com.netcracker.ui.service.navigator;
 
+import java.util.Map;
+import org.springframework.util.LinkedMultiValueMap;
+
 /**
  * Используется для работы с видами класса Navigator
  * @author Artem
@@ -16,5 +19,5 @@ abstract public class View {
     {
         this.name = name;
     }
-    abstract public void draw();
+    abstract public void draw(LinkedMultiValueMap<String, String> parameters);
 }

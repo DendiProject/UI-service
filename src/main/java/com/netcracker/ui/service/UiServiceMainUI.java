@@ -28,6 +28,7 @@ import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
 import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.netcracker.ui.service.navigator.Navigator;
+import com.netcracker.ui.service.navigator.RecipientOfTheCurrentPage;
 import com.netcracker.ui.service.navigator.View;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeDataConverter;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
@@ -59,6 +60,7 @@ import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -105,7 +107,7 @@ public class UiServiceMainUI extends UI{
         
         newViews.add(new View("Main") {
             @Override
-            public void draw() {
+            public void draw(LinkedMultiValueMap<String, String> parameters) {
                 mainLayer.contentRowLayout.removeAllComponents();
                 addSliderComponent(mainLayer.contentRowLayout);
                 addTopRecepiesComponent(mainLayer.contentRowLayout);
@@ -114,13 +116,10 @@ public class UiServiceMainUI extends UI{
 
         newViews.add(new View("Recept") {
             @Override
-            public void draw() {               
-                MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-                //parameters.add("receipe_id", "1"); 
-                //ReceipeProxy proxy = new ReceipeProxy();
-                //proxy.setConfig("http://localhost:8081/receipes/", parameters);
+            public void draw(LinkedMultiValueMap<String, String> parameters) {               
+                /*MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
                 parameters.add("receipeId", "12345");
-                parameters.add("userId","1111");
+                parameters.add("userId","1111");*/
                 ReceipeProxy proxy = new ReceipeProxy();
                 proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters);
 
@@ -136,6 +135,7 @@ public class UiServiceMainUI extends UI{
                 }
                 catch(Exception exception)
                 {
+                    //ДОБАВИТЬ БИН HttpClientErrorException 
                     ExceptionHandler.getInstance().runExceptionhandling(exception);
                 }
             }
@@ -143,7 +143,7 @@ public class UiServiceMainUI extends UI{
         
         newViews.add(new View("Search") {
             @Override
-            public void draw() {
+            public void draw(LinkedMultiValueMap<String, String> parameters) {
                 mainLayer.contentRowLayout.removeAllComponents();
                 mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Рецепты, удовлетворяющие условию поиска:"));
             }
@@ -151,13 +151,18 @@ public class UiServiceMainUI extends UI{
         
         newViews.add(new View("UserPage") {
            @Override
-            public void draw() {
+            public void draw(LinkedMultiValueMap<String, String> parameters) {
                 mainLayer.contentRowLayout.removeAllComponents();
                 addUserPageComponent(mainLayer.contentRowLayout);
             }
         });
         
-        Navigator navigator = new Navigator(getPage(),newViews);
+        Navigator navigator = new Navigator(new RecipientOfTheCurrentPage() {
+            @Override
+            public Page getCurrentPath() {
+                return getPage();
+            }
+        },newViews);
         
         //Создаем подпункты меню
         ArrayList<MenusButton> mainSubMenus = new ArrayList<>();
@@ -192,7 +197,7 @@ public class UiServiceMainUI extends UI{
         MenusButton mainBtn = new MenusButton("Главная","idMain", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                navigator.navigateTo("Main");
+                getPage().setUriFragment("Main");
             }
             
         },mainSubMenus);
@@ -202,7 +207,7 @@ public class UiServiceMainUI extends UI{
         MenusButton recepsBtn = new MenusButton("Рецепты","idRecept", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                navigator.navigateTo("Recept");
+                getPage().setUriFragment("Recept?userId=1111&receipeId=12343");
             }
             
         });
@@ -210,7 +215,7 @@ public class UiServiceMainUI extends UI{
         MenusSearchBar search = new MenusSearchBar("idSearch", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                navigator.navigateTo("Search");
+                getPage().setUriFragment("Search");
             }
             
         });
@@ -236,7 +241,7 @@ public class UiServiceMainUI extends UI{
         MenusButton userPageBtn = new MenusButton("Профиль","iduserPage", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-               navigator.navigateTo("UserPage");
+               getPage().setUriFragment("UserPage");
             }
 
         });

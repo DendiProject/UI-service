@@ -10,7 +10,10 @@ import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.LinkedMultiValueMap;
 
 /**
  * Используется для навигации между видами
@@ -18,17 +21,19 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class Navigator {
     private ArrayList<View> views;
-    Page currentPage;
-    String newCurrentPage;
+    private Page currentPage;
+    //private String newCurrentPage;
+    private RecipientOfTheCurrentPage recipientOfTheCurrentPage;
     
     public Navigator()
     {
         
     }
-    public Navigator(Page newcurrentPage, ArrayList<View> newViews)
+    public Navigator(RecipientOfTheCurrentPage recipientOfTheCurrentPage, ArrayList<View> newViews)
     {
         views = newViews;
-        currentPage = newcurrentPage;
+        this.recipientOfTheCurrentPage = recipientOfTheCurrentPage;
+        currentPage = recipientOfTheCurrentPage.getCurrentPath();
         
         String currentPath = currentPage.getUriFragment();
         if(views.size()>0)
@@ -44,42 +49,72 @@ public class Navigator {
             new Page.UriFragmentChangedListener() {
                 public void uriFragmentChanged(
                     Page.UriFragmentChangedEvent source) {
-                        drawView(newCurrentPage);
+                        currentPage = recipientOfTheCurrentPage.
+                                getCurrentPath();
+                        drawView(currentPage.getUriFragment());
                 }
             });
     }
     
-    private void drawView(String viewsName)
+    private void drawView(String path)
     {
         if(views.size()>0)
         {
-            //Если путо, то отобразить дефолтный вид (считаю дефолтным первый вид)
-            if(viewsName == null || viewsName.equals(""))
+            //Если пуcто, то отобразить дефолтный вид (считаю дефолтным первый вид)
+            if(path == null || path.equals(""))
             {
-                viewsName = views.get(0).name;
+                path = views.get(0).name;
                 CookieHandler ch = new CookieHandler();
                 ch.guestEnter();
+                return;
+            }
+            //Иначе поиск вида
+            else
+            {
+                //Получение имени страницы и параметров(если они есть)
+                String[] pageNameAndParameters = path.split("\\?");
+                LinkedMultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+                if(pageNameAndParameters.length == 2)
+                {
+                    String[] parametersWithKeys = pageNameAndParameters[1].split("&");
+                    for(int i=0; i<parametersWithKeys.length; i++)
+                    {
+                        String[] parameter = parametersWithKeys[i].split("=");
+                        if(pageNameAndParameters.length == 2)
+                        {
+                            parameters.add(parameter[0], parameter[1]);
+                        }
+                        else
+                        {
+                            //ВЫЗОВ ИСКЛЮЧЕНИЯ - НЕВЕРНЫЙ ФОРМАТ ЗАПРОСА
+                        }
+                    }
+                }
+                if(pageNameAndParameters.length > 2)
+                {
+                    //ВЫЗОВ ИСКЛЮЧЕНИЯ - НЕВЕРНЫЙ ФОРМАТ ЗАПРОСА
+                }
+
+                
+                for(int i=0; i<views.size(); i++)
+                {
+                    if(views.get(i).name.equals(pageNameAndParameters[0]))
+                    {
+                        views.get(i).draw(parameters);
+                        break;
+                    }
+                }
+                //ДОБАВИТЬ СЮДА ПЕРЕХОД НА 404 СТРАНИЦУ
             }
         }
-        
-        for(int i=0; i<views.size(); i++)
+        else
         {
-            if(views.get(i).name.equals(viewsName))
-            {
-                views.get(i).draw();
-                break;
-            }
+            //ДОБАВИТЬ ВЫЗОВ ИСКЛЮЧЕНИЯ-ОТСУТСТВИЕ ВИДОВ
         }
     }
     
     public void addView(View view)
     {
         views.add(view);
-    }
-    
-    public void navigateTo(String path)
-    {
-        newCurrentPage = path;
-        currentPage.setUriFragment(path);
     }
 }
