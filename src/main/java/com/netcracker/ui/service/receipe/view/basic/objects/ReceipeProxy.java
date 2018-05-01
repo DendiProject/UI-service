@@ -73,7 +73,7 @@ public class ReceipeProxy  implements Proxy{
         }
         else
         {
-            return null;
+            throw new ConnectionErrorException("Access error: insufficient permissions or connection loss");
         }
     }
 }

@@ -18,6 +18,7 @@ import com.netcracker.ui.service.content.handler.ContentManagerController;
 import com.netcracker.ui.service.exception.ConcreteException;
 import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.exception.UiServiceException;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
@@ -87,7 +88,8 @@ public class UiServiceMainUI extends UI{
         }
     }
     
-    private ResponsiveLayout createMainLayout() throws MenuComponentException, NotFoundBean
+    private ResponsiveLayout createMainLayout() throws MenuComponentException, 
+            NotFoundBean
     {
         setSizeFull();//Пользовательский интерфейс на весь экран
         BasicLayoutCreator mainLayer;
@@ -157,20 +159,33 @@ public class UiServiceMainUI extends UI{
         
         Navigator navigator = new Navigator(getPage(),newViews);
         
-        
         //Создаем подпункты меню
         ArrayList<MenusButton> mainSubMenus = new ArrayList<>();
         mainSubMenus.add(new MenusButton("Подпункт1","idsubMain1", new HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                throw new UnsupportedOperationException("No added treatment, yet to test fly an exception for button: subMain1"); //To change body of generated methods, choose Tools | Templates.
+                try {
+                    throw new UiServiceException("Проверка работы с неизвестным "
+                            + "типом исключений");
+                }
+                catch(Exception exception)
+                {
+                    ExceptionHandler.getInstance().runExceptionhandling(exception);
+                }
             }
         }));
         
         mainSubMenus.add(new MenusButton("Подпункт2","idsubMain2", new HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                throw new UnsupportedOperationException("No added treatment, yet to test fly an exception for button: subMain2"); //To change body of generated methods, choose Tools | Templates.
+                try {
+                    throw new UiServiceException("Проверка работы с неизвестным "
+                            + "типом исключений");
+                }
+                catch(Exception exception)
+                {
+                    ExceptionHandler.getInstance().runExceptionhandling(exception);
+                }
             }
         }));
         //создаем кнопку меню, включающую подпункты
@@ -225,30 +240,12 @@ public class UiServiceMainUI extends UI{
             }
 
         });
-        MenusButton addIngredient = new MenusButton("Загрузить картинку", "idconfigIngredient", new HandlerForClickingTheButton() {
-      @Override
-      public void onEventClickDo() {
 
-        try {
-          contentManadgerController = bfCMC.getBean(ContentManagerController.class);
-          String path = "C:\\Users\\1\\Documents\\1NETCRACKER PROJECT\\_____\\ui-service\\src\\main\\webapp\\WEB-INF\\images\\slide1.png";
-          contentManadgerController.addImage(path);
-        } catch (FileNotFoundException ex) {
-          java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-          java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        System.out.print("addIngredient");
-      }
-
-    });
         mainLayer.menu.addItem(mainBtn);
         mainLayer.menu.addItem(recepsBtn);
         mainLayer.menu.addItem(search);
         mainLayer.menu.addItem(registration);
         mainLayer.menu.addItem(signIn);
-        //mainLayer.menu.addItem(userPageBtn);
         
         BeansFactory<ButtonsClickListener> bf = BeansFactory.getInstance();
         ButtonsClickListener clickListener;

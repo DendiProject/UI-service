@@ -10,5 +10,5 @@ package com.netcracker.ui.service.exception;
  * @author Artem
  */
 abstract public class ConcreteExceptionHandler {
-    public abstract void handling();
+    public abstract void handling(Exception exception);
 }

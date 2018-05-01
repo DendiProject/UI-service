@@ -39,40 +39,48 @@ public class UiServiceApplication {
         ConcreteException connectionErrorException = 
                 new ConcreteException(new ConcreteExceptionHandler() {
                     @Override
-                    public void handling() {
-                        throw new UnsupportedOperationException("Not supported yet.");
+                    public void handling(Exception exception) {
+                        
                     }
-                }, ConnectionErrorException.class, "message","moreAboutException",
+                }, ConnectionErrorException.class, "Не удалось создать соединение."
+                        + " Пожалуйста, повторите попытку позже.",
+                        "Failed to create connection",
                 BasicImportanceClass.errorMessage);
         ex.addException(connectionErrorException);
 
         ConcreteException convertDataException = 
                 new ConcreteException(new ConcreteExceptionHandler() {
                     @Override
-                    public void handling() {
-                        throw new UnsupportedOperationException("Not supported yet.");
+                    public void handling(Exception exception) {
+                        
                     }
-                }, ConvertDataException.class, "message","moreAboutException",
+                }, ConvertDataException.class, "Не удалось преобразовать "
+                        + "входные данные. Ошибка со стороны сервера, "
+                        + "пожалуйста, повторите попытку позже.",
+                        "Unable to convert input data",
                 BasicImportanceClass.errorMessage);
         ex.addException(convertDataException);
 
         ConcreteException shortViewException = 
                         new ConcreteException(new ConcreteExceptionHandler() {
                     @Override
-                    public void handling() {
-                        throw new UnsupportedOperationException("Not supported yet.");
+                    public void handling(Exception exception) {
+                        
                     }
-        }, ShortViewException.class, "message","moreAboutException",
+        }, ShortViewException.class, "Данная страница недоступна, пожалуйста, "
+                + "повторите попытку позже","This page is not available",
                 BasicImportanceClass.errorMessage);
         ex.addException(shortViewException);
 
         ConcreteException resourceAccessException = 
                         new ConcreteException(new ConcreteExceptionHandler() {
                     @Override
-                    public void handling() {
-                        throw new UnsupportedOperationException("Not supported yet.");
+                    public void handling(Exception exception) {
+                        
                     }
-        }, ResourceAccessException.class, "message","moreAboutException",
+        }, ResourceAccessException.class, "Ресурс временно недоступен, "
+                + "пожалуйста, повторите попытку позже",
+                                "Resource temporarily unavailable",
                 BasicImportanceClass.errorMessage);
         ex.addException(resourceAccessException);
         SpringApplication.run(UiServiceApplication.class, args);

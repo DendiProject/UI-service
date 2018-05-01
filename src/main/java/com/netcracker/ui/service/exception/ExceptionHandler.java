@@ -5,6 +5,9 @@
  */
 package com.netcracker.ui.service.exception;
 
+import static com.netcracker.ui.service.exception.ConcreteException.logger;
+import com.vaadin.server.Page;
+import com.vaadin.ui.Notification;
 import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +25,30 @@ public class ExceptionHandler{
         exceptions = new ArrayList<>();
         configuration = new ExceptionHandlersConfiguration() {
             @Override
-            public void doOnExceptionAlreadyExists() {
-                return;
+            public void doOnExceptionAlreadyExists(String type) {
+                //Обработка логером
+                logger.error("Information: Нельзя добавить два обработчика "
+                        + "ошибок одного типа: "+type+" Exception message: "
+                                + "You cannot add two error handlers of the "
+                                + "same type: "+type);
+                //Обработка нотификацией
+                new Notification("This is a error",
+                        "Нельзя добавить два обработчика "
+                        + "ошибок одного типа: "+type,
+                        Notification.Type.ERROR_MESSAGE, true)
+                .show(Page.getCurrent());
             }
 
             @Override
-            public void doOnNoFoundException() {
-                return;
+            public void doOnNoFoundException(String type) {
+                //Обработка логером
+                logger.error("Information: Неизвестное исключение типа: "+type+
+                        " Exception message: Unknown exception: "+type);
+                //Обработка нотификацией
+                new Notification("This is a error",
+                        "Неизвестное исключение типа: "+type,
+                        Notification.Type.ERROR_MESSAGE, true)
+                .show(Page.getCurrent());
             }
         };
     }
@@ -54,7 +74,8 @@ public class ExceptionHandler{
         {
             if(exception.getType().equals(exceptions.get(i).getType()))
             {
-                configuration.doOnExceptionAlreadyExists();
+                configuration.doOnExceptionAlreadyExists(exception.
+                        getType().toString());
                 return;
             }
         }
@@ -67,11 +88,11 @@ public class ExceptionHandler{
         {
             if(exception.getClass().equals(exceptions.get(i).getType()))
             { 
-                exceptions.get(i).callExceptionHandler();
+                exceptions.get(i).callExceptionHandler(exception);
                 return;
             }
         }
-        configuration.doOnNoFoundException();
+        configuration.doOnNoFoundException(exception.getClass().toString());
     }
     
     public void setConfigureation(ExceptionHandlersConfiguration configuration)
