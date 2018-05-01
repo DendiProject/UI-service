@@ -12,8 +12,8 @@ import com.jarektoro.responsivelayout.ResponsiveRow;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
 import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
-import com.netcracker.ui.service.components.SecurityTokenHandler;
-import com.netcracker.ui.service.components.StartupHousekeeper;
+import com.netcracker.ui.service.security.SecurityTokenHandler;
+import com.netcracker.ui.service.security.StartupHousekeeper;
 import com.netcracker.ui.service.content.handler.ContentManagerController;
 import com.netcracker.ui.service.exception.ConcreteException;
 import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
@@ -157,12 +157,7 @@ public class UiServiceMainUI extends UI{
             }
         });
         
-        Navigator navigator = new Navigator(new RecipientOfTheCurrentPage() {
-            @Override
-            public Page getCurrentPath() {
-                return getPage();
-            }
-        },newViews);
+        Navigator navigator = new Navigator(() -> getPage(),newViews);
         
         //Создаем подпункты меню
         ArrayList<MenusButton> mainSubMenus = new ArrayList<>();

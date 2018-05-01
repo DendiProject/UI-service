@@ -6,8 +6,8 @@
 package com.netcracker.ui.service.content.handler;
 
 import com.netcracker.ui.service.beans.factory.BeansFactory;
-import com.netcracker.ui.service.components.RestFilter;
-import com.netcracker.ui.service.components.SecurityTokenHandler;
+import com.netcracker.ui.service.filters.RestFilter;
+import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import java.io.File;
 import java.io.FileNotFoundException;

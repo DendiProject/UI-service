@@ -12,6 +12,7 @@ import com.netcracker.ui.service.beans.factory.TokenStoreBean;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.components.PostUserData;
+import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
@@ -38,7 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import com.netcracker.ui.service.components.SecurityTokenHandler;
+import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.vaadin.ui.Window;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -80,7 +81,7 @@ public class AuthorizationForm extends BasicForm {
         String secureToken = tokenStore.getToken();
 
         PostUserData postRequest = new PostUserData(
-                "http://"+idpURL+"/idpsecure/authorization", userInfo, secureToken);
+                "http://localhost:8181/idpsecure/authorization", userInfo, secureToken);
 
 //                    Gson gson = new Gson(); 
 //                    URL url = new URL("http://"+idpURL+"/authorization/");

@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service.components;
+package com.netcracker.ui.service.filters;
 
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.security.SecurityTokenHandler;
+import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;

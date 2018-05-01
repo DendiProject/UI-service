@@ -6,7 +6,7 @@
 package com.netcracker.ui.service.beans.factory;
 
 import com.netcracker.ui.service.beans.factory.basic.objects.interfaces.Product;
-import com.netcracker.ui.service.components.SecurityTokenHandler;
+import com.netcracker.ui.service.security.SecurityTokenHandler;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 

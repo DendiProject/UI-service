@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import com.netcracker.ui.service.UserDto;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.content.handler.CookieHandler;
-import com.netcracker.ui.service.components.SecurityTokenHandler;
+import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.netcracker.ui.service.components.PostUserData;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.vaadin.data.validator.StringLengthValidator;
@@ -74,6 +74,7 @@ public class RegistrationForm extends BasicForm {
 
     register.addClickListener(e -> {
       try {
+        
         if (password.getValue().equals(password2.getValue())) {
 
           tokenStore = bfTK.getBean(SecurityTokenHandler.class);
@@ -102,7 +103,7 @@ public class RegistrationForm extends BasicForm {
             RegistrationForm.this.close();
 
             PostUserData authRequest = new PostUserData(
-                    "http://"+idpURL+"/idpsecure/authorization", userInfo, secureToken);
+                    "http://localhost:8181/idpsecure/authorization", userInfo, secureToken);
 
             cookieHandler.updateUserCookies(authRequest);
           } else {

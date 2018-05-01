@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service.components;
+package com.netcracker.ui.service.security;
 
+import com.netcracker.ui.service.security.StartupHousekeeper;
 import com.google.gson.Gson;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.vaadin.spring.annotation.SpringComponent;
