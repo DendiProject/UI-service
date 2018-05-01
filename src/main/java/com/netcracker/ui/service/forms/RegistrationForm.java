@@ -12,6 +12,7 @@ import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.netcracker.ui.service.components.PostUserData;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.FontAwesome;
@@ -119,11 +120,9 @@ public class RegistrationForm extends BasicForm {
 
         }
 
-      } catch (UnsupportedEncodingException ex) {
-        Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (IOException | NullPointerException ex) {
-        Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-      }
+      } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
+    }
     }
     );
   }

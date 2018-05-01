@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -112,11 +113,9 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
           }
         }
 
-      } catch (UnsupportedEncodingException ex) {
-        Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (IOException ex) {
-        Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
-      }
+      } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
+    }
       start = false;
     }
   }

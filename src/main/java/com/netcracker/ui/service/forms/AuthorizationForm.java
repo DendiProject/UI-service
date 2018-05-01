@@ -12,6 +12,7 @@ import com.netcracker.ui.service.beans.factory.TokenStoreBean;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.components.PostUserData;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinService;
@@ -134,15 +135,9 @@ public class AuthorizationForm extends BasicForm {
         postRequest.wr.close();
         postRequest.con.disconnect();
 
-      } catch (UnsupportedEncodingException ex) {
-        Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (IOException ex) {
-        Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (NullPointerException ex) {
-        Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (InterruptedException ex) {
-        Logger.getLogger(AuthorizationForm.class.getName()).log(Level.SEVERE, null, ex);
-      }
+      } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
+    }
 
     });
   }

@@ -9,6 +9,7 @@ import com.netcracker.ui.service.UserDto;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.netcracker.ui.service.components.PostUserData;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.forms.RegistrationForm;
 import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -70,10 +71,8 @@ public class CookieHandler {
         postRequest.con.disconnect();
       }
 
-    } catch (UnsupportedEncodingException ex) {
-      Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (IOException | NullPointerException ex) {
-      Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
     }
 
   }
@@ -109,8 +108,8 @@ public class CookieHandler {
         System.out.println("Токен USER");
 
       }
-    } catch (IOException ex) {
-      Logger.getLogger(CookieHandler.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
     }
     return result;
   }
@@ -125,6 +124,5 @@ public class CookieHandler {
     }
     return null;
   }
-  
-  
+
 }
