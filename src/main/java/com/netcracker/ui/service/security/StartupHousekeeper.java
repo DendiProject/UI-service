@@ -113,9 +113,11 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
           }
         }
 
-      } catch (Exception exception) {
-      ExceptionHandler.getInstance().runExceptionhandling(exception);
-    }
+      } catch (UnsupportedEncodingException ex) {
+        Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
+      } catch (IOException ex) {
+        Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
+      }
       start = false;
     }
   }
