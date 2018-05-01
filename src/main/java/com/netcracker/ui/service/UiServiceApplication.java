@@ -170,7 +170,7 @@ public class UiServiceApplication {
                 BasicImportanceClass.errorMessage);
         ex.addException(NotFoundBean);
  
-        SpringApplication.run(IncorrectClaimException.class, args);
+        SpringApplication.run(UiServiceApplication.class, args);
         
        
     }
