@@ -86,7 +86,7 @@ public class RegistrationForm extends BasicForm {
           userInfo.setPassword(password.getValue());
           System.out.println("secureToken = " + secureToken);
           PostUserData postRequest = new PostUserData(
-                  "http://"+idpURL+"/idpsecure/register", userInfo, secureToken);
+                  "http://localhost:8181/idpsecure/register", userInfo, secureToken);
 
 //
 //                    String postUrl = "http://"+idpURL+"/idpsecure/register";

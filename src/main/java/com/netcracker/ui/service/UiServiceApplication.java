@@ -162,7 +162,7 @@ public class UiServiceApplication {
                     public void handling(Exception exception) {
                         
                     }
-                }, NullPointerException.class, "Произошла ошибка при обращении к объекту ",
+                }, NullPointerException.class, "Произошла ошибка при обращении к объекту (NullPointerException)",
                         "NullPointerException",
                 BasicImportanceClass.errorMessage);
         ex.addException(NullPointerException);
