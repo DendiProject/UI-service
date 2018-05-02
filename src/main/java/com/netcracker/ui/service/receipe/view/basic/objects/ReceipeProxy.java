@@ -6,9 +6,12 @@
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.content.handler.CookieHandler;
+import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
+import javax.servlet.http.Cookie;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,12 +25,15 @@ import org.springframework.web.util.UriComponentsBuilder;
  *
  * @author Artem
  */
+
 public class ReceipeProxy  implements Proxy{
     private String connectionUrl;
     public MultiValueMap<String, String> parameters;
     
     private RestTemplate restTemplate;
-   
+    
+    
+    
     public void setConfig(String connectionUrl, MultiValueMap<String, String> parameters)
     {
         this.connectionUrl = connectionUrl;
@@ -36,7 +42,13 @@ public class ReceipeProxy  implements Proxy{
     //Проверка прав пользователя
     @Override
     public Boolean connect() throws ConnectionErrorException{
-        if(true)
+        CookieHandler ch = new CookieHandler();
+        JWTHandler jwth = new JWTHandler();
+        Cookie userCookie = ch.getCookieByName("userInfo");
+        //user = true  - это пользователь
+        //uesr = false - это гость
+        boolean user = jwth.checkUser(userCookie.getValue(), "test");
+        if(user)
         {
             return true;
         }

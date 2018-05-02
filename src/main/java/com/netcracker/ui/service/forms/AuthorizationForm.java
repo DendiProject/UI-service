@@ -12,6 +12,8 @@ import com.netcracker.ui.service.beans.factory.TokenStoreBean;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.components.PostUserData;
+import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
@@ -38,7 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import com.netcracker.ui.service.components.SecurityTokenHandler;
+import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.vaadin.ui.Window;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -80,7 +82,7 @@ public class AuthorizationForm extends BasicForm {
         String secureToken = tokenStore.getToken();
 
         PostUserData postRequest = new PostUserData(
-                "http://"+idpURL+"/idpsecure/authorization", userInfo, secureToken);
+                "http://localhost:8181/idpsecure/authorization", userInfo, secureToken);
 
 //                    Gson gson = new Gson(); 
 //                    URL url = new URL("http://"+idpURL+"/authorization/");
@@ -133,15 +135,9 @@ public class AuthorizationForm extends BasicForm {
         postRequest.wr.close();
         postRequest.con.disconnect();
 
-      } catch (UnsupportedEncodingException ex) {
-        Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (IOException ex) {
-        Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (NullPointerException ex) {
-        Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (InterruptedException ex) {
-        Logger.getLogger(AuthorizationForm.class.getName()).log(Level.SEVERE, null, ex);
-      }
+      } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
+    }
 
     });
   }

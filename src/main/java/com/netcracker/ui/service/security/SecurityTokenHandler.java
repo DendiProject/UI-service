@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service.components;
+package com.netcracker.ui.service.security;
 
+import com.netcracker.ui.service.security.StartupHousekeeper;
 import com.google.gson.Gson;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.spring.annotation.VaadinSessionScope;
@@ -111,10 +113,8 @@ public class SecurityTokenHandler {
         }
       }
 
-    } catch (UnsupportedEncodingException ex) {
-      Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (IOException ex) {
-      Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
     }
   }
   
@@ -133,10 +133,8 @@ public class SecurityTokenHandler {
       System.out.println("responseCode =  " + responseCode);
       res = con.getResponseCode();
 
-    } catch (MalformedURLException ex) {
-      Logger.getLogger(SecurityTokenHandler.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (IOException ex) {
-      Logger.getLogger(SecurityTokenHandler.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
     }
     return res;
   }

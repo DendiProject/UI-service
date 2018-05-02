@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service.components;
+package com.netcracker.ui.service.filters;
 
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -48,8 +50,8 @@ public class ZuulPreFilter extends ZuulFilter {
   public Object run() {
     try {
       tokenHandler = bfTK.getBean(SecurityTokenHandler.class);
-    } catch (NotFoundBean ex) {
-      Logger.getLogger(ZuulPreFilter.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
     }
     RequestContext ctx = RequestContext.getCurrentContext();
     ctx.addZuulRequestHeader("secureToken", tokenHandler.getToken());

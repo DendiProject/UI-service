@@ -6,8 +6,9 @@
 package com.netcracker.ui.service.content.handler;
 
 import com.netcracker.ui.service.beans.factory.BeansFactory;
-import com.netcracker.ui.service.components.RestFilter;
-import com.netcracker.ui.service.components.SecurityTokenHandler;
+import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.filters.RestFilter;
+import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,24 +44,18 @@ import org.springframework.web.util.UriComponentsBuilder;
 @EnableZuulServer
 public class ContentManagerController {
 
-    private String connectionUrl;
-    BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
-    SecurityTokenHandler tokenStore;
-    
-    public ContentManagerController(String connectionUrl)
-    {
-        this.connectionUrl = connectionUrl;
-        //http://localhost:8082/
-    }
-    
-     public String getImage(String id) {
+  private String connectionUrl;
+  BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
+  SecurityTokenHandler tokenStore;
+
+  public ContentManagerController(String connectionUrl) {
+    this.connectionUrl = connectionUrl;
+    //http://localhost:8082/
+  }
+
+  public String getImage(String id) {
     return connectionUrl + "/file/getfile/" + id;//"http://localhost:8082/file/getfile/41e9d7a1-966f-43ce-a860-71745e3d5fc9"
   }
-    
-
-  
-
- 
 
   public String addImage(String filePath) throws NotFoundBean, FileNotFoundException, IOException {
     try {
@@ -114,25 +109,9 @@ public class ContentManagerController {
       httpclient.getConnectionManager().shutdown();
       System.out.println(id);
       return id;
-    } catch (IOException ex) {
-      System.out.println(ex);
-      return "error";
+    } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
+      return "err";
     }
   }
-
-//  public String getFile() throws IOException {
-//    try {
-//
-//      HttpClient httpclient = new DefaultHttpClient();
-//      HttpGet httppost = new HttpGet("http://localhost:8081/file/getfile/130dd111-8a67-4630-b082-07de12fed38a");
-//      HttpResponse response2 = httpclient.execute(httppost);
-//      httpclient.getConnectionManager().shutdown();
-//
-//      System.out.println(response2.getAllHeaders());
-//    } catch (NotFoundBean ex) {
-//      Logger.getLogger(ContentManagerController.class.getName()).log(Level.SEVERE, null, ex);
-//    }
-//    return "getFile Class";
-//  }
-
 }
