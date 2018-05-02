@@ -7,6 +7,10 @@ package com.netcracker.ui.service.navigator;
 
 
 import com.netcracker.ui.service.content.handler.CookieHandler;
+import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.exception.navigator.InvalidQueryFormat;
+import com.netcracker.ui.service.exception.navigator.NoViewAvailable;
+import com.netcracker.ui.service.exception.navigator.NotFound;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 import java.util.ArrayList;
@@ -29,7 +33,9 @@ public class Navigator {
     {
         
     }
-    public Navigator(RecipientOfTheCurrentPage recipientOfTheCurrentPage, ArrayList<View> newViews)
+    public Navigator(RecipientOfTheCurrentPage recipientOfTheCurrentPage, 
+            ArrayList<View> newViews) throws NoViewAvailable, 
+            InvalidQueryFormat, NotFound
     {
         views = newViews;
         this.recipientOfTheCurrentPage = recipientOfTheCurrentPage;
@@ -51,21 +57,34 @@ public class Navigator {
                     Page.UriFragmentChangedEvent source) {
                         currentPage = recipientOfTheCurrentPage.
                                 getCurrentPath();
-                        drawView(currentPage.getUriFragment());
+                        try{
+                            drawView(currentPage.getUriFragment());
+                        }
+                        catch(Exception exception)
+                        {
+                            ExceptionHandler.getInstance().
+                                    runExceptionhandling(exception);
+                        }
                 }
             });
     }
     
-    private void drawView(String path)
+    private void drawView(String path) throws NoViewAvailable, InvalidQueryFormat, NotFound
     {
         if(views.size()>0)
         {
             //Если пуcто, то отобразить дефолтный вид (считаю дефолтным первый вид)
-            if(path == null || path.equals(""))
+            if(path == null)
             {
                 path = views.get(0).name;
                 CookieHandler ch = new CookieHandler();
                 ch.guestEnter();
+                views.get(0).draw(new LinkedMultiValueMap<>());
+                return;
+            }
+            //При пустом ничего не делать
+            if(path.equals(""))
+            {
                 return;
             }
             //Иначе поиск вида
@@ -86,30 +105,32 @@ public class Navigator {
                         }
                         else
                         {
-                            //ВЫЗОВ ИСКЛЮЧЕНИЯ - НЕВЕРНЫЙ ФОРМАТ ЗАПРОСА
+                            throw new InvalidQueryFormat("Invalid query "
+                                    + "format.");
                         }
                     }
                 }
                 if(pageNameAndParameters.length > 2)
                 {
-                    //ВЫЗОВ ИСКЛЮЧЕНИЯ - НЕВЕРНЫЙ ФОРМАТ ЗАПРОСА
+                    throw new InvalidQueryFormat("Invalid query format.");
                 }
 
-                
+
                 for(int i=0; i<views.size(); i++)
                 {
                     if(views.get(i).name.equals(pageNameAndParameters[0]))
                     {
                         views.get(i).draw(parameters);
-                        break;
+                        return;
                     }
                 }
-                //ДОБАВИТЬ СЮДА ПЕРЕХОД НА 404 СТРАНИЦУ
+                throw new NotFound("Page:" + pageNameAndParameters[0]
+                        + "not found");
             }
         }
         else
         {
-            //ДОБАВИТЬ ВЫЗОВ ИСКЛЮЧЕНИЯ-ОТСУТСТВИЕ ВИДОВ
+            throw new NoViewAvailable("No view available, add them");
         }
     }
     

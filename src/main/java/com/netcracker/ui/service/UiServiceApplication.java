@@ -13,9 +13,13 @@ import com.netcracker.ui.service.exception.ConcreteException;
 import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.importanceTypes.BasicImportanceClass;
+import com.netcracker.ui.service.exception.navigator.InternalServerError;
+import com.netcracker.ui.service.exception.navigator.NotFound;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.exception.receipe.view.ShortViewException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -40,7 +44,14 @@ public class UiServiceApplication {
                 new ConcreteException(new ConcreteExceptionHandler() {
                     @Override
                     public void handling(Exception exception) {
-                        
+                        try {
+                            throw new InternalServerError("Exception from "
+                                    + "IU-Service, Navigator. Internal server "
+                                    + "error");
+                        } catch (InternalServerError ex1) {
+                            ExceptionHandler.getInstance().
+                                    runExceptionhandling(ex1);
+                        }
                     }
                 }, ConnectionErrorException.class, "Не удалось создать соединение."
                         + " Пожалуйста, повторите попытку позже.",
@@ -52,7 +63,14 @@ public class UiServiceApplication {
                 new ConcreteException(new ConcreteExceptionHandler() {
                     @Override
                     public void handling(Exception exception) {
-                        
+                        try {
+                            throw new InternalServerError("Exception from "
+                                    + "IU-Service, Navigator. Internal server "
+                                    + "error");
+                        } catch (InternalServerError ex1) {
+                            ExceptionHandler.getInstance().
+                                    runExceptionhandling(ex1);
+                        }
                     }
                 }, ConvertDataException.class, "Не удалось преобразовать "
                         + "входные данные. Ошибка со стороны сервера, "
@@ -65,7 +83,13 @@ public class UiServiceApplication {
                         new ConcreteException(new ConcreteExceptionHandler() {
                     @Override
                     public void handling(Exception exception) {
-                        
+                        try {
+                            throw new NotFound("Exception from IU-Service, "
+                                    + "Navigator. Not found.");
+                        } catch (NotFound ex1) {
+                            ExceptionHandler.getInstance().
+                                    runExceptionhandling(ex1);
+                        }
                     }
         }, ShortViewException.class, "Данная страница недоступна, пожалуйста, "
                 + "повторите попытку позже","This page is not available",
@@ -76,7 +100,14 @@ public class UiServiceApplication {
                         new ConcreteException(new ConcreteExceptionHandler() {
                     @Override
                     public void handling(Exception exception) {
-                        
+                        try {
+                            throw new InternalServerError("Exception from "
+                                    + "IU-Service, Navigator. Internal server "
+                                    + "error");
+                        } catch (InternalServerError ex1) {
+                            ExceptionHandler.getInstance().
+                                    runExceptionhandling(ex1);
+                        }
                     }
         }, ResourceAccessException.class, "Ресурс временно недоступен, "
                 + "пожалуйста, повторите попытку позже",

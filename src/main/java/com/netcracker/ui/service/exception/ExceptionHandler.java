@@ -6,6 +6,8 @@
 package com.netcracker.ui.service.exception;
 
 import static com.netcracker.ui.service.exception.ConcreteException.logger;
+import com.netcracker.ui.service.exception.navigator.InternalServerError;
+import com.netcracker.ui.service.exception.navigator.NotFound;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 import java.util.ArrayList;
@@ -72,7 +74,9 @@ public class ExceptionHandler{
         }
         for(int i=0;i<exceptions.size();i++)
         {
-            if(exception.getType().equals(exceptions.get(i).getType()))
+            if(exception.getType().equals(exceptions.get(i).getType()) && 
+                    !exception.getType().equals(NotFound.class) && 
+                    !exception.getType().equals(InternalServerError.class))
             {
                 configuration.doOnExceptionAlreadyExists(exception.
                         getType().toString());
