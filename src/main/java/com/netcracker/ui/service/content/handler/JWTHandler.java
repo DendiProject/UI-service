@@ -53,8 +53,7 @@ public class JWTHandler {
               .requireSubject("USER")
               .setSigningKey(DatatypeConverter.parseBase64Binary(key))
               .parseClaimsJws(jwt).getBody();
-    } catch (IncorrectClaimException e) {
-      
+    } catch (IncorrectClaimException e) { 
      user = false;
     }
     return user;

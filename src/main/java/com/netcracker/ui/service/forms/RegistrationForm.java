@@ -107,6 +107,7 @@ public class RegistrationForm extends BasicForm {
                     "http://localhost:8181/idpsecure/authorization", userInfo, secureToken);
 
             cookieHandler.updateUserCookies(authRequest);
+            Page.getCurrent().reload();
           } else {
             System.out.println("ошиька при регистрации");
           }

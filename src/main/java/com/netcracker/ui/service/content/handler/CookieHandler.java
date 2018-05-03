@@ -65,7 +65,7 @@ public class CookieHandler {
           }
           myUserCookie.setPath("/");
           VaadinService.getCurrentResponse().addCookie(myUserCookie);
-          System.out.println(myUserCookie.getName() + " " + myUserCookie.getValue());      //<----DELETE
+          System.out.println("guestEnter = " + myUserCookie.getName() + " " + myUserCookie.getValue());      //<----DELETE
         }
         postRequest.wr.close();
         postRequest.con.disconnect();
@@ -125,4 +125,39 @@ public class CookieHandler {
     return null;
   }
 
+  public void getCookieForGuest() {
+    try {
+      Cookie myUserCookie = getCookieByName("userInfo");
+      tokenStore = bfTK.getBean(SecurityTokenHandler.class);
+      String secureToken = tokenStore.getToken();
+      UserDto userInfo = new UserDto();
+      userInfo.setEmail("guest");
+      userInfo.setPassword("guestpass");
+      PostUserData postRequest = new PostUserData(
+              "http://localhost:8181/idpsecure/authorization", userInfo, secureToken);
+      System.out.println(postRequest.con.getResponseCode());
+      if (postRequest.con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+        Map<String, List<String>> headerFields = postRequest.con.getHeaderFields();
+        List<String> cookiesHeader = headerFields.get("Set-Cookie");
+
+        if (cookiesHeader != null) {
+          for (String cookie : cookiesHeader) {
+            String name = HttpCookie.parse(cookie).get(0).getName();
+            String value = HttpCookie.parse(cookie).get(0).getValue();
+            myUserCookie = new Cookie(name, value);
+
+          }
+        }
+        myUserCookie.setPath("/");
+        VaadinService.getCurrentResponse().addCookie(myUserCookie);
+        System.out.println("getCookieForGuest = " + myUserCookie.getName() + " " + myUserCookie.getValue());      //<----DELETE
+      }
+      postRequest.wr.close();
+      postRequest.con.disconnect();
+
+    } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
+    }
+  }
 }

@@ -130,6 +130,7 @@ public class AuthorizationForm extends BasicForm {
 //                        n.show(Page.getCurrent());
           Thread.sleep(1300);
           AuthorizationForm.this.close();
+          Page.getCurrent().reload();
         }
 
         postRequest.wr.close();
