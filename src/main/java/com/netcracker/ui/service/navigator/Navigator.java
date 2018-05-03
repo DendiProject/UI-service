@@ -55,8 +55,6 @@ public class Navigator {
             new Page.UriFragmentChangedListener() {
                 public void uriFragmentChanged(
                     Page.UriFragmentChangedEvent source) {
-                        currentPage = recipientOfTheCurrentPage.
-                                getCurrentPath();
                         try{
                             drawView(currentPage.getUriFragment());
                         }
@@ -124,6 +122,8 @@ public class Navigator {
                         return;
                     }
                 }
+                currentPage.reload();
+                recipientOfTheCurrentPage.getCurrentPath().setUriFragment("PageNotFound");
                 throw new NotFound("Page:" + pageNameAndParameters[0]
                         + "not found");
             }

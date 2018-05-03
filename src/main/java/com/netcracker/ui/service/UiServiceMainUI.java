@@ -80,7 +80,7 @@ public class UiServiceMainUI extends UI{
     
     BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
     ContentManagerController contentManadgerController;
-
+    
     @Override
     protected void init(VaadinRequest vaadinRequest){
         try
@@ -91,11 +91,6 @@ public class UiServiceMainUI extends UI{
         {
             ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
-    }
-    
-    public void navigateTo(String path)
-    {
-        getPage().setUriFragment("path");
     }
     
     private ResponsiveLayout createMainLayout() throws MenuComponentException, 
@@ -117,7 +112,6 @@ public class UiServiceMainUI extends UI{
                     new ConcreteException(new ConcreteExceptionHandler() {
                         @Override
                         public void handling(Exception exception) {
-                            getPage().setUriFragment("PageNotFound");
                         }
                     }, NotFound.class, "", "Page not found.",
                     BasicImportanceClass.informationMessage);
@@ -127,7 +121,6 @@ public class UiServiceMainUI extends UI{
                     new ConcreteException(new ConcreteExceptionHandler() {
                         @Override
                         public void handling(Exception exception) {
-                            getPage().setUriFragment("PageInternalServerError");
                         }
                     }, InternalServerError.class, "", "Internal server error.",
                     BasicImportanceClass.informationMessage);
