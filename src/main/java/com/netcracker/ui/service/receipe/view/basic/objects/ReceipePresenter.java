@@ -6,6 +6,7 @@
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
@@ -34,12 +35,12 @@ public class ReceipePresenter implements PresenterObserver{
     }
     
     @Override
-    public void load() throws ConnectionErrorException, ConvertDataException, NotFoundBean{
+    public void load() throws NotFoundBean, InternalServerError{
         updateStore(proxi.load());
     }
 
     @Override
-    public void updateStore(Object result) throws ConvertDataException, NotFoundBean{
+    public void updateStore(Object result) throws InternalServerError, NotFoundBean{
         storeSubject.handleNewData(result);
     }
 

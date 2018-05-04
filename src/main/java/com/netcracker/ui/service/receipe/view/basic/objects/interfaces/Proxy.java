@@ -6,6 +6,7 @@
 package com.netcracker.ui.service.receipe.view.basic.objects.interfaces;
 
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 
 /**
@@ -13,6 +14,6 @@ import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException
  * @author Artem
  */
 public interface Proxy {
-    Boolean connect() throws ConnectionErrorException;
-    Object load() throws ConnectionErrorException, NotFoundBean;//Выполнение запроса на бэкенд
+    Boolean connect() throws InternalServerError;
+    Object load() throws NotFoundBean,InternalServerError;//Выполнение запроса на бэкенд
 }

@@ -23,6 +23,8 @@ import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.importanceTypes.BasicImportanceClass;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
+import com.netcracker.ui.service.exception.navigator.InvalidQueryFormat;
+import com.netcracker.ui.service.exception.navigator.NoViewAvailable;
 import com.netcracker.ui.service.exception.navigator.NotFound;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
@@ -98,34 +100,12 @@ public class UiServiceMainUI extends UI{
     {
         BasicLayoutCreator mainLayer;
         mainLayer = new BasicLayoutCreator();
-        try {
             setSizeFull();//Пользовательский интерфейс на весь экран
             ResponsiveLayout mainLayout = mainLayer.mainLayout;
             mainLayout.setStyleName("teststyle");
 
             mainLayout.setSizeFull();
             setContent(mainLayout);
-            
-
-            ExceptionHandler ex = ExceptionHandler.getInstance(); 
-            ConcreteException notFoundException = 
-                    new ConcreteException(new ConcreteExceptionHandler() {
-                        @Override
-                        public void handling(Exception exception) {
-                        }
-                    }, NotFound.class, "", "Page not found.",
-                    BasicImportanceClass.informationMessage);
-            ex.addException(notFoundException);
-             
-            ConcreteException internalServerErrorException = 
-                    new ConcreteException(new ConcreteExceptionHandler() {
-                        @Override
-                        public void handling(Exception exception) {
-                        }
-                    }, InternalServerError.class, "", "Internal server error.",
-                    BasicImportanceClass.informationMessage);
-            ex.addException(internalServerErrorException);
-            
             
             //Создание и добавление видов в навигатор
             ArrayList<View> newViews = new ArrayList<>();
@@ -143,8 +123,7 @@ public class UiServiceMainUI extends UI{
                 @Override
                 public void draw(LinkedMultiValueMap<String, String> parameters) {
                     mainLayer.contentRowLayout.removeAllComponents();
-                    addSliderComponent(mainLayer.contentRowLayout);
-                    addTopRecepiesComponent(mainLayer.contentRowLayout);
+                    mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("404"));
                 }
             });
             
@@ -152,8 +131,7 @@ public class UiServiceMainUI extends UI{
                 @Override
                 public void draw(LinkedMultiValueMap<String, String> parameters) {
                     mainLayer.contentRowLayout.removeAllComponents();
-                    addSliderComponent(mainLayer.contentRowLayout);
-                    addTopRecepiesComponent(mainLayer.contentRowLayout);
+                    mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("500"));
                 }
             });
 
@@ -200,14 +178,60 @@ public class UiServiceMainUI extends UI{
                     addUserPageComponent(mainLayer.contentRowLayout);
                 }
             });
+            try
+            {
+                Navigator navigator = new Navigator(newViews, "Main", getPage());
+                ExceptionHandler ex = ExceptionHandler.getInstance(); 
+                ConcreteException notFoundException = 
+                        new ConcreteException(new ConcreteExceptionHandler() {
+                            @Override
+                            public void handling(Exception exception) {
+                                try {
+                                    navigator.navigateTo("PageNotFound");
+                                } catch (Exception ex1) {
 
-            Navigator navigator = new Navigator(new RecipientOfTheCurrentPage() {
-                @Override
-                public Page getCurrentPath() {
-                    return getPage();
+                                }
+                            }
+                        }, NotFound.class, "", "Page not found.",
+                        BasicImportanceClass.informationMessage);
+                ex.addException(notFoundException);
+
+                ConcreteException internalServerErrorException = 
+                        new ConcreteException(new ConcreteExceptionHandler() {
+                            @Override
+                            public void handling(Exception exception) {
+                                try {
+                                    navigator.navigateTo("PageInternalServerError");
+                                } catch (Exception ex1) {
+
+                                }
+                            }
+                        }, InternalServerError.class, "", "Internal server error.",
+                        BasicImportanceClass.informationMessage);
+                ex.addException(internalServerErrorException);
+                
+                getPage().addUriFragmentChangedListener(
+                new Page.UriFragmentChangedListener() {
+                    public void uriFragmentChanged(
+                        Page.UriFragmentChangedEvent source) {
+                            try{
+                                navigator.navigateTo(getPage().getUriFragment());
+                            }
+                            catch(Exception exception)
+                            {
+                                ExceptionHandler.getInstance().
+                                        runExceptionhandling(exception);
+                            }
+                    }
+                });
+                
+                navigator.load();
+                navigator.navigateTo(getPage().getUriFragment());
                 }
-            },newViews);
-
+            catch (Exception exception) {
+                ExceptionHandler.getInstance().runExceptionhandling(exception);
+            }
+            
             //Создаем подпункты меню
             ArrayList<MenusButton> mainSubMenus = new ArrayList<>();
             mainSubMenus.add(new MenusButton("Подпункт1","idsubMain1", new HandlerForClickingTheButton(){
@@ -323,10 +347,6 @@ public class UiServiceMainUI extends UI{
                     int i=0;
                 }
             });
-        } 
-        catch (Exception exception) {
-            ExceptionHandler.getInstance().runExceptionhandling(exception);
-        }
         return mainLayer.contentRowLayout;
     }
     

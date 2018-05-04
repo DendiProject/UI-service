@@ -46,18 +46,10 @@ public class UiServiceApplication {
         bf.addBean(new ContentManadgerControllerBean());
         bf.addBean(new TokenStoreBean());
         ExceptionHandler ex = ExceptionHandler.getInstance(); 
-        ConcreteException connectionErrorException = 
+        /*ConcreteException connectionErrorException = 
                 new ConcreteException(new ConcreteExceptionHandler() {
                     @Override
                     public void handling(Exception exception) {
-                        try {
-                            throw new InternalServerError("Exception from "
-                                    + "IU-Service, Navigator. Internal server "
-                                    + "error");
-                        } catch (InternalServerError ex1) {
-                            ExceptionHandler.getInstance().
-                                    runExceptionhandling(ex1);
-                        }
                     }
                 }, ConnectionErrorException.class, "Не удалось создать соединение."
                         + " Пожалуйста, повторите попытку позже.",
@@ -69,14 +61,6 @@ public class UiServiceApplication {
                 new ConcreteException(new ConcreteExceptionHandler() {
                     @Override
                     public void handling(Exception exception) {
-                        try {
-                            throw new InternalServerError("Exception from "
-                                    + "IU-Service, Navigator. Internal server "
-                                    + "error");
-                        } catch (InternalServerError ex1) {
-                            ExceptionHandler.getInstance().
-                                    runExceptionhandling(ex1);
-                        }
                     }
                 }, ConvertDataException.class, "Не удалось преобразовать "
                         + "входные данные. Ошибка со стороны сервера, "
@@ -119,7 +103,7 @@ public class UiServiceApplication {
                 + "пожалуйста, повторите попытку позже",
                                 "Resource temporarily unavailable",
                 BasicImportanceClass.errorMessage);
-        ex.addException(resourceAccessException);
+        ex.addException(resourceAccessException);*/
         
         ConcreteException IOException = 
                 new ConcreteException(new ConcreteExceptionHandler() {

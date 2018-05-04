@@ -25,33 +25,28 @@ import org.springframework.util.LinkedMultiValueMap;
  */
 public class Navigator {
     private ArrayList<View> views;
-    private Page currentPage;
+    private String mainPage;
     //private String newCurrentPage;
-    private RecipientOfTheCurrentPage recipientOfTheCurrentPage;
-    
+    private Page currentPage;
     public Navigator()
     {
         
     }
-    public Navigator(RecipientOfTheCurrentPage recipientOfTheCurrentPage, 
-            ArrayList<View> newViews) throws NoViewAvailable, 
+    
+    public Navigator(ArrayList<View> views, String mainPage, Page page) throws NoViewAvailable, 
             InvalidQueryFormat, NotFound
     {
-        views = newViews;
-        this.recipientOfTheCurrentPage = recipientOfTheCurrentPage;
-        currentPage = recipientOfTheCurrentPage.getCurrentPath();
+        this.views = views;
+        this.mainPage = mainPage;
+        currentPage = page;
         
-        String currentPath = currentPage.getUriFragment();
-        if(views.size()>0)
+        if(views.isEmpty())
         {
-            drawView(currentPath);
-        }
-        else
-        {
+            //ДОБАВИТЬ СЮДА ВЫЗОВ ИСКОЛЮЧЕНИЯ
             Notification.show("Пустой набор видов");
         }
         
-        currentPage.addUriFragmentChangedListener(
+        /*currentPage.addUriFragmentChangedListener(
             new Page.UriFragmentChangedListener() {
                 public void uriFragmentChanged(
                     Page.UriFragmentChangedEvent source) {
@@ -64,25 +59,28 @@ public class Navigator {
                                     runExceptionhandling(exception);
                         }
                 }
-            });
+            });*/
+    }
+    
+    public void load() throws NoViewAvailable, InvalidQueryFormat, NotFound{
+        drawView(mainPage);
+    }
+    
+    public void navigateTo(String pageName) throws NoViewAvailable, 
+            InvalidQueryFormat, NotFound
+    {
+        currentPage.setUriFragment(pageName);
+        drawView(pageName);
     }
     
     private void drawView(String path) throws NoViewAvailable, InvalidQueryFormat, NotFound
     {
         if(views.size()>0)
         {
-            //Если пуcто, то отобразить дефолтный вид (считаю дефолтным первый вид)
-            if(path == null)
+            //Если пуcто, то отобразить дефолтный вид 
+            if(path == null || path.equals(""))
             {
-                path = views.get(0).name;
-                CookieHandler ch = new CookieHandler();
-                ch.guestEnter();
-                views.get(0).draw(new LinkedMultiValueMap<>());
-                return;
-            }
-            //При пустом ничего не делать
-            if(path.equals(""))
-            {
+                load();
                 return;
             }
             //Иначе поиск вида
@@ -122,8 +120,6 @@ public class Navigator {
                         return;
                     }
                 }
-                currentPage.reload();
-                recipientOfTheCurrentPage.getCurrentPath().setUriFragment("PageNotFound");
                 throw new NotFound("Page:" + pageNameAndParameters[0]
                         + "not found");
             }

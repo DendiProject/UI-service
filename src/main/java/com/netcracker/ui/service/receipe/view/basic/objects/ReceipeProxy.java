@@ -9,6 +9,7 @@ import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import javax.servlet.http.Cookie;
@@ -41,26 +42,47 @@ public class ReceipeProxy  implements Proxy{
     }
     //Проверка прав пользователя
     @Override
-    public Boolean connect() throws ConnectionErrorException{
-        CookieHandler ch = new CookieHandler();
-        JWTHandler jwth = new JWTHandler();
-        Cookie userCookie = ch.getCookieByName("userInfo");
-        //user = true  - это пользователь
-        //uesr = false - это гость
-        boolean user = jwth.checkUser(userCookie.getValue(), "test");
-        if(user)
+    public Boolean connect() throws InternalServerError{
+        try
         {
-            return true;
+            CookieHandler ch = new CookieHandler();
+            JWTHandler jwth = new JWTHandler();
+            Cookie userCookie = ch.getCookieByName("userInfo");
+            //user = true  - это пользователь
+            //uesr = false - это гость
+            boolean user = jwth.checkUser(userCookie.getValue(), "test");
+            if(user)
+            {
+                return true;
+            }
+            else
+            {
+                ConnectionErrorException ex1 = new 
+                ConnectionErrorException("Access error: insufficient permissions "
+                    + "or connection loss");
+                InternalServerError exception = new InternalServerError("Exception from "
+                                        + "IU-Service, Navigator. Internal server "
+                                        + "error");
+                exception.initCause(ex1);
+                throw exception;
+            }
         }
-        else
+        catch(Exception ex)
         {
-            throw new ConnectionErrorException("Access error: insufficient permissions or connection loss");
+            ConnectionErrorException ex1 = new 
+            ConnectionErrorException("Access error: insufficient permissions "
+                + "or connection loss");
+            InternalServerError exception = new InternalServerError("Exception from "
+                                    + "IU-Service, Navigator. Internal server "
+                                    + "error");
+            exception.initCause(ex1);
+            throw exception;
         }
     }
 
     //Загрузка с бэкенда данных о конкретном рецепте, используя конфигарцию, определенную через функцию connect()
     @Override
-    public Object load() throws ConnectionErrorException, NotFoundBean{
+    public Object load() throws NotFoundBean, InternalServerError{
         if(connect())
         {
             BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
@@ -85,7 +107,14 @@ public class ReceipeProxy  implements Proxy{
         }
         else
         {
-            throw new ConnectionErrorException("Access error: insufficient permissions or connection loss");
+            ConnectionErrorException ex1 = new 
+            ConnectionErrorException("Access error: insufficient "
+                    + "permissions or connection loss");
+            InternalServerError exception = new InternalServerError(
+                    "Exception from IU-Service, Navigator. Internal server "
+                                    + "error");
+            exception.initCause(ex1);
+            throw exception;
         }
     }
 }
