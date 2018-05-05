@@ -28,6 +28,7 @@ public class Navigator {
     private String mainPage;
     //private String newCurrentPage;
     private Page currentPage;
+    
     public Navigator()
     {
         
@@ -45,21 +46,6 @@ public class Navigator {
             //ДОБАВИТЬ СЮДА ВЫЗОВ ИСКОЛЮЧЕНИЯ
             Notification.show("Пустой набор видов");
         }
-        
-        /*currentPage.addUriFragmentChangedListener(
-            new Page.UriFragmentChangedListener() {
-                public void uriFragmentChanged(
-                    Page.UriFragmentChangedEvent source) {
-                        try{
-                            drawView(currentPage.getUriFragment());
-                        }
-                        catch(Exception exception)
-                        {
-                            ExceptionHandler.getInstance().
-                                    runExceptionhandling(exception);
-                        }
-                }
-            });*/
     }
     
     public void load() throws NoViewAvailable, InvalidQueryFormat, NotFound{
@@ -69,8 +55,9 @@ public class Navigator {
     public void navigateTo(String pageName) throws NoViewAvailable, 
             InvalidQueryFormat, NotFound
     {
-        currentPage.setUriFragment(pageName);
         drawView(pageName);
+        //Временно отключил для тестов
+        //currentPage.setUriFragment(pageName);
     }
     
     private void drawView(String path) throws NoViewAvailable, InvalidQueryFormat, NotFound
