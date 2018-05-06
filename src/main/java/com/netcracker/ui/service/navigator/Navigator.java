@@ -67,6 +67,8 @@ public class Navigator {
             //Если пуcто, то отобразить дефолтный вид 
             if(path == null || path.equals(""))
             {
+                CookieHandler ch = new CookieHandler();
+                ch.guestEnter();
                 load();
                 return;
             }
