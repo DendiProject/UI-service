@@ -72,10 +72,8 @@ public class RegistrationForm extends BasicForm {
     super.information.addComponent(password);
     super.information.addComponent(password2);
     super.information.addComponent(register);
-
     register.addClickListener(e -> {
       try {
-        
         if (password.getValue().equals(password2.getValue())) {
 
           tokenStore = bfTK.getBean(SecurityTokenHandler.class);
@@ -98,19 +96,24 @@ public class RegistrationForm extends BasicForm {
 //                    post.setHeader("Content-type", "application/json");
 //                    HttpResponse response = httpClient.execute(post);
           System.out.println(postRequest.con.getResponseCode());
-          if (postRequest.con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            Notification n = new Notification("Вы зарегестрированы");
-            n.show(Page.getCurrent());
-            RegistrationForm.this.close();
+          int response = postRequest.con.getResponseCode();
+          switch (response) {
+            case 200:
+              Notification n = new Notification("Вы зарегестрированы");
+              n.show(Page.getCurrent());
+              RegistrationForm.this.close();
 
-            PostUserData authRequest = new PostUserData(
-                    "http://localhost:8181/idpsecure/authorization", userInfo, secureToken);
+              PostUserData authRequest = new PostUserData(
+                      "http://localhost:8181/idpsecure/authorization", userInfo, secureToken);
 
-            cookieHandler.updateUserCookies(authRequest);
-          } else {
-            System.out.println("ошиька при регистрации");
+              cookieHandler.updateUserCookies(authRequest);
+              break;
+            case 409:
+              Notification q = new Notification("Пользователь с такой почтой уже существует. " + "\n"+ "Введите другую");
+              q.setDelayMsec(2600);
+              q.show(Page.getCurrent());
+              break;
           }
-
           postRequest.wr.close();
           postRequest.con.disconnect();
         } else {
@@ -121,17 +124,11 @@ public class RegistrationForm extends BasicForm {
         }
 
       } catch (Exception exception) {
-      ExceptionHandler.getInstance().runExceptionhandling(exception);
-    }
+        ExceptionHandler.getInstance().runExceptionhandling(exception);
+      }
     }
     );
   }
 
-  private void nameValidation() {
-//        firstName.setIcon(FontAwesome.AMBULANCE);
-//        StringLengthValidator slv = new StringLengthValidator("The name must be 3-10 letters (was {0})",3,10);        
-//      //  firstName.setBuffered(true);
-//       // firstName.addValidator(slv);
-
-  }
+ 
 }
