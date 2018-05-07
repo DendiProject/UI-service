@@ -34,32 +34,32 @@ public class BasicLayoutCreator{
         mainLayout.addComponent(mainCustomLayout);
         mainCustomLayout.addComponent(contentRowLayout,"content_row");
         Page.Styles styles = Page.getCurrent().getStyles();
-        styles.add(".v-app {background: url(http://localhost:8081/images/1);webkit-background-size: cover; \n" +
+        styles.add(".v-app {background: url(http://localhost:8008/images/1);webkit-background-size: cover; \n" +
 "            moz-background-size: cover; \n" +
 "            o-background-size: cover; \n" +
 "            background-size: 100% 100%;\n" +
 "            background-repeat: no-repeat;}");
-        styles.add("#slider li.firstanimation {background: url(http://localhost:8081/images/s3);webkit-background-size: cover; \n" +
+        styles.add("#slider li.firstanimation {background: url(http://localhost:8008/images/s3);webkit-background-size: cover; \n" +
 "            moz-background-size: cover; \n" +
 "            o-background-size: cover; \n" +
 "            background-size: 100% 100%;\n" +
 "            background-repeat: no-repeat;}}");
-        styles.add("#slider li.secondanimation {background: url(http://localhost:8081/images/s2);webkit-background-size: cover; \n" +
+        styles.add("#slider li.secondanimation {background: url(http://localhost:8008/images/s2);webkit-background-size: cover; \n" +
 "            moz-background-size: cover; \n" +
 "            o-background-size: cover; \n" +
 "            background-size: 100% 100%;\n" +
 "            background-repeat: no-repeat;}}");
-        styles.add("#slider li.thirdanimation {background: url(http://localhost:8081/images/s1);webkit-background-size: cover; \n" +
+        styles.add("#slider li.thirdanimation {background: url(http://localhost:8008/images/s1);webkit-background-size: cover; \n" +
 "            moz-background-size: cover; \n" +
 "            o-background-size: cover; \n" +
 "            background-size: 100% 100%;\n" +
 "            background-repeat: no-repeat;}}");
-        styles.add("#slider li.fourthanimation {background: url(http://localhost:8081/images/s3);webkit-background-size: cover; \n" +
+        styles.add("#slider li.fourthanimation {background: url(http://localhost:8008/images/s3);webkit-background-size: cover; \n" +
 "            moz-background-size: cover; \n" +
 "            o-background-size: cover; \n" +
 "            background-size: 100% 100%;\n" +
 "            background-repeat: no-repeat;}}");
-        styles.add("#slider li.fifthanimation {background: url(http://localhost:8081/images/s2);webkit-background-size: cover; \n" +
+        styles.add("#slider li.fifthanimation {background: url(http://localhost:8008/images/s2);webkit-background-size: cover; \n" +
 "            moz-background-size: cover; \n" +
 "            o-background-size: cover; \n" +
 "            background-size: 100% 100%;\n" +
