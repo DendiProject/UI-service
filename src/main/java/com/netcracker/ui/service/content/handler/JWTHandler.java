@@ -58,5 +58,13 @@ public class JWTHandler {
     }
     return user;
   }
+  
+  public String readUserId(String jwt, String key) {
+     Claims claims = Jwts.parser()
+            .setSigningKey(DatatypeConverter.parseBase64Binary(key))
+            .parseClaimsJws(jwt).getBody();
+     String id = claims.getId();
+    return id;
+  }
 
 }
