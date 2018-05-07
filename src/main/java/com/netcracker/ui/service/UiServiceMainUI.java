@@ -571,7 +571,7 @@ public class UiServiceMainUI extends UI {
       //Отрисовка изображения рецепта
       ResponsiveRow recipeRow = contentRowLayout.addRow();
       Image topImage = new Image();
-      topImage.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/top1.png")));
+      topImage.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/cake.png")));
       topImage.setHeight("70%");
       topImage.setWidth("100%");
       recipeRow.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(topImage);
