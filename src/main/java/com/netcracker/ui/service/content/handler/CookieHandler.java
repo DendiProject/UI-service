@@ -65,7 +65,7 @@ public class CookieHandler {
           }
           myUserCookie.setPath("/");
           VaadinService.getCurrentResponse().addCookie(myUserCookie);
-          System.out.println(myUserCookie.getName() + " " + myUserCookie.getValue());      //<----DELETE
+          System.out.println("guestEnter = " + myUserCookie.getName() + " " + myUserCookie.getValue());      //<----DELETE
         }
         postRequest.wr.close();
         postRequest.con.disconnect();
@@ -77,36 +77,41 @@ public class CookieHandler {
 
   }
 
-  public boolean updateUserCookies(PostUserData postRequest) {
-    boolean result = false;
+  public int updateUserCookies(PostUserData postRequest) {
+    int result = 0;
     try {
 
-      System.out.println(postRequest.con.getResponseCode());
-      if (postRequest.con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-        result = true;
-        Cookie myUserCookie = getCookieByName("userInfo");
-        CookieManager msCookieManager = new java.net.CookieManager();
-        Map<String, List<String>> headerFields = postRequest.con.getHeaderFields();
-        List<String> cookiesHeader = headerFields.get("Set-Cookie");
+      System.out.println();
+      int resp = postRequest.con.getResponseCode();
+      switch (resp) {
+        case 200:
+          result = 200;
+          Cookie myUserCookie = getCookieByName("userInfo");
+          CookieManager msCookieManager = new java.net.CookieManager();
+          Map<String, List<String>> headerFields = postRequest.con.getHeaderFields();
+          List<String> cookiesHeader = headerFields.get("Set-Cookie");
 
-        if (cookiesHeader != null) {
-          for (String cookie : cookiesHeader) {
-            String name = HttpCookie.parse(cookie).get(0).getName();
-            if (name.equals("userInfo")) {
-              String value = HttpCookie.parse(cookie).get(0).getValue();
-              myUserCookie.setValue(value);
+          if (cookiesHeader != null) {
+            for (String cookie : cookiesHeader) {
+              String name = HttpCookie.parse(cookie).get(0).getName();
+              if (name.equals("userInfo")) {
+                String value = HttpCookie.parse(cookie).get(0).getValue();
+                myUserCookie.setValue(value);
+              }
             }
           }
-        }
 
-        myUserCookie.setPath("/");
-        VaadinService.getCurrentResponse().addCookie(myUserCookie);
+          myUserCookie.setPath("/");
+          VaadinService.getCurrentResponse().addCookie(myUserCookie);
 
-        String end = handler.parseJWT(myUserCookie.getValue(), "test");
+          String end = handler.parseJWT(myUserCookie.getValue(), "test");
 
-        System.out.println(myUserCookie.getName() + " " + myUserCookie.getValue());     //<--- DELETE
-        System.out.println("Токен USER");
-
+          System.out.println(myUserCookie.getName() + " " + myUserCookie.getValue());     //<--- DELETE
+          System.out.println("Токен USER");
+          break;
+        case 409:
+          result = 409;
+          
       }
     } catch (Exception exception) {
       ExceptionHandler.getInstance().runExceptionhandling(exception);
@@ -125,4 +130,39 @@ public class CookieHandler {
     return null;
   }
 
+  public void getCookieForGuest() {
+    try {
+      Cookie myUserCookie = getCookieByName("userInfo");
+      tokenStore = bfTK.getBean(SecurityTokenHandler.class);
+      String secureToken = tokenStore.getToken();
+      UserDto userInfo = new UserDto();
+      userInfo.setEmail("guest");
+      userInfo.setPassword("guestpass");
+      PostUserData postRequest = new PostUserData(
+              "http://localhost:8181/idpsecure/authorization", userInfo, secureToken);
+      System.out.println(postRequest.con.getResponseCode());
+      if (postRequest.con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+        Map<String, List<String>> headerFields = postRequest.con.getHeaderFields();
+        List<String> cookiesHeader = headerFields.get("Set-Cookie");
+
+        if (cookiesHeader != null) {
+          for (String cookie : cookiesHeader) {
+            String name = HttpCookie.parse(cookie).get(0).getName();
+            String value = HttpCookie.parse(cookie).get(0).getValue();
+            myUserCookie = new Cookie(name, value);
+
+          }
+        }
+        myUserCookie.setPath("/");
+        VaadinService.getCurrentResponse().addCookie(myUserCookie);
+        System.out.println("getCookieForGuest = " + myUserCookie.getName() + " " + myUserCookie.getValue());      //<----DELETE
+      }
+      postRequest.wr.close();
+      postRequest.con.disconnect();
+
+    } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
+    }
+  }
 }

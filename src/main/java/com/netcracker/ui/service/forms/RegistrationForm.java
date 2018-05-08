@@ -74,6 +74,7 @@ public class RegistrationForm extends BasicForm {
     super.information.addComponent(register);
     register.addClickListener(e -> {
       try {
+
         if (password.getValue().equals(password2.getValue())) {
 
           tokenStore = bfTK.getBean(SecurityTokenHandler.class);
@@ -109,7 +110,7 @@ public class RegistrationForm extends BasicForm {
               cookieHandler.updateUserCookies(authRequest);
               break;
             case 409:
-              Notification q = new Notification("Пользователь с такой почтой уже существует. " + "\n"+ "Введите другую");
+              Notification q = new Notification("Пользователь с такой почтой уже существует. " + "\n" + "Введите другую");
               q.setDelayMsec(2600);
               q.show(Page.getCurrent());
               break;
@@ -129,6 +130,4 @@ public class RegistrationForm extends BasicForm {
     }
     );
   }
-
- 
 }

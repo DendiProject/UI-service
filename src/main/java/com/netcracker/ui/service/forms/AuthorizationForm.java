@@ -84,60 +84,28 @@ public class AuthorizationForm extends BasicForm {
         PostUserData postRequest = new PostUserData(
                 "http://localhost:8181/idpsecure/authorization", userInfo, secureToken);
 
-//                    Gson gson = new Gson(); 
-//                    URL url = new URL("http://"+idpURL+"/authorization/");
-//                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//                    con.setRequestMethod("POST");
-//                    con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-//                    con.setRequestProperty("Accept", "application/json");
-//                    con.setDoOutput(true);
-//                    
-//                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-//                    wr.write(gson.toJson(userInfo));
-//                    wr.flush();
-        boolean cookieupdate = cookieHandler.updateUserCookies(postRequest);
+        int cookieupdate = cookieHandler.updateUserCookies(postRequest);
 
-//                System.out.println(postRequest.con.getResponseCode());
-//                if (postRequest.con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-//                    Cookie myUserCookie = getCookieByName("userInfo");
-//                    CookieManager msCookieManager = new java.net.CookieManager();
-//                    Map<String, List<String>> headerFields = postRequest.con.getHeaderFields();
-//                    List<String> cookiesHeader = headerFields.get("Set-Cookie");
-//
-//                    if (cookiesHeader != null) {
-//                        for (String cookie : cookiesHeader) {
-//                            String name = HttpCookie.parse(cookie).get(0).getName();
-//                            if (name.equals("userInfo")) {
-//                                String value = HttpCookie.parse(cookie).get(0).getValue();
-//                                myUserCookie.setValue(value);
-//                            }
-//                        }
-//                    }
-//
-//                    myUserCookie.setPath("/");
-//                    VaadinService.getCurrentResponse().addCookie(myUserCookie);
-//                    String end = handler.parseJWT(myUserCookie.getValue(), "test");
-//                    System.out.println(myUserCookie.getName() + " " + myUserCookie.getValue());     //<--- DELETE
-//                    System.out.println("Токен USER");                                               //<--- DELETE
-//                    
-//                    Notification n = new Notification("Вы вошли");                                  //<--- DELETE
-//                    n.show(Page.getCurrent());                                                   //<--- DELETE
-//                    
-//                }
-        if (cookieupdate) {
-//                        Notification n = new Notification("Вы вошли");   
-//                        n.setDelayMsec(1300);//<--- DELETE
-//                        n.show(Page.getCurrent());
-          Thread.sleep(1300);
-          AuthorizationForm.this.close();
-        }
+        switch (cookieupdate) {
+          case 200:
+            Notification n = new Notification("Вы вошли");
+            n.setDelayMsec(1300);//<--- DELETE
+            n.show(Page.getCurrent());
+            Thread.sleep(1300);
+            AuthorizationForm.this.close();
+            Page.getCurrent().reload();
+          case 409:
+            Notification q = new Notification("Вы ввели неверную почту или пароль");
+            q.setDelayMsec(1300);
+            q.show(Page.getCurrent());
+        }   
 
         postRequest.wr.close();
         postRequest.con.disconnect();
 
       } catch (Exception exception) {
-      ExceptionHandler.getInstance().runExceptionhandling(exception);
-    }
+        ExceptionHandler.getInstance().runExceptionhandling(exception);
+      }
 
     });
   }

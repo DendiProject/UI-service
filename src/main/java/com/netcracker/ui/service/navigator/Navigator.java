@@ -56,62 +56,61 @@ public class Navigator {
             InvalidQueryFormat, NotFound
     {
         drawView(pageName);
-        //Временно отключил для тестов
-        //currentPage.setUriFragment(pageName);
     }
     
     private void drawView(String path) throws NoViewAvailable, InvalidQueryFormat, NotFound
     {
+        //Если пуcто, то отобразить дефолтный вид 
+        if(path == null)
+        {
+            CookieHandler ch = new CookieHandler();
+            ch.guestEnter();
+            load();
+            return;
+        }
+        if(path.equals(""))
+        {
+            return;
+        }
         if(views.size()>0)
         {
-            //Если пуcто, то отобразить дефолтный вид 
-            if(path == null || path.equals(""))
-            {
-                CookieHandler ch = new CookieHandler();
-                ch.guestEnter();
-                load();
-                return;
-            }
             //Иначе поиск вида
-            else
+            //Получение имени страницы и параметров(если они есть)
+            String[] pageNameAndParameters = path.split("\\?");
+            LinkedMultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+            if(pageNameAndParameters.length == 2)
             {
-                //Получение имени страницы и параметров(если они есть)
-                String[] pageNameAndParameters = path.split("\\?");
-                LinkedMultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-                if(pageNameAndParameters.length == 2)
+                String[] parametersWithKeys = pageNameAndParameters[1].split("&");
+                for(int i=0; i<parametersWithKeys.length; i++)
                 {
-                    String[] parametersWithKeys = pageNameAndParameters[1].split("&");
-                    for(int i=0; i<parametersWithKeys.length; i++)
+                    String[] parameter = parametersWithKeys[i].split("=");
+                    if(pageNameAndParameters.length == 2)
                     {
-                        String[] parameter = parametersWithKeys[i].split("=");
-                        if(pageNameAndParameters.length == 2)
-                        {
-                            parameters.add(parameter[0], parameter[1]);
-                        }
-                        else
-                        {
-                            throw new InvalidQueryFormat("Invalid query "
-                                    + "format.");
-                        }
+                        parameters.add(parameter[0], parameter[1]);
+                    }
+                    else
+                    {
+                        throw new InvalidQueryFormat("Invalid query "
+                                + "format.");
                     }
                 }
-                if(pageNameAndParameters.length > 2)
-                {
-                    throw new InvalidQueryFormat("Invalid query format.");
-                }
-
-
-                for(int i=0; i<views.size(); i++)
-                {
-                    if(views.get(i).name.equals(pageNameAndParameters[0]))
-                    {
-                        views.get(i).draw(parameters);
-                        return;
-                    }
-                }
-                throw new NotFound("Page:" + pageNameAndParameters[0]
-                        + "not found");
             }
+            if(pageNameAndParameters.length > 2)
+            {
+                throw new InvalidQueryFormat("Invalid query format.");
+            }
+
+
+            for(int i=0; i<views.size(); i++)
+            {
+                if(views.get(i).name.equals(pageNameAndParameters[0]))
+                {
+                    views.get(i).draw(parameters);
+                    return;
+                }
+            }
+            throw new NotFound("Page:" + pageNameAndParameters[0]
+                    + "not found");
         }
         else
         {

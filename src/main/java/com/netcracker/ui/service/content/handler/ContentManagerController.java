@@ -77,7 +77,6 @@ public class ContentManagerController {
       //Запрос на получение id для новой картинки
       BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
       RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
-      restTemplate.setInterceptors(Collections.singletonList(new RestFilter()));
       HttpHeaders headers = new HttpHeaders();
       headers.set("Accept=application/json", MediaType.APPLICATION_JSON_VALUE);
       headers.setContentType(MediaType.APPLICATION_JSON);
