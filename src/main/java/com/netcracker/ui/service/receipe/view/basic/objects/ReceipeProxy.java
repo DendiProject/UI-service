@@ -11,6 +11,7 @@ import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
+import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import javax.servlet.http.Cookie;
 import org.json.JSONObject;
@@ -29,16 +30,18 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 public class ReceipeProxy  implements Proxy{
     private String connectionUrl;
-    public MultiValueMap<String, String> parameters;
+    public String userId;
+    public String receipeId;
     
     private RestTemplate restTemplate;
     
     
     
-    public void setConfig(String connectionUrl, MultiValueMap<String, String> parameters)
+    public void setConfig(String connectionUrl, String userId, String receipeId)
     {
         this.connectionUrl = connectionUrl;
-        this.parameters = parameters;
+        this.userId = userId;
+        this.receipeId = receipeId;
     }
     //Проверка прав пользователя
     @Override
@@ -82,28 +85,11 @@ public class ReceipeProxy  implements Proxy{
 
     //Загрузка с бэкенда данных о конкретном рецепте, используя конфигарцию, определенную через функцию connect()
     @Override
-    public Object load() throws NotFoundBean, InternalServerError{
+    public Object load() throws Exception{
         if(connect())
         {
-            BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
-            restTemplate = bfOM.getBean(RestTemplate.class);
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-
-            UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(connectionUrl).queryParams(parameters);
-
-            HttpEntity<?> entity = new HttpEntity<>(headers);
-
-            HttpEntity<String> response = restTemplate.exchange(
-                builder.build().encode().toUri(), 
-                HttpMethod.GET, 
-                entity, 
-                String.class);       
-
-            JSONObject resultReceipe = new JSONObject(response.getBody());
-
-            return resultReceipe;
+            GMFacade gm = new GMFacade("http://localhost:8083/");
+            return gm.getTestGraf(userId, receipeId);
         }
         else
         {

@@ -5,18 +5,12 @@
  */
 package com.netcracker.ui.service.graf.component.gmfacade;
 
-import com.netcracker.ui.service.beans.factory.BeansFactory;
-import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Node;
+import com.netcracker.ui.service.graf.component.gmfacade.workers.EdgeWorker;
+import com.netcracker.ui.service.graf.component.gmfacade.workers.GrafWorker;
+import com.netcracker.ui.service.graf.component.gmfacade.workers.NodeWorker;
 import org.json.JSONObject;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  *
@@ -30,112 +24,105 @@ public class GMFacade {
         //http://localhost:8083/
     }
     
-    public Node addNode(Node node) throws NotFoundBean
+    public Node addNode(Node node) throws Exception
     {
-        Node newNode = new Node();
-        //Cоздание новой ноды на gm
-        newNode.setNodeId(getIdForNewNode("1111","1111"));
-        //Добавление к новой ноде description
-        newNode.setDescription(node.getDescription());
-        addNodeDescription(newNode.getNodeId(), newNode.getDescription());
-        //Добавление к новой ноде label
-        newNode.setLabel(node.getLabel());
-        addNodeLabel(newNode.getNodeId(), newNode.getLabel());
-        //Добавление к новой ноде picture
-        newNode.setPictureId(node.getPictureId());
-        addNodePicture(newNode.getNodeId(), newNode.getPictureId());
-        return node;
+        try
+        {
+            NodeWorker nodeWorker = new NodeWorker(connectionUrl);
+            //Cоздание новой ноды на gm
+            node.setNodeId(nodeWorker.getIdForNewNode("1111","1111"));
+            //Добавление к новой ноде description
+            nodeWorker.addNodeDescription(node.getNodeId(), node.getDescription());
+            //Добавление к новой ноде label
+            nodeWorker.addNodeLabel(node.getNodeId(), node.getLabel());
+            //Добавление к новой ноде picture
+            nodeWorker.addNodePicture(node.getNodeId(), node.getPictureId());
+            return node;
+        }
+        catch(Exception ex)
+        {
+            throw new Exception();
+        }
     }
     
-    private String getIdForNewNode(String receipeId, String userId) throws NotFoundBean
+    public void addEdge(Edge edge) throws Exception
     {
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("receipeId", receipeId);
-        parameters.add("userId", userId);
-        //Запрос на получение id для новой картинки
-        BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
-        RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept=application/json", MediaType.APPLICATION_JSON_VALUE);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(connectionUrl + "node/addnode").queryParams(parameters);
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-        HttpEntity<String> response = restTemplate.exchange(
-                builder.build().encode().toUri(),
-                HttpMethod.POST,
-                entity,
-                String.class);
-        String id = response.getBody();
-        
-        return id;
+        try
+        {
+            EdgeWorker edgeWorker = new EdgeWorker(connectionUrl);
+            edgeWorker.addEdge(edge.getStartNodeId(), edge.getEndNodeId());
+        }
+        catch(Exception ex)
+        {
+            throw new Exception();
+        }
     }
     
-    private void addNodeDescription(String nodeId, String description) throws NotFoundBean
+    public void deleteNode(Node node) throws Exception
     {
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("description", description);
-        //Запрос на получение id для новой картинки
-        BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
-        RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept=application/json", MediaType.APPLICATION_JSON_VALUE);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(connectionUrl + "node/addnodedescription/"+nodeId).queryParams(parameters);
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-        HttpEntity<String> response = restTemplate.exchange(
-                builder.build().encode().toUri(),
-                HttpMethod.POST,
-                entity,
-                String.class);
+        try
+        {
+            NodeWorker nodeWorker = new NodeWorker(connectionUrl);
+            nodeWorker.deleteNode(node.getNodeId());
+        }
+        catch(Exception ex)
+        {
+            throw new Exception();
+        }
     }
     
-    private void addNodeLabel(String nodeId, String label) throws NotFoundBean
+    public void deleteEdge(Edge edge) throws Exception
     {
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("label", label);
-        //Запрос на получение id для новой картинки
-        BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
-        RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept=application/json", MediaType.APPLICATION_JSON_VALUE);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(connectionUrl + "node/addnodedelabel/"+nodeId).queryParams(parameters);
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-        HttpEntity<String> response = restTemplate.exchange(
-                builder.build().encode().toUri(),
-                HttpMethod.POST,
-                entity,
-                String.class);
+        try
+        {
+            EdgeWorker edgeWorker = new EdgeWorker(connectionUrl);
+            edgeWorker.deleteEdge(edge.getStartNodeId(), edge.getEndNodeId());
+        }
+        catch(Exception ex)
+        {
+            throw new Exception();
+        }
     }
     
-    private void addNodePicture(String nodeId, String pictureId) throws NotFoundBean
+    public JSONObject getGraph(String userId, String receipeId) throws Exception
     {
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("pictureId", pictureId);
-        //Запрос на получение id для новой картинки
-        BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
-        RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept=application/json", MediaType.APPLICATION_JSON_VALUE);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(connectionUrl + "node/addnodepicture/"+nodeId).queryParams(parameters);
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-        HttpEntity<String> response = restTemplate.exchange(
-                builder.build().encode().toUri(),
-                HttpMethod.POST,
-                entity,
-                String.class);
+        try
+        {
+            GrafWorker grafWorker = new GrafWorker(connectionUrl);
+            JSONObject result = grafWorker.getGraph(userId, receipeId);
+            return result;
+        }
+        catch(Exception ex)
+        {
+            throw new Exception();
+        }
+    }
+    
+    public JSONObject getParallelGraph(String userId, String receipeId) throws Exception
+    {
+        try
+        {
+            GrafWorker grafWorker = new GrafWorker(connectionUrl);
+            JSONObject result = grafWorker.getParallelGraph(userId, receipeId);
+            return result;
+        }
+        catch(Exception ex)
+        {
+            throw new Exception();
+        }
+    }
+    
+    public JSONObject getTestGraf(String userId, String receipeId) throws Exception
+    {
+        try
+        {
+            GrafWorker grafWorker = new GrafWorker(connectionUrl);
+            JSONObject result = grafWorker.getTestGraf(userId, receipeId);
+            return result;
+        }
+        catch(Exception ex)
+        {
+            throw new Exception();
+        }
     }
 }

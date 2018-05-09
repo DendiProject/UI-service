@@ -31,6 +31,7 @@ import com.netcracker.ui.service.exception.navigator.NotFound;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.exception.receipe.view.ShortViewException;
+import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
@@ -96,6 +97,13 @@ public class UiServiceMainUI extends UI{
            Node n = new Node("", "description", "picture");
            n.setLabel("label");
            Node node = gm.addNode(n);
+           Edge edge = new Edge();
+           gm.addEdge(edge);
+           gm.deleteNode(node);
+           gm.deleteEdge(edge);
+           //gm.getGraph("11111", "111111");
+           //gm.getParallelGraph("11111", "111111");
+           gm.getTestGraf("1111", "111111");
            int d=0;
        }
        catch(Exception eeeee)
@@ -180,7 +188,7 @@ public class UiServiceMainUI extends UI{
                 parameters.add("receipeId", "12345");
                 parameters.add("userId","1111");*/
                 ReceipeProxy proxy = new ReceipeProxy();
-                proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters);
+                proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters.getFirst("userId"), parameters.getFirst("receipeId"));
 
                 ReceipeDataConverter converter = new ReceipeDataConverter();
                 ReceipeStore store = new ReceipeStore(converter);
@@ -444,7 +452,7 @@ public class UiServiceMainUI extends UI{
                 parameters.add("receipeId", "12345");
                 parameters.add("userId","1111");*/
                 ReceipeProxy proxy = new ReceipeProxy();
-                proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters);
+                proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters.getFirst("userId"), parameters.getFirst("receipeId"));
 
                 ReceipeDataConverter converter = new ReceipeDataConverter();
                 ReceipeStore store = new ReceipeStore(converter);
