@@ -6,7 +6,11 @@
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
+import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
+import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.graf.component.Graf;
@@ -15,6 +19,8 @@ import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
 import com.vaadin.ui.CustomLayout;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -32,7 +38,7 @@ public class ReceipeView implements View{
     }
     
     @Override
-    public void reload() throws ConnectionErrorException, ConvertDataException, NotFoundBean{
+    public void reload() throws NotFoundBean,InternalServerError{
         //Вызов функции load PresenterObserver
         presenter.load();
     }
@@ -50,8 +56,7 @@ public class ReceipeView implements View{
         contentRowLayout.addComponent(ShortViewOfReceipeLayout);
         
         graf = new Graf();
-        graf.setNodesCollection(receipe.steps);
-        graf.setEdgesCollection(receipe.stepsConnections);
+        graf.setInitCollections(receipe.nodes, receipe.edges);
         ShortViewOfReceipeLayout.addComponent(graf,"panelWithGraf");
         //Пример добавления слушателя на клик по ЛЮБОЙ ноде
         /*graf.addHandlerForClickingOnNode(new ClickOnNodeEventListener() {

@@ -12,6 +12,8 @@ import com.netcracker.ui.service.beans.factory.TokenStoreBean;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.components.PostUserData;
+import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
@@ -38,8 +40,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import com.netcracker.ui.service.components.SecurityTokenHandler;
+import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.vaadin.ui.Window;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 /**
@@ -47,119 +50,76 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
  * @author ArtemShevelyukhin
  */
 public class AuthorizationForm extends BasicForm {
-    
-    
-    CookieHandler cookieHandler = new CookieHandler();
-    
-    TextField email = new TextField("E-mail");
-    PasswordField password = new PasswordField("Пароль");
-    Button enter = new Button("Вход");
-    
-    private JWTHandler handler = new JWTHandler();
 
-    BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
-    SecurityTokenHandler tokenStore;
-    
-    
-    
-    // HttpClientBuilder builder = HttpClientBuilder.create().setDefaultCookieStore(cookieStore);
-    public AuthorizationForm() {
-        super();
-        super.information.addComponent(email);
-        super.information.addComponent(password);
-        super.information.addComponent(enter);
-        
-        
-        enter.addClickListener(e -> {
-            try {
-                tokenStore = bfTK.getBean(SecurityTokenHandler.class);
-                UserDto userInfo = new UserDto();
-                userInfo.setEmail(email.getValue());
-                userInfo.setPassword(password.getValue());
+  @Value("${idp.url}")
+  String idpURL;
 
-                
-                String secureToken = tokenStore.getToken();
-               
-                PostUserData postRequest = new PostUserData(
-                        "http://localhost:8182/idpsecure/authorization", userInfo, secureToken);
+  CookieHandler cookieHandler = new CookieHandler();
 
-//                    Gson gson = new Gson(); 
-//                    URL url = new URL("http://localhost:8182/authorization/");
-//                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//                    con.setRequestMethod("POST");
-//                    con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-//                    con.setRequestProperty("Accept", "application/json");
-//                    con.setDoOutput(true);
-//                    
-//                    OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-//                    wr.write(gson.toJson(userInfo));
-//                    wr.flush();
+  TextField email = new TextField("E-mail");
+  PasswordField password = new PasswordField("Пароль");
+  Button enter = new Button("Вход");
 
-                boolean cookieupdate = cookieHandler.updateUserCookies(postRequest);
-                
-//                System.out.println(postRequest.con.getResponseCode());
-//                if (postRequest.con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-//                    Cookie myUserCookie = getCookieByName("userInfo");
-//                    CookieManager msCookieManager = new java.net.CookieManager();
-//                    Map<String, List<String>> headerFields = postRequest.con.getHeaderFields();
-//                    List<String> cookiesHeader = headerFields.get("Set-Cookie");
-//
-//                    if (cookiesHeader != null) {
-//                        for (String cookie : cookiesHeader) {
-//                            String name = HttpCookie.parse(cookie).get(0).getName();
-//                            if (name.equals("userInfo")) {
-//                                String value = HttpCookie.parse(cookie).get(0).getValue();
-//                                myUserCookie.setValue(value);
-//                            }
-//                        }
-//                    }
-//
-//                    myUserCookie.setPath("/");
-//                    VaadinService.getCurrentResponse().addCookie(myUserCookie);
-//                    String end = handler.parseJWT(myUserCookie.getValue(), "test");
-//                    System.out.println(myUserCookie.getName() + " " + myUserCookie.getValue());     //<--- DELETE
-//                    System.out.println("Токен USER");                                               //<--- DELETE
-//                    
-//                    Notification n = new Notification("Вы вошли");                                  //<--- DELETE
-//                    n.show(Page.getCurrent());                                                   //<--- DELETE
-//                    
-//                }
-                    if (cookieupdate){
-//                        Notification n = new Notification("Вы вошли");   
-//                        n.setDelayMsec(1300);//<--- DELETE
-//                        n.show(Page.getCurrent());
-                        Thread.sleep(1300);
-                        AuthorizationForm.this.close();
-                    }
-       
-                postRequest.wr.close();
-                postRequest.con.disconnect();
+  private JWTHandler handler = new JWTHandler();
 
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NullPointerException ex) {
-                Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(AuthorizationForm.class.getName()).log(Level.SEVERE, null, ex);
-            }
+  BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
+  SecurityTokenHandler tokenStore;
 
-        });
+  // HttpClientBuilder builder = HttpClientBuilder.create().setDefaultCookieStore(cookieStore);
+  public AuthorizationForm() {
+    super();
+    super.information.addComponent(email);
+    super.information.addComponent(password);
+    super.information.addComponent(enter);
+
+    enter.addClickListener(e -> {
+      try {
+        tokenStore = bfTK.getBean(SecurityTokenHandler.class);
+        UserDto userInfo = new UserDto();
+        userInfo.setEmail(email.getValue());
+        userInfo.setPassword(password.getValue());
+
+        String secureToken = tokenStore.getToken();
+
+        PostUserData postRequest = new PostUserData(
+                "http://localhost:8181/idpsecure/authorization", userInfo, secureToken);
+
+        int cookieupdate = cookieHandler.updateUserCookies(postRequest);
+
+        switch (cookieupdate) {
+          case 200:
+            Notification n = new Notification("Вы вошли");
+            n.setDelayMsec(1300);//<--- DELETE
+            n.show(Page.getCurrent());
+            Thread.sleep(1300);
+            AuthorizationForm.this.close();
+            Page.getCurrent().reload();
+          case 409:
+            Notification q = new Notification("Вы ввели неверную почту или пароль");
+            q.setDelayMsec(1300);
+            q.show(Page.getCurrent());
+        }   
+
+        postRequest.wr.close();
+        postRequest.con.disconnect();
+
+      } catch (Exception exception) {
+        ExceptionHandler.getInstance().runExceptionhandling(exception);
+      }
+
+    });
+  }
+
+  private Cookie getCookieByName(String name) {
+    Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
+
+    for (Cookie cookie : cookies) {
+      if (name.equals(cookie.getName())) {
+        return cookie;
+      }
     }
 
-    
-
-    private Cookie getCookieByName(String name) {
-        Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
-
-        for (Cookie cookie : cookies) {
-            if (name.equals(cookie.getName())) {
-                return cookie;
-            }
-        }
-
-        return null;
-    }
+    return null;
+  }
 
 }

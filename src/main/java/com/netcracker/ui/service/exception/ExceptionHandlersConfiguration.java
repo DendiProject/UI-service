@@ -10,6 +10,6 @@ package com.netcracker.ui.service.exception;
  * @author Artem
  */
 public abstract class ExceptionHandlersConfiguration {
-    public abstract void doOnExceptionAlreadyExists();
-    public abstract void doOnNoFoundException();
+    public abstract void doOnExceptionAlreadyExists(String type);
+    public abstract void doOnNoFoundException(String type);
 }

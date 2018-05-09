@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service.components;
+package com.netcracker.ui.service.security;
 
 import com.google.common.net.MediaType;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -61,6 +62,8 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
   String clientId;
   @Value("${service.secret}")
   String clientSecret;
+  @Value("${idp.url}")
+  String idpURL;
   private boolean start = true;
 
   SecurityTokenHandler tokenHandler;
@@ -77,7 +80,7 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
         String encoded = "Basic " + str;
 
         HttpClient httpclient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost("http://localhost:8182/oauth/token");
+        HttpPost httppost = new HttpPost("http://"+idpURL+"/oauth/token");
 
         httppost.addHeader("Content-Type", "application/x-www-form-urlencoded");
         httppost.addHeader("Authorization", encoded);

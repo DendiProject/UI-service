@@ -10,8 +10,9 @@ import com.google.gson.Gson;
 import com.netcracker.ui.service.UserDto;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.content.handler.CookieHandler;
-import com.netcracker.ui.service.components.SecurityTokenHandler;
+import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.netcracker.ui.service.components.PostUserData;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.FontAwesome;
@@ -40,6 +41,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 //import com.vaadin.data.Validator.InvalidValueException;
 //import com.vaadin.data.util.ObjectProperty;
@@ -50,41 +52,43 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author eliza
  */
 public class RegistrationForm extends BasicForm {
-    
-    
-    CookieHandler cookieHandler = new CookieHandler();
-    
-    TextField email = new TextField("E-mail");
-    PasswordField password = new PasswordField("Пароль");
-    PasswordField password2 = new PasswordField("Повторите пароль");
-    Button register = new Button("Зарегистрироваться");
 
-    BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
-    SecurityTokenHandler tokenStore;
+  @Value("${idp.url}")
+  String idpURL;
 
-    public RegistrationForm() {
-        super();
-        super.information.addComponent(email);
-        super.information.addComponent(password);
-        super.information.addComponent(password2);
-        super.information.addComponent(register);
+  CookieHandler cookieHandler = new CookieHandler();
 
-        register.addClickListener(e -> {
-            try{
-            if (password.getValue().equals(password2.getValue())) {
+  TextField email = new TextField("E-mail");
+  PasswordField password = new PasswordField("Пароль");
+  PasswordField password2 = new PasswordField("Повторите пароль");
+  Button register = new Button("Зарегистрироваться");
 
-                tokenStore = bfTK.getBean(SecurityTokenHandler.class);
-                String secureToken = tokenStore.getToken();
+  BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
+  SecurityTokenHandler tokenStore;
 
-                UserDto userInfo = new UserDto();
-                userInfo.setEmail(email.getValue());
-                userInfo.setPassword(password.getValue());
-                System.out.println("secureToken = " + secureToken);
-                PostUserData postRequest = new PostUserData(
-                        "http://localhost:8182/idpsecure/register", userInfo, secureToken);
+  public RegistrationForm() {
+    super();
+    super.information.addComponent(email);
+    super.information.addComponent(password);
+    super.information.addComponent(password2);
+    super.information.addComponent(register);
+    register.addClickListener(e -> {
+      try {
+
+        if (password.getValue().equals(password2.getValue())) {
+
+          tokenStore = bfTK.getBean(SecurityTokenHandler.class);
+          String secureToken = tokenStore.getToken();
+
+          UserDto userInfo = new UserDto();
+          userInfo.setEmail(email.getValue());
+          userInfo.setPassword(password.getValue());
+          System.out.println("secureToken = " + secureToken);
+          PostUserData postRequest = new PostUserData(
+                  "http://localhost:8181/idpsecure/register", userInfo, secureToken);
 
 //
-//                    String postUrl = "http://localhost:8182/idpsecure/register";
+//                    String postUrl = "http://"+idpURL+"/idpsecure/register";
 //                    Gson gson = new Gson();
 //                    HttpClient httpClient = HttpClientBuilder.create().build();
 //                    HttpPost post = new HttpPost(postUrl);
@@ -92,44 +96,38 @@ public class RegistrationForm extends BasicForm {
 //                    post.setEntity(postingString);
 //                    post.setHeader("Content-type", "application/json");
 //                    HttpResponse response = httpClient.execute(post);
-                System.out.println(postRequest.con.getResponseCode());
-                if (postRequest.con.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    Notification n = new Notification("Вы зарегестрированы");
-                    n.show(Page.getCurrent());
-                    RegistrationForm.this.close();
-                    
-                    PostUserData authRequest = new PostUserData(
-                        "http://localhost:8182/idpsecure/authorization", userInfo, secureToken);
-                    
-                   cookieHandler.updateUserCookies(authRequest);
-                }
-                else{
-                    System.out.println("ошиька при регистрации");
-                }
-                
-                postRequest.wr.close();
-                postRequest.con.disconnect();
-            } else {
-                Notification n = new Notification("Пароли не совпадают");
-                n.setDelayMsec(1300);
-                n.show(Page.getCurrent());
-                
-            }
-            
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException | NullPointerException ex) {
-                Logger.getLogger(RegistrationForm.class.getName()).log(Level.SEVERE, null, ex);
-            }
+          System.out.println(postRequest.con.getResponseCode());
+          int response = postRequest.con.getResponseCode();
+          switch (response) {
+            case 200:
+              Notification n = new Notification("Вы зарегестрированы");
+              n.show(Page.getCurrent());
+              RegistrationForm.this.close();
+
+              PostUserData authRequest = new PostUserData(
+                      "http://localhost:8181/idpsecure/authorization", userInfo, secureToken);
+
+              cookieHandler.updateUserCookies(authRequest);
+              break;
+            case 409:
+              Notification q = new Notification("Пользователь с такой почтой уже существует. " + "\n" + "Введите другую");
+              q.setDelayMsec(2600);
+              q.show(Page.getCurrent());
+              break;
+          }
+          postRequest.wr.close();
+          postRequest.con.disconnect();
+        } else {
+          Notification n = new Notification("Пароли не совпадают");
+          n.setDelayMsec(1300);
+          n.show(Page.getCurrent());
+
         }
-        );
-    }
 
-    private void nameValidation() {
-//        firstName.setIcon(FontAwesome.AMBULANCE);
-//        StringLengthValidator slv = new StringLengthValidator("The name must be 3-10 letters (was {0})",3,10);        
-//      //  firstName.setBuffered(true);
-//       // firstName.addValidator(slv);
-
+      } catch (Exception exception) {
+        ExceptionHandler.getInstance().runExceptionhandling(exception);
+      }
     }
+    );
+  }
 }

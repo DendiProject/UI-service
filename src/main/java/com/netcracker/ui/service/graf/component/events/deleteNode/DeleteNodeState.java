@@ -11,7 +11,7 @@ package com.netcracker.ui.service.graf.component.events.deleteNode;
  * @author Artem
  */
 public class DeleteNodeState{
-    public int deleteNodesId;
+    public String deleteNodesId;
     public boolean stateReady = false;
     private int numberOfNonEmptyFeelds = 0;
     
@@ -20,17 +20,17 @@ public class DeleteNodeState{
         
     }
     
-    public DeleteNodeState(int _deleteNodesId)
+    public DeleteNodeState(String _deleteNodesId)
     {
         deleteNodesId = _deleteNodesId;
     }
     
-    public int getDeleteNodesId()
+    public String getDeleteNodesId()
     {
         return deleteNodesId;
     }
     
-    public void setDeleteNodesId(int deleteNodesId)
+    public void setDeleteNodesId(String deleteNodesId)
     {
         this.deleteNodesId = deleteNodesId;
         checkState();

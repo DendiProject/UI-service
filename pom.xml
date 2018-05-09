@@ -344,5 +344,6 @@
             </plugin>
 			
         </plugins>
-    </reporting>    
+    </reporting>
+    <name>ui-service</name>
 </project>

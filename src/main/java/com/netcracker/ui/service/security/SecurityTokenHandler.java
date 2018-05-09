@@ -3,16 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service.components;
+package com.netcracker.ui.service.security;
 
+import com.netcracker.ui.service.security.StartupHousekeeper;
 import com.google.gson.Gson;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.spring.annotation.VaadinSessionScope;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -52,7 +57,9 @@ public class SecurityTokenHandler {
   String clientId;
   @Value("${service.secret}")
   String clientSecret;
-
+  @Value("${idp.url}")
+  String idpURL;
+          
   public SecurityTokenHandler() {
     this.token = null;
   }
@@ -75,7 +82,7 @@ public class SecurityTokenHandler {
       String encoded = "Basic " + str;
 
       HttpClient httpclient = HttpClients.createDefault();
-      HttpPost httppost = new HttpPost("http://localhost:8182/oauth/token");
+      HttpPost httppost = new HttpPost("http://"+idpURL+"/oauth/token");
 
       httppost.addHeader("Content-Type", "application/x-www-form-urlencoded");
       httppost.addHeader("Authorization", encoded);
@@ -106,11 +113,29 @@ public class SecurityTokenHandler {
         }
       }
 
-    } catch (UnsupportedEncodingException ex) {
-      Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (IOException ex) {
-      Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
     }
   }
+  
+  public int verifySecureToken(String secureToken) {
+    int res = 0;
+    try {
+      URL url = new URL(
+              "http://"+idpURL+"/idpsecure/verifyToken" + "?access_token=" + tokenHandler.getToken());
+      HttpURLConnection con = (HttpURLConnection) url.openConnection();
+      con.setRequestMethod("POST");
+      con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+      con.setRequestProperty("secureToken", secureToken);
+      con.setDoOutput(true);
 
+      int responseCode = con.getResponseCode();
+      System.out.println("responseCode =  " + responseCode);
+      res = con.getResponseCode();
+
+    } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
+    }
+    return res;
+  }
 }

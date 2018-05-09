@@ -9,11 +9,11 @@ package com.netcracker.ui.service.graf.component.eventTypes;
  *
  * @author Artem
  */
-public class DeleteLastEdgeType extends EventType{
+public class AddNodeType extends EventType{
 
     @Override
     public String getType() {
-        return "DeleteLastEdge";
+        return "AddNode";
     }
     
 }

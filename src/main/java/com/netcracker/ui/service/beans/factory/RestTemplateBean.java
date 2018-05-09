@@ -6,6 +6,8 @@
 package com.netcracker.ui.service.beans.factory;
 
 import com.netcracker.ui.service.beans.factory.basic.objects.interfaces.Product;
+import com.netcracker.ui.service.filters.RestFilter;
+import java.util.Collections;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -24,6 +26,7 @@ public class RestTemplateBean implements Product<RestTemplate>{
     @Override
     public void setContent() {
         content = new RestTemplate();
+        content.setInterceptors(Collections.singletonList(new RestFilter()));
     }
 
     @Override

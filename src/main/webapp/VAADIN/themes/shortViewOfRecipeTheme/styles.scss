@@ -6,9 +6,7 @@
     .shortViewOfRecipe
     {
         width: 100%;
-        //border: solid 2px grey;
         height: 100%;
-        margin-top:-25px;
 
         display: -webkit-flex; 
         display: flex;
@@ -17,82 +15,153 @@
     }
     .panelWithGraf
     {
-        width: 70%;
+        width: 60%;
         height: 100%;
         border: solid 4px grey;
+        box-sizing:border-box;
     }
     .panelWithDescriptionOfNode
     {
-        width: 30%;
+        width: 40%;
         height: 100%;
         border: solid 4px grey;
+        box-sizing:border-box;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+    .receipeParts{
+        width: 100%;
+        height: 38%;
+        border: solid 4px green;
+        box-sizing:border-box;
+    }
+    .receipePartsLabel{
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 10%;
+        border: solid 1px blue;
+        box-sizing:border-box;
+        text-align: center
+    }
+    .receipePartsTable{
+        top: 10%;
+        left: 0px;
+        width: 100%;
+        height: 80%;
+        border: solid 1px blue;
+        box-sizing:border-box;
+    }
+    .addReceipePartsBtn{
+        top: 90%;
+        left: 0px;
+        width: 100%;
+        height: 10%;
+        border: solid 1px orange;
+        box-sizing:border-box;
+        text-align: center
+    }
+
+
+    .receipeResourses{
+        width: 100%;
+        height: 38%;
+        border: solid 4px green;
+        box-sizing:border-box;
+    }
+    .receipeResoursesLabel{
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 10%;
+        border: solid 1px blue;
+        box-sizing:border-box;
+        text-align: center
+    }
+    .receipeResoursesTable{
+        top: 10%;
+        left: 0px;
+        width: 100%;
+        height: 80%;
+        border: solid 1px blue;
+        box-sizing:border-box;
+    }
+    .addReceipeResoursesBtn{
+        top: 90%;
+        left: 0px;
+        width: 100%;
+        height: 10%;
+        border: solid 1px orange;
+        box-sizing:border-box;
+        text-align: center
+    }
+
+
+    .receipeControls{
+        width: 100%;
+        height: 24%;
+        border: solid 4px green;
+        box-sizing:border-box;
+    }
+    .receipeControlsLabel{
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 20%;
+        border: solid 1px blue;
+        box-sizing:border-box;
+        text-align: center
+    }
     .networkControls{
-		//position: absolute;
-		//top: 50px;
-		//left: 800px;
-		width: 100%;
-		height: 100%;
-		border: solid 4px green;
-		
-		
-		display: -webkit-flex; 
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		flex-wrap: wrap;
-		align-content: space-between;
-	}
-	#networkAddNode{
-		width:150px;
-		height:80px;
-		border-style:solid;
-		border-width:3px;
-		border-color: #5394ed;
-		text-align: center;
-	}
-	#networkEditNode{
-		width:150px;
-		height:80px;
-		border-style:solid;
-		border-width:3px;
-		border-color: #5394ed;
-		text-align: center;
-	}
-	#networkDeleteElement{
-		width:150px;
-		height:80px;
-		border-style:solid;
-		border-width:3px;
-		border-color: #5394ed;
-		text-align: center;
-	}
-	#networkAddEdge{
-		width:150px;
-		height:80px;
-		border-style:solid;
-		border-width:3px;
-		border-color: #5394ed;
-		text-align: center;
-	}
-	#networkEditEdge{
-		width:150px;
-		height:80px;
-		border-style:solid;
-		border-width:3px;
-		border-color: #5394ed;
-		text-align: center;
-	}
+        top: 20%;
+        left: 0px;
+        width: 100%;
+        height: 80%;
+        border: solid 1px blue;
+        box-sizing:border-box;
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        align-content: space-between;
+    }
+    #networkAddNode{
+        width:150px;
+        height:45px;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
+    #networkDeleteElement{
+        width:150px;
+        height:45px;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
+    #networkAddEdge{
+        width:150px;
+        height:45px;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
+    #networkEditEdge{
+        width:150px;
+        height:45px;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
     
     
     
@@ -117,42 +186,6 @@
         height: 100%;
         margin: 0 auto;
         position:relative;
-    }
-    table.legend_table {
-        font-size: 11px;
-        border-width:1px;
-        border-color:#d3d3d3;
-        border-style:solid;
-    }
-    table.legend_table,td {
-        border-width:1px;
-        border-color:#d3d3d3;
-        border-style:solid;
-        padding: 2px;
-    }
-    div.table_content {
-        width:80px;
-        text-align:center;
-    }
-    div.table_description {
-        width:100px;
-    }
-    #operation {
-        font-size:28px;
-    }
-    #network-popUp {
-        display:none;
-        position:absolute;
-        margin:0px auto 0px auto;
-        z-index:299;
-        width:250px;
-        height:200px;
-        background-color: #f9f9f9;
-        border-style:solid;
-        border-width:3px;
-        border-color: #5394ed;
-        //padding:10px;
-        text-align: center;
     }
     .vis.overlay{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10}
     .vis-active{box-shadow:0 0 10px #86d5f8}

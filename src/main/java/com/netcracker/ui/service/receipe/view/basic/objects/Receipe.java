@@ -14,73 +14,70 @@ import java.util.ArrayList;
  * @author Artem
  */
 public class Receipe implements Comparable<Receipe>{
-    public String receipesName;
-    public ArrayList<Node> steps;
-    public ArrayList<Edge> stepsConnections;
+    public String receipeName;
+    public ArrayList<Node> nodes;
+    public ArrayList<Edge> edges;
     
-    public Receipe(){
-        
-    }
-    
-    public Receipe(String _receipesName, ArrayList<Node> _steps, ArrayList<Edge> _stepsConnections){
-        receipesName = _receipesName;
-        steps = _steps;
-        stepsConnections = _stepsConnections;
-    }
-    
-    public String getReceipesName()
+    public  Receipe()
     {
-        return receipesName;
+
     }
     
-    public void setReceipesName(String receipesName)
+    public Receipe(String receipeName, ArrayList<Node> nodes,
+            ArrayList<Edge> edges)
     {
-        this.receipesName = receipesName;
+        this.receipeName = receipeName;
+        this.nodes = nodes;
+        this.edges = edges;
     }
     
-    public ArrayList<Node> getSteps()
-    {
-        return steps;
+    public String getReceipeName() {
+        return receipeName;
     }
-    
-    public void setNodes(ArrayList<Node> nodes)
-    {
-        this.steps = nodes;
+
+    public void setReceipeName(String receipeName) {
+        this.receipeName = receipeName;
     }
-    
-    public ArrayList<Edge> getStepsConnections()
-    {
-        return stepsConnections;
+
+    public ArrayList<Node> getNodes() {
+        return nodes;
     }
-    
-    public void setStepsConnections(ArrayList<Edge> stepsConnections)
-    {
-        this.stepsConnections = stepsConnections;
+
+    public void setNodes(ArrayList<Node> nodes) {
+        this.nodes = nodes;
+    }
+
+    public ArrayList<Edge> getEdges() {
+        return edges;
+    }
+
+    public void setEdges(ArrayList<Edge> edges) {
+        this.edges = edges;
     }
 
     @Override
     public int compareTo(Receipe t) {
         
-        if(t.steps.size() != steps.size() | t.stepsConnections.size() != 
-                stepsConnections.size() | !t.receipesName.equals(receipesName))
+        if(t.nodes.size() != nodes.size() | t.edges.size() != 
+                edges.size() | !t.receipeName.equals(receipeName))
         {
             return 0;
         }
         
-        for(int i=0;i<t.steps.size();i++)
+        for(int i=0;i<t.nodes.size();i++)
         {
-            if(t.steps.get(i).getId() != steps.get(i).getId())
+            if(t.nodes.get(i).getNodeId() != nodes.get(i).getNodeId())
             {
                 return 0;
             }
         }
         
-        for(int i=0;i<t.stepsConnections.size();i++)
+        for(int i=0;i<t.edges.size();i++)
         {
-            if(t.stepsConnections.get(i).getTo() != 
-                    stepsConnections.get(i).getTo() | 
-                    t.stepsConnections.get(i).getFrom() != 
-                    stepsConnections.get(i).getFrom())
+            if(t.edges.get(i).getEndNodeId()!= 
+                    edges.get(i).getEndNodeId()| 
+                    t.edges.get(i).getStartNodeId() != 
+                    edges.get(i).getStartNodeId())
             {
                 return 0;
             }

@@ -11,8 +11,8 @@ package com.netcracker.ui.service.graf.component.events.deleteEdge;
  * @author Artem
  */
 public class DeleteEdgeState{
-    public int deleteEdgeFrom;
-    public int deleteEdgeTo;
+    public String deleteEdgeFrom;
+    public String deleteEdgeTo;
     public boolean stateReady = false;
     private int numberOfNonEmptyFeelds = 0;
     
@@ -21,29 +21,29 @@ public class DeleteEdgeState{
         
     }
     
-    public DeleteEdgeState(int _deleteEdgeFrom, int _deleteEdgeTo)
+    public DeleteEdgeState(String _deleteEdgeFrom, String _deleteEdgeTo)
     {
         deleteEdgeFrom = _deleteEdgeFrom;
         deleteEdgeTo = _deleteEdgeTo;
     }
     
-    public int getDeleteEdgeFrom()
+    public String getDeleteEdgeFrom()
     {
         return deleteEdgeFrom;
     }
     
-    public void setDeleteEdgeFrom(int deleteEdgeFrom)
+    public void setDeleteEdgeFrom(String deleteEdgeFrom)
     {
         this.deleteEdgeFrom = deleteEdgeFrom;
         checkState();
     }
     
-    public int getDeleteEdgeTo()
+    public String getDeleteEdgeTo()
     {
         return deleteEdgeTo;
     }
     
-    public void setDeleteEdgeTo(int deleteEdgeTo)
+    public void setDeleteEdgeTo(String deleteEdgeTo)
     {
         this.deleteEdgeTo = deleteEdgeTo;
         checkState();

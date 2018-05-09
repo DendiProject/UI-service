@@ -7,6 +7,7 @@ package com.netcracker.ui.service.components;
 
 import com.google.gson.Gson;
 import com.netcracker.ui.service.UserDto;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -53,12 +54,8 @@ public class PostUserData {
             wr = new OutputStreamWriter(con.getOutputStream());
             wr.write(gson.toJson(userDto));
             wr.flush();
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(PostUserData.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ProtocolException ex) {
-            Logger.getLogger(PostUserData.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(PostUserData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(Exception exception){
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
 
     }

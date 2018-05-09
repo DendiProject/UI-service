@@ -10,11 +10,32 @@ function() {
         //mycomponent.draw(this.getState().newNodesimageUrl, this.getState().newNodesLabel, this.getState().idNodesConnectedFrom, this.getState().idNodesConnectedTo, this.getState().newNodesId);
         if(this.getState().event === "Initialize")
         {
-            mygraf.draw(this.getState().nodes, this.getState().edges);
+            mygraf.draw(this.getState().eventStateInJSONFormat);
         }
-        if(this.getState().event === "DeleteLastEdge")
+        if(this.getState().event === "DeleteEdge")
         {
-            mygraf.deleteLastEdge(this.getState().edges[this.getState().edges.length-1].from, this.getState().edges[this.getState().edges.length-1].to);
+            var state = JSON.parse(this.getState().eventStateInJSONFormat);
+            mygraf.deleteEdgeSideJAVA(state[0].deleteIdEdge);
+        }
+        if(this.getState().event==="AddEdge")
+        {
+            var state = JSON.parse(this.getState().eventStateInJSONFormat);
+            mygraf.addEdgeSideJAVA(state[0].newEdgesFrom, state[0].newEdgesTo);
+        }
+        if(this.getState().event==="EditEdge")
+        {
+            var state = JSON.parse(this.getState().eventStateInJSONFormat);
+            mygraf.editEdgeSideJAVA(state[0].editableEdgesNewIdFrom, state[0].editableEdgesNewIdTo, state[0].idEditableEdge);
+        }
+        if(this.getState().event==="AddNode")
+        {
+            var state = JSON.parse(this.getState().eventStateInJSONFormat);
+            mygraf.addNodeSideJAVA(state[0].newNodesId, state[0].newNodesLable, state[0].newNodesImage);
+        }
+        if(this.getState().event==="DeleteNode")
+        {
+            var state = JSON.parse(this.getState().eventStateInJSONFormat);
+            mygraf.deleteNodeSideJAVA(state[0].deleteNodesId);
         }
         this.getState().event = "";
     };

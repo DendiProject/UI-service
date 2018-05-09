@@ -11,8 +11,8 @@ package com.netcracker.ui.service.graf.component.events.addEdge;
  * @author Artem
  */
 public class AddEdgeState{
-    public int newEdgesFrom;
-    public int newEdgesTo;
+    public String newEdgesFrom;
+    public String newEdgesTo;
     public boolean stateReady = false;
     private int numberOfNonEmptyFeelds = 0;
     
@@ -21,29 +21,29 @@ public class AddEdgeState{
         
     }
     
-    public AddEdgeState(int _newEdgesFrom, int _newEdgesTo)
+    public AddEdgeState(String _newEdgesFrom, String _newEdgesTo)
     {
         newEdgesFrom = _newEdgesFrom;
         newEdgesTo = _newEdgesTo;
     }
     
-    public int getNewEdgesFrom()
+    public String getNewEdgesFrom()
     {
         return newEdgesFrom;
     }
     
-    public void setNewEdgesFrom(int newEdgesFrom)
+    public void setNewEdgesFrom(String newEdgesFrom)
     {
         this.newEdgesFrom = newEdgesFrom;
         checkState();
     }
     
-    public int getNewEdgesTo()
+    public String getNewEdgesTo()
     {
         return newEdgesTo;
     }
     
-    public void setNewEdgesTo(int newEdgesTo)
+    public void setNewEdgesTo(String newEdgesTo)
     {
         this.newEdgesTo = newEdgesTo;
         checkState();

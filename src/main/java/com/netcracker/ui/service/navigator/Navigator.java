@@ -7,9 +7,17 @@ package com.netcracker.ui.service.navigator;
 
 
 import com.netcracker.ui.service.content.handler.CookieHandler;
+import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.exception.navigator.InvalidQueryFormat;
+import com.netcracker.ui.service.exception.navigator.NoViewAvailable;
+import com.netcracker.ui.service.exception.navigator.NotFound;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.LinkedMultiValueMap;
 
 /**
  * Используется для навигации между видами
@@ -17,67 +25,101 @@ import java.util.ArrayList;
  */
 public class Navigator {
     private ArrayList<View> views;
-    Page currentPage;
-    String newCurrentPage;
+    private String mainPage;
+    //private String newCurrentPage;
+    private Page currentPage;
+    
     public Navigator()
     {
         
     }
-    public Navigator(Page newcurrentPage, ArrayList<View> newViews)
+    
+    public Navigator(ArrayList<View> views, String mainPage, Page page) throws NoViewAvailable, 
+            InvalidQueryFormat, NotFound
     {
-        views = newViews;
-        currentPage = newcurrentPage;
+        this.views = views;
+        this.mainPage = mainPage;
+        currentPage = page;
         
-        String currentPath = currentPage.getUriFragment();
+        if(views.isEmpty())
+        {
+            //ДОБАВИТЬ СЮДА ВЫЗОВ ИСКОЛЮЧЕНИЯ
+            Notification.show("Пустой набор видов");
+        }
+    }
+    
+    public void load() throws NoViewAvailable, InvalidQueryFormat, NotFound{
+        drawView(mainPage);
+    }
+    
+    public void navigateTo(String pageName) throws NoViewAvailable, 
+            InvalidQueryFormat, NotFound
+    {
+        drawView(pageName);
+    }
+    
+    private void drawView(String path) throws NoViewAvailable, InvalidQueryFormat, NotFound
+    {
+        //Если пуcто, то отобразить дефолтный вид 
+        if(path == null)
+        {
+            CookieHandler ch = new CookieHandler();
+            ch.guestEnter();
+            load();
+            return;
+        }
+        if(path.equals(""))
+        {
+            return;
+        }
         if(views.size()>0)
         {
-            drawView(currentPath);
+            //Иначе поиск вида
+            //Получение имени страницы и параметров(если они есть)
+            String[] pageNameAndParameters = path.split("\\?");
+            LinkedMultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+            if(pageNameAndParameters.length == 2)
+            {
+                String[] parametersWithKeys = pageNameAndParameters[1].split("&");
+                for(int i=0; i<parametersWithKeys.length; i++)
+                {
+                    String[] parameter = parametersWithKeys[i].split("=");
+                    if(pageNameAndParameters.length == 2)
+                    {
+                        parameters.add(parameter[0], parameter[1]);
+                    }
+                    else
+                    {
+                        throw new InvalidQueryFormat("Invalid query "
+                                + "format.");
+                    }
+                }
+            }
+            if(pageNameAndParameters.length > 2)
+            {
+                throw new InvalidQueryFormat("Invalid query format.");
+            }
+
+
+            for(int i=0; i<views.size(); i++)
+            {
+                if(views.get(i).name.equals(pageNameAndParameters[0]))
+                {
+                    views.get(i).draw(parameters);
+                    return;
+                }
+            }
+            throw new NotFound("Page:" + pageNameAndParameters[0]
+                    + "not found");
         }
         else
         {
-            Notification.show("Пустой набор видов");
-        }
-        
-        currentPage.addUriFragmentChangedListener(
-            new Page.UriFragmentChangedListener() {
-                public void uriFragmentChanged(
-                    Page.UriFragmentChangedEvent source) {
-                        drawView(newCurrentPage);
-                }
-            });
-    }
-    
-    private void drawView(String viewsName)
-    {
-        if(views.size()>0)
-        {
-            //Если путо, то отобразить дефолтный вид (считаю дефолтным первый вид)
-            if(viewsName == null || viewsName.equals(""))
-            {
-                viewsName = views.get(0).name;
-                CookieHandler ch = new CookieHandler();
-                ch.guestEnter();
-            }
-        }
-        
-        for(int i=0; i<views.size(); i++)
-        {
-            if(views.get(i).name.equals(viewsName))
-            {
-                views.get(i).draw();
-                break;
-            }
+            throw new NoViewAvailable("No view available, add them");
         }
     }
     
     public void addView(View view)
     {
         views.add(view);
-    }
-    
-    public void navigateTo(String path)
-    {
-        newCurrentPage = path;
-        currentPage.setUriFragment(path);
     }
 }

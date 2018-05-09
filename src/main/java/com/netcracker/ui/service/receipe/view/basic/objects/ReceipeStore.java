@@ -6,6 +6,7 @@
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.DataConverter;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
@@ -46,13 +47,13 @@ public class ReceipeStore implements StoreSubject{
     }
     
     @Override
-    public void handleNewData(Object object) throws ConvertDataException, NotFoundBean{
+    public void handleNewData(Object object) throws InternalServerError, NotFoundBean{
         currentData = object;
         notifyObservers();
     }
 
     @Override
-    public void notifyObservers() throws ConvertDataException, NotFoundBean{
+    public void notifyObservers() throws InternalServerError, NotFoundBean{
         for(int i=0; i<observers.size();i++)
         {
             observers.get(i).updateView(converter.convert(currentData));

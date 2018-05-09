@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.graf.component.Graf;
 import com.netcracker.ui.service.graf.component.Node;
+import com.netcracker.ui.service.graf.component.eventTypes.EventType;
 import com.netcracker.ui.service.graf.component.events.BasicGrafEventHandler;
 import com.netcracker.ui.service.graf.component.events.clickOnNode.ClickOnNodeState;
 import elemental.json.JsonArray;
@@ -41,9 +42,17 @@ public class AddNodeEvent extends BasicGrafEventHandler{
             state = mapper.readValue(arguments.getObject(0).toString(),AddNodeState.class);
             if(state.stateReady)
             {
-                graf.addNode(state.newNodesImage, state.newNodesLable, state.newNodesId);
-                //Оповещаю всех слушателей
-                graf.notifyEventListeners(graf.getAddNodeListeners());
+                 //Вначале нужно сделать запрос на GM для проверки возможности создания ноды
+                if(true){
+                    graf.addNode(state.newNodesImage, state.newNodesLable, state.newNodesId);
+                    graf.setEvent(EventType.addNode, arguments.toJson());
+                    //Оповещаю всех слушателей
+                    graf.notifyEventListeners(graf.getAddNodeListeners());
+                }
+                else{
+                    //Иначе уведомление пользователя о том, что нода не может 
+                    //быть создана
+                }
             }
             else
             {

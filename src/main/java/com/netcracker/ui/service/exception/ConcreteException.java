@@ -40,36 +40,45 @@ public class ConcreteException {
         return type;
     }
     
-    public void callExceptionHandler(){
+    public void callExceptionHandler(Exception exception){
         if(exceptionType instanceof InformationMessage){
             //Обработка логером
-            logger.info(moreAboutException);
+            logger.info("Information: "+moreAboutException+"Exception message: "+exception.getMessage());
             //Обработка нотификацией
-            new Notification("This is a information",
-                    exceptionMessage,
-                    Notification.Type.HUMANIZED_MESSAGE, true)
-            .show(Page.getCurrent());
+            if(!exceptionMessage.equals(""))
+            {
+                new Notification("This is a information",
+                        exceptionMessage,
+                        Notification.Type.HUMANIZED_MESSAGE, true)
+                .show(Page.getCurrent());
+            }
         }
         if(exceptionType instanceof WarningMessage){
             //Обработка логером
-            logger.warn(moreAboutException);
+            logger.warn("Information: "+moreAboutException+"Exception message: "+exception.getMessage());
             //Обработка нотификацией
-            new Notification("This is a error",
-                    exceptionMessage,
-                    Notification.Type.WARNING_MESSAGE, true)
-            .show(Page.getCurrent());
+            if(!exceptionMessage.equals(""))
+            {
+                new Notification("This is a warning",
+                        exceptionMessage,
+                        Notification.Type.WARNING_MESSAGE, true)
+                .show(Page.getCurrent());
+            }
         }
         if(exceptionType instanceof ErrorMessage){
             //Обработка логером
-            logger.error(moreAboutException);
+            logger.error("Information: "+moreAboutException+"Exception message: "+exception.getMessage());
             //Обработка нотификацией
-            new Notification("This is a warning",
-                    exceptionMessage,
-                    Notification.Type.ERROR_MESSAGE, true)
-            .show(Page.getCurrent());
+            if(!exceptionMessage.equals(""))
+            {
+                new Notification("This is a error",
+                        exceptionMessage,
+                        Notification.Type.ERROR_MESSAGE, true)
+                .show(Page.getCurrent());
+            }
         }
            
         //Обработка определенным handler - ом
-        concreteExceptionHandler.handling();
+        concreteExceptionHandler.handling(exception);
     }
 }

@@ -20,31 +20,51 @@ import org.springframework.stereotype.Service;
 @Service
 public class JWTHandler {
 
+  public String createJWT(String issuer, String subject, String id, String email, String key) {
 
-    public String createJWT(String issuer, String subject, String id, String email, String key) {
+    JwtBuilder builder = Jwts.builder()
+            .setId(id)
+            .setIssuer(issuer)
+            .setSubject(subject)
+            .setIssuedAt(Date.from(Instant.now()))
+            .setExpiration(Date.from(Instant.now().plusSeconds(300)))
+            .signWith(SignatureAlgorithm.HS512, key);
 
-        JwtBuilder builder = Jwts.builder()
-                .setId(id)
-                .setIssuer(issuer)
-                .setSubject(subject)
-                .setIssuedAt(Date.from(Instant.now()))
-                .setExpiration(Date.from(Instant.now().plusSeconds(300)))
-                .signWith(SignatureAlgorithm.HS512, key);
+    return builder.compact();
+  }
 
-        return builder.compact();
+  public String parseJWT(String jwt, String key) {
+
+    //This line will throw an exception if it is not a signed JWS (as expected)
+    Claims claims = Jwts.parser()
+            .setSigningKey(DatatypeConverter.parseBase64Binary(key))
+            .parseClaimsJws(jwt).getBody();
+    System.out.println("ID: " + claims.getId());
+    System.out.println("Subject: " + claims.getSubject());
+    System.out.println("Issuer: " + claims.getIssuer());
+    System.out.println("Expiration: " + claims.getExpiration());
+    return "End Parsing";
+  }
+
+  public boolean checkUser(String jwt, String key) {
+    boolean user = true;
+    try {
+      Claims claims = Jwts.parser()
+              .requireSubject("USER")
+              .setSigningKey(DatatypeConverter.parseBase64Binary(key))
+              .parseClaimsJws(jwt).getBody();
+    } catch (IncorrectClaimException e) { 
+     user = false;
     }
-
-    public String parseJWT(String jwt, String key) {
-
-        //This line will throw an exception if it is not a signed JWS (as expected)
-        Claims claims = Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(key))
-                .parseClaimsJws(jwt).getBody();
-        System.out.println("ID: " + claims.getId());
-        System.out.println("Subject: " + claims.getSubject());
-        System.out.println("Issuer: " + claims.getIssuer());
-        System.out.println("Expiration: " + claims.getExpiration());
-        return "End Parsing";
-    }
+    return user;
+  }
+  
+  public String readUserId(String jwt, String key) {
+     Claims claims = Jwts.parser()
+            .setSigningKey(DatatypeConverter.parseBase64Binary(key))
+            .parseClaimsJws(jwt).getBody();
+     String id = claims.getId();
+    return id;
+  }
 
 }

@@ -11,8 +11,8 @@ mylibrary.MyGraf = function (element) {
     var yClick = 0;//координаты клика по рабочему полю
     var returnUnswer;//Содержит данные об обновлении стейта
 
-    this.draw = function (nodesBuf, nodesConnectionsBuf) {
-        nodes = [];
+    this.draw = function (newstate) {
+        /*nodes = [];
         edges = [];
         for (var i = 0; i < nodesBuf.length; i++) 
         {
@@ -21,10 +21,11 @@ mylibrary.MyGraf = function (element) {
         for (var i = 0; i < nodesConnectionsBuf.length; i++) 
         {
             edges.push({from: nodesConnectionsBuf[i].from, to: nodesConnectionsBuf[i].to, length: 100});
-        }
+        }*/
+        var state = JSON.parse(newstate);
         var data = {
-            nodes: nodes,
-            edges: edges
+            nodes: state.nodes,
+            edges: state.edges
         };
         // create a network
         var container = document.getElementById('mynetwork');
@@ -44,8 +45,7 @@ mylibrary.MyGraf = function (element) {
                             };
                             //Обновление состояния
                             self.click();
-                            
-                            callback(data);
+                            network.disableEditMode();
                         }
                     }
                     else {
@@ -56,8 +56,7 @@ mylibrary.MyGraf = function (element) {
                         };
                         //Обновление состояния
                         self.click();
-                        
-                        callback(data);
+                        network.disableEditMode();
                     }
                 },
                 editEdge: function (data, callback) {
@@ -70,8 +69,7 @@ mylibrary.MyGraf = function (element) {
                             returnUnswer.editableEdgesNewIdTo = data.to;
                             //Обновление состояния
                             self.click();
-                            
-                            callback(data);
+                            network.disableEditMode();
                         }
                     }
                     else {
@@ -80,8 +78,7 @@ mylibrary.MyGraf = function (element) {
                         returnUnswer.editableEdgesNewIdTo = data.to;
                         //Обновление состояния
                         self.click();
-
-                        callback(data);
+                        network.disableEditMode();
                     }
                 }
             }
@@ -112,6 +109,25 @@ mylibrary.MyGraf = function (element) {
 
 
     //Функции для работы с графом
+    
+    //Функция добавления ноды, через изменение стейта
+    //оповещает java и, следуя своей логике, java вызовет метод добавления 
+    //конкретной ноды на стороне js
+    function addNodeSideJS(id, label, image) {
+        //Синхронизация состояния
+        returnUnswer ={
+            newNodesId: id,
+            newNodesLable: label,
+            newNodesImage: image,
+            newNodesX: xClick,
+            newNodesY: yClick
+        };
+        //Обновление состояния
+        self.click();
+    }
+    this.addNodeSideJAVA= function (id, label, image) {
+        addNode(id, label, image);
+    };
     function addNode(id, label, image) {
         //Создание в правильном формате новой ноды
         var newData =  {
@@ -123,24 +139,35 @@ mylibrary.MyGraf = function (element) {
             y: yClick
         };
         network.body.data.nodes.getDataSet().add(newData);
-        
-        //Синхронизация состояния
-        returnUnswer ={
-            newNodesId: newData.id,
-            newNodesLable: newData.label,
-            newNodesImage: newData.image,
-            newNodesX: newData.x,
-            newNodesY: newData.y
+    }
+    
+    
+    //Функция добавления связи, вызывает соответствующий режим vis 
+    //js, который, после считывания нужных данных, через изменение стейта
+    //оповещает java и, следуя своей логике, java вызовет метод добавления 
+    //конкретной связи на стороне js 
+    function addEdgeSideJS() {
+        network.addEdgeMode();
+    }
+    //Вызов функции добавления ноды со стороны Java
+    this.addEdgeSideJAVA= function (from, to) {
+        addEdge(from, to);
+    };
+    function addEdge(from, to) {
+        var finalizedData ={
+            from: from,
+            to: to,
+            arrows: "to"
         };
-        //Обновление состояния
-        self.click();
+        network.body.data.edges.getDataSet().add(finalizedData)
     }
     
-    function addEdge() {
-         network.addEdgeMode();
-    }
     
-    function editEdge(){
+    //Функция редактирования связи,вызывает соответствующий режим vis 
+    //js, который, после считывания нужных данных, через изменение стейта
+    //оповещает java и, следуя своей логике, java вызовет метод редактирования 
+    //конкретной связи на стороне js
+    function editEdgeSideJS() {
         var idEdge = 0;
         if(network.getSelectedEdges().length > 0)
         {
@@ -150,47 +177,32 @@ mylibrary.MyGraf = function (element) {
                 editableEdgesOldIdFrom: network.getConnectedNodes(idEdge)[0],
                 editableEdgesOldIdTo: network.getConnectedNodes(idEdge)[1],
                 editableEdgesNewIdFrom: 0,
-                editableEdgesNewIdTo: 0
+                editableEdgesNewIdTo: 0,
+                idEditableEdge: idEdge
             };
             
             network.editEdgeMode();
         }
     }
-    
-    //Функция удаления выделенного элемента
-    function deleteElement(){
-        //Вначале проверка на выделение ноды, она выделяется вместе со связью
-        if(network.getSelectedNodes().length > 0)
-        {
-            var id = network.getSelectedNodes()[0];
-            network.body.data.nodes.getDataSet().remove(network.getSelectedNodes()[0],null);
-
-            //Синхронизация состояния
-            returnUnswer ={
-                deleteNodesId: id
-            };
-            //Обновление состояния
-            self.click();
-        }
-        //Если пользователь хочет удалить связь, то он кликает именно на ней и нода
-        //в таком случае не выделится
-        if(network.getSelectedEdges().length > 0)
-        {
-            var id = network.getSelectedEdges()[0];
-            //Синхронизация состояния
-            returnUnswer ={
-                deleteEdgeFrom: network.getConnectedNodes(id)[0],
-                deleteEdgeTo: network.getConnectedNodes(id)[1]
-            };
-            
-            network.body.data.edges.getDataSet().remove(network.getSelectedEdges()[0],null);
-
-            //Обновление состояния
-            self.click();
-        }
+    this.editEdgeSideJAVA= function (from, to, id) {
+        editEdge(from, to, id);
+    };
+    function editEdge(from, to, id) {
+        var finalizedData = {
+            from: from,
+            id: id,
+            to: to
+        };
+        network.body.data.edges.getDataSet().update(finalizedData);
+        network.disableEditMode();
     }
-    //Функция вызова функции удаления ноды со стороны java по двум параметрам
-    this.deleteLastEdge= function (from, to) {
+    
+    
+    //Функция редактирования связи,вызывает соответствующий режим vis 
+    //js, который, после считывания нужных данных, через изменение стейта
+    //оповещает java и, следуя своей логике, java вызовет метод редактирования 
+    //конкретной связи на стороне js
+    function deleteEdgeSideJS(from, to) {
         var firstNode = network.getConnectedEdges(from);
         var secondNode = network.getConnectedEdges(to);
         for(var i=0; i<firstNode.length; i++){
@@ -199,10 +211,9 @@ mylibrary.MyGraf = function (element) {
                     //Синхронизация состояния
                     returnUnswer ={
                         deleteEdgeFrom: from,
-                        deleteEdgeTo: to
+                        deleteEdgeTo: to,
+                        deleteIdEdge: firstNode[i]
                     };
-                    
-                    network.body.data.edges.getDataSet().remove(firstNode[i],null);
 
                     //Обновление состояния
                     self.click();
@@ -210,7 +221,51 @@ mylibrary.MyGraf = function (element) {
                 }
             }
         }
+    }
+    this.deleteEdgeSideJAVA= function (id) {
+        deleteEdge(id);
     };
+    function deleteEdge(id) {
+        network.body.data.edges.getDataSet().remove(id,null);
+    }
+    
+    
+    //Функция редактирования связи,вызывает соответствующий режим vis 
+    //js, который, после считывания нужных данных, через изменение стейта
+    //оповещает java и, следуя своей логике, java вызовет метод редактирования 
+    //конкретной связи на стороне js
+    function deleteNodeSideJS(id) {
+        //Синхронизация состояния
+        returnUnswer ={
+            deleteNodesId: id
+        };
+        //Обновление состояния
+        self.click();
+    }
+    this.deleteNodeSideJAVA= function (id) {
+        deleteNode(id);
+    };
+    function deleteNode(id) {
+        network.body.data.nodes.getDataSet().remove(id,null);
+    }
+    
+    
+    //Функция удаления выделенного элемента
+    function deleteSelectedElement(){
+        //Вначале проверка на выделение ноды, она выделяется вместе со связью
+        if(network.getSelectedNodes().length > 0)
+        {
+            var id = network.getSelectedNodes()[0];
+            deleteNodeSideJS(id);
+        }
+        //Если пользователь хочет удалить связь, то он кликает именно на ней и нода
+        //в таком случае не выделится
+        if(network.getSelectedEdges().length > 0)
+        {
+            var id = network.getSelectedEdges()[0];
+            deleteEdgeSideJS(network.getConnectedNodes(id)[0], network.getConnectedNodes(id)[1]);
+        }
+    }
     
     
     
@@ -218,23 +273,23 @@ mylibrary.MyGraf = function (element) {
     //Кнопки для вызовов функций графа со стороны js
     var addNodeBtn = document.getElementById("networkAddNode");
     addNodeBtn.onclick = function(event){
-        addNode(767686,"newNode","https://png.icons8.com/edit-property/nolan/64");
+        addNodeSideJS(767686,"newNode","https://png.icons8.com/edit-property/nolan/64");
     };
      
     var addEdgeBtn = document.getElementById("networkAddEdge");
     addEdgeBtn.onclick = function(event){
-        addEdge();
+        addEdgeSideJS();
     };
     
     var editEdgeBtn = document.getElementById("networkEditEdge");
     editEdgeBtn.onclick = function(event) 
     {
-        editEdge();
+        editEdgeSideJS();
     };
 
     var deleteElementBtn = document.getElementById("networkDeleteElement");
     deleteElementBtn.onclick = function(event) 
     {
-        deleteElement();
+        deleteSelectedElement();
     };
 };
