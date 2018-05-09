@@ -62,6 +62,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.Upload;
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -195,8 +196,10 @@ public class UiServiceMainUI extends UI{
         newViews.add(new View("UserPage") {
            @Override
             public void draw(LinkedMultiValueMap<String, String> parameters) {
-                mainLayer.contentRowLayout.removeAllComponents();
-                addUserPageComponent(mainLayer.contentRowLayout);
+                CustomLayout ShortViewOfReceipeLayout = new CustomLayout("UserPageLayout");
+                ShortViewOfReceipeLayout.setHeight("100%");
+                mainLayer.contentRowLayout.setHeight("100%");
+                mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
             }
         });
         try
@@ -457,8 +460,31 @@ public class UiServiceMainUI extends UI{
         newViews.add(new View("UserPage") {
            @Override
             public void draw(LinkedMultiValueMap<String, String> parameters) {
-                mainLayer.contentRowLayout.removeAllComponents();
-                addUserPageComponent(mainLayer.contentRowLayout);
+                CustomLayout ShortViewOfReceipeLayout = new CustomLayout("UserPageLayout");
+                ShortViewOfReceipeLayout.setHeight("100%");
+                mainLayer.contentRowLayout.setHeight("100%");
+                mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
+                ShortViewOfReceipeLayout.addComponent(new Label("Name"), "userPageNameFieldAndLable");
+                ShortViewOfReceipeLayout.addComponent(new Label("SecondName"), "userPageSecondNameFieldAndLable");
+                ShortViewOfReceipeLayout.addComponent(new Label("Nickname"), "userPageNicknameFieldAndLable");
+                ShortViewOfReceipeLayout.addComponent(new Label("Mail"), "userPageMailFieldAndLable");
+                ShortViewOfReceipeLayout.addComponent(new Label("BirthDate"), "userPageBirthDateFieldAndLable");
+                TextArea area = new TextArea();
+                area.setValue("testt esttestte sttesttesttesttest testtesttest"
+                        + "testtestt esttesttesttesttesttesttesttesttest"
+                        + "testt esttesttesttesttest testtestt esttesttest"
+                        + "testtesttestte sttest testtest testtesttest"
+                        + "testtestt esttest testtesttesttesttest");
+                area.setHeight("100%");
+                area.setWidth("100%");
+                area.setWordWrap(true);
+                ShortViewOfReceipeLayout.addComponent(area, "userPageAboutOneselfFieldAndLable");
+                
+                Image topImage = new Image();
+                topImage.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/cake.png")));
+                topImage.setHeight("100%");
+                topImage.setWidth("100%");
+                ShortViewOfReceipeLayout.addComponent(topImage, "userPageImage");
             }
         });
         try
@@ -629,6 +655,52 @@ public class UiServiceMainUI extends UI{
                 int i=0;
             }
         });
+        
+        //Артем, назначь действия на событие onClick для следующих кнопок:
+        clickListener.addButtonClickListener(new ClickListener() {
+            @Override
+            public String getId() {
+                return "userPageSaveBtn";
+            }
+
+            @Override
+            public void onEventDo() {
+                int i=0;//Код писать сюда
+            }
+        });
+        clickListener.addButtonClickListener(new ClickListener() {
+            @Override
+            public String getId() {
+                return "userPageCancelBtn";
+            }
+
+            @Override
+            public void onEventDo() {
+                int i=0;//Код писать сюда
+            }
+        });
+        clickListener.addButtonClickListener(new ClickListener() {
+            @Override
+            public String getId() {
+                return "userPageLoadFotoBtn";
+            }
+
+            @Override
+            public void onEventDo() {
+                int i=0;//Код писать сюда
+            }
+        });
+        clickListener.addButtonClickListener(new ClickListener() {
+            @Override
+            public String getId() {
+                return "userPageChangePasswordButtonBtn";
+            }
+
+            @Override
+            public void onEventDo() {
+                int i=0;//Код писать сюда
+            }
+        });
         return mainLayer.contentRowLayout;
     }
     
@@ -687,13 +759,4 @@ public class UiServiceMainUI extends UI{
         theDistanceBetweenBottomAndRecipes.setHeight("60px");
         theDistanceBetweenBottomAndRecipes.addColumn().withDisplayRules(12, 12, 12, 12);
     }
-    
-    private void addUserPageComponent(ResponsiveLayout contentRowLayout){
-        
-        ResponsiveRow sliderRow = contentRowLayout.addRow();
-        
-        CustomLayout userPage = new CustomLayout("UserPageLayout");
-        
-        sliderRow.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(userPage);
-    } 
 }
