@@ -18,6 +18,7 @@ import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Presenter
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,6 +59,7 @@ public class ReceipeView implements View{
         graf = new Graf();
         graf.setInitCollections(receipe.nodes, receipe.edges);
         ShortViewOfReceipeLayout.addComponent(graf,"panelWithGraf");
+        ShortViewOfReceipeLayout.addComponent(new Button("Test"),"receipePartsTable");
         //Пример добавления слушателя на клик по ЛЮБОЙ ноде
         /*graf.addHandlerForClickingOnNode(new ClickOnNodeEventListener() {
             @Override
