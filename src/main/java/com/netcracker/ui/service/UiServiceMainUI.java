@@ -31,6 +31,8 @@ import com.netcracker.ui.service.exception.navigator.NotFound;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.exception.receipe.view.ShortViewException;
+import com.netcracker.ui.service.graf.component.Node;
+import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
 import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
@@ -88,23 +90,37 @@ public class UiServiceMainUI extends UI{
     
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-      try {
-        CookieHandler ch = new CookieHandler();
-        JWTHandler jwth = new JWTHandler();
-        Cookie userCookie = ch.getCookieByName("userInfo");
-        if (userCookie == null) {
-          createMainLayout();
-        } else {
-          boolean user = jwth.checkUser(userCookie.getValue(), "test");
-          if (user) {
-            createUserLayout();
-          } else {
-            createMainLayout();
-          }
+       try
+       {
+           GMFacade gm = new GMFacade("http://localhost:8083/");
+           Node n = new Node("", "description", "picture");
+           n.setLabel("label");
+           Node node = gm.addNode(n);
+           int d=0;
+       }
+       catch(Exception eeeee)
+       {
+           int d=0;
+       }
+        
+        try {
+            CookieHandler ch = new CookieHandler();
+            JWTHandler jwth = new JWTHandler();
+            Cookie userCookie = ch.getCookieByName("userInfo");
+            if (userCookie == null) {
+              createMainLayout();
+            } else {
+              boolean user = jwth.checkUser(userCookie.getValue(), "test");
+              if (user) {
+                createUserLayout();
+              } else {
+                createMainLayout();
+              }
+            }
+          } 
+        catch (Exception exception) {
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
-      } catch (Exception exception) {
-        ExceptionHandler.getInstance().runExceptionhandling(exception);
-      }
     }
     
     private void setUrl(String path)
