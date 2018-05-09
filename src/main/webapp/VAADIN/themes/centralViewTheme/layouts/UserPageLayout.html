@@ -1,42 +1,71 @@
-<div id = "userPage">
-    <div id = "leftBlock">
-        <img src="https://cs.pikabu.ru/images/big_size_comm/2013-12_6/13880049494467.jpg" alt="Фото пользователя"
-                        id = "userPicture"> <br>
-
-        <button>Загрузить фото</button><br>
-        <button>Изменить пароль</button><br>
-
-
+<div class="userPageView">
+    <div class="userPagePanelWithInformation">
+        <div class="userPagePanelWithImageAndButtons">
+            <div class="userPageImage" data-location="userPageImage">
+            </div>
+            <div class="userPageButtonsBottomImage">
+                <div class="userPageLoadFotoBtn" id="userPageLoadFotoBtn">
+                    Загрузить фото
+                </div>
+                <div class="userPageChangePasswordButtonBtn" id="userPageChangePasswordButtonBtn">
+                    Изменить пароль
+                </div>
+            </div>
+        </div>
+        <div class="userPagePanelWithHeaderAndFields">
+            <div class="userPageHeader">
+                <div class="userPageHeaderText">Информация о пользователе</div>
+                <div class="userPageHeaderHR"><hr style="color: black;"></div>
+            </div>
+            <div class="userPageColumnsWithLablesAndFields">
+                <div class="userPagePanelWithLables">
+                    <div class="userPageNameFieldAndLable">
+                        <div>Имя</div>
+                    </div>
+                    <div class="userPageSecondNameFieldAndLable">
+                        <div>Фамилия</div>
+                    </div>
+                    <div class="userPageNicknameFieldAndLable">
+                        <div>Псевдоним</div>
+                    </div>
+                    <div class="userPageMailFieldAndLable">
+                        <div>Почта</div>
+                    </div>
+                    <div class="userPageBirthDateFieldAndLable">
+                        <div>Дата рождения</div>
+                    </div>
+                    <div class="userPageAboutOneselfFieldAndLable">
+                        <div>Обо мне</div>
+                    </div>
+                </div>
+                <div class="userPagePanelWithFields">
+                    <div class="userPageNameFieldAndLable">
+                        <div data-location="userPageNameFieldAndLable"></div>
+                    </div>
+                    <div class="userPageSecondNameFieldAndLable">
+                        <div data-location="userPageSecondNameFieldAndLable"></div>
+                    </div>
+                    <div class="userPageNicknameFieldAndLable">
+                        <div data-location="userPageNicknameFieldAndLable"></div>
+                    </div>
+                    <div class="userPageMailFieldAndLable">
+                        <div data-location="userPageMailFieldAndLable"></div>
+                    </div>
+                    <div class="userPageBirthDateFieldAndLable">
+                        <div data-location="userPageBirthDateFieldAndLable"></div>
+                    </div>
+                    <div class="userPageAboutOneselfFieldAndLable" data-location="userPageAboutOneselfFieldAndLable">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div id = "mainBlock">
-        <p>Информация о пользователе</p>
-
-        <hr>
-        <div class = "first-raw">
-            <p>Имя</p>
-            <p class = "input_fields"><input maxlength="25" size="40"></p>
-
-
-            <p>Фамилия</p>
-            <p class = "input_fields"><input maxlength="25" size="40"></p>
-
+    <div class="userPagePanelWithButtons">
+        <div class="userPageSaveBtn" id="userPageSaveBtn">
+            Сохранить
         </div>
-
-        <div class="second-raw">
-            <p>Псевдоним</p>
-            <p class = "input_fields"><input maxlength="25" size="40"></p>
-
-            <p>Почта</p>
-            <p class = "input_fields"><input maxlength="25" size="40"></p>
+        <div class="userPageCancelBtn" id="userPageCancelBtn">
+            Отмена
         </div>
-
-        <p>Дата рождения</p>
-         <input type="date" id="date" name="date"/>
-
-        <p>О себе</p>
-        <p><textarea id="userinfo" name="comment"></textarea></p>
-
-        <button id = "save">Сохранить</button>
-        <button>Отмена</button>
     </div>
 </div>
