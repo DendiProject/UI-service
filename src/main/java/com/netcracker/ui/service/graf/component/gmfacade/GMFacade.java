@@ -5,6 +5,7 @@
  */
 package com.netcracker.ui.service.graf.component.gmfacade;
 
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.gmfacade.workers.EdgeWorker;
@@ -24,7 +25,7 @@ public class GMFacade {
         //http://localhost:8083/
     }
     
-    public Node addNode(Node node) throws Exception
+    public Node addNode(Node node)
     {
         try
         {
@@ -39,52 +40,53 @@ public class GMFacade {
             nodeWorker.addNodePicture(node.getNodeId(), node.getPictureId());
             return node;
         }
-        catch(Exception ex)
+        catch(Exception exception)
         {
-            throw new Exception();
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+            return null;
         }
     }
     
-    public void addEdge(Edge edge) throws Exception
+    public void addEdge(Edge edge)
     {
         try
         {
             EdgeWorker edgeWorker = new EdgeWorker(connectionUrl);
             edgeWorker.addEdge(edge.getStartNodeId(), edge.getEndNodeId());
         }
-        catch(Exception ex)
+        catch(Exception exception)
         {
-            throw new Exception();
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
     }
     
-    public void deleteNode(Node node) throws Exception
+    public void deleteNode(Node node)
     {
         try
         {
             NodeWorker nodeWorker = new NodeWorker(connectionUrl);
             nodeWorker.deleteNode(node.getNodeId());
         }
-        catch(Exception ex)
+        catch(Exception exception)
         {
-            throw new Exception();
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
     }
     
-    public void deleteEdge(Edge edge) throws Exception
+    public void deleteEdge(Edge edge)
     {
         try
         {
             EdgeWorker edgeWorker = new EdgeWorker(connectionUrl);
             edgeWorker.deleteEdge(edge.getStartNodeId(), edge.getEndNodeId());
         }
-        catch(Exception ex)
+        catch(Exception exception)
         {
-            throw new Exception();
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
     }
     
-    public JSONObject getGraph(String userId, String receipeId) throws Exception
+    public JSONObject getGraph(String userId, String receipeId)
     {
         try
         {
@@ -92,13 +94,14 @@ public class GMFacade {
             JSONObject result = grafWorker.getGraph(userId, receipeId);
             return result;
         }
-        catch(Exception ex)
+        catch(Exception exception)
         {
-            throw new Exception();
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+            return null;
         }
     }
     
-    public JSONObject getParallelGraph(String userId, String receipeId) throws Exception
+    public JSONObject getParallelGraph(String userId, String receipeId)
     {
         try
         {
@@ -106,13 +109,14 @@ public class GMFacade {
             JSONObject result = grafWorker.getParallelGraph(userId, receipeId);
             return result;
         }
-        catch(Exception ex)
+        catch(Exception exception)
         {
-            throw new Exception();
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+            return null;
         }
     }
     
-    public JSONObject getTestGraf(String userId, String receipeId) throws Exception
+    public JSONObject getTestGraf(String userId, String receipeId)
     {
         try
         {
@@ -120,9 +124,10 @@ public class GMFacade {
             JSONObject result = grafWorker.getTestGraf(userId, receipeId);
             return result;
         }
-        catch(Exception ex)
+        catch(Exception exception)
         {
-            throw new Exception();
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+            return null;
         }
     }
 }

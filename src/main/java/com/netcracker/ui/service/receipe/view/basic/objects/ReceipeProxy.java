@@ -8,6 +8,7 @@ package com.netcracker.ui.service.receipe.view.basic.objects;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.JWTHandler;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
@@ -45,7 +46,7 @@ public class ReceipeProxy  implements Proxy{
     }
     //Проверка прав пользователя
     @Override
-    public Boolean connect() throws InternalServerError{
+    public Boolean connect(){
         try
         {
             CookieHandler ch = new CookieHandler();
@@ -67,7 +68,8 @@ public class ReceipeProxy  implements Proxy{
                                         + "IU-Service, Navigator. Internal server "
                                         + "error");
                 exception.initCause(ex1);
-                throw exception;
+                ExceptionHandler.getInstance().runExceptionhandling(exception);
+                return false;
             }
         }
         catch(Exception ex)
@@ -79,13 +81,14 @@ public class ReceipeProxy  implements Proxy{
                                     + "IU-Service, Navigator. Internal server "
                                     + "error");
             exception.initCause(ex1);
-            throw exception;
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+            return false;
         }
     }
 
     //Загрузка с бэкенда данных о конкретном рецепте, используя конфигарцию, определенную через функцию connect()
     @Override
-    public Object load() throws Exception{
+    public Object load() {
         if(connect())
         {
             GMFacade gm = new GMFacade("http://localhost:8083/");
@@ -100,7 +103,8 @@ public class ReceipeProxy  implements Proxy{
                     "Exception from IU-Service, Navigator. Internal server "
                                     + "error");
             exception.initCause(ex1);
-            throw exception;
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+            return false;
         }
     }
 }

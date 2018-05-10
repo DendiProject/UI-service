@@ -91,25 +91,18 @@ public class UiServiceMainUI extends UI{
     
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-       try
-       {
-           GMFacade gm = new GMFacade("http://localhost:8083/");
-           Node n = new Node("", "description", "picture");
-           n.setLabel("label");
-           Node node = gm.addNode(n);
-           Edge edge = new Edge();
-           gm.addEdge(edge);
-           gm.deleteNode(node);
-           gm.deleteEdge(edge);
-           //gm.getGraph("11111", "111111");
-           //gm.getParallelGraph("11111", "111111");
-           gm.getTestGraf("1111", "111111");
-           int d=0;
-       }
-       catch(Exception eeeee)
-       {
-           int d=0;
-       }
+        GMFacade gm = new GMFacade("http://localhost:8083/");
+        Node n = new Node("", "description", "picture");
+        n.setLabel("label");
+        Node node = gm.addNode(n);
+        Edge edge = new Edge();
+        gm.addEdge(edge);
+        gm.deleteNode(node);
+        gm.deleteEdge(edge);
+        //gm.getGraph("11111", "111111");
+        //gm.getParallelGraph("11111", "111111");
+        gm.getTestGraf("1111", "111111");
+        int d=0;
         
         try {
             CookieHandler ch = new CookieHandler();
