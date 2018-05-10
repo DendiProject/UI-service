@@ -7,6 +7,7 @@ package com.netcracker.ui.service.graf.component.gmfacade.workers;
 
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,21 +21,20 @@ import org.springframework.web.util.UriComponentsBuilder;
  *
  * @author Artem
  */
-public class EdgeWorker  {
+public class CatalogWorker {
     private String connectionUrl;
 
-    public EdgeWorker(String connectionUrl) {
+    public CatalogWorker(String connectionUrl) {
         this.connectionUrl = connectionUrl;
         //http://localhost:8083/
     }
     
-    //Создание связи между нодами на gm 
-    public void addEdge(String startNodeId,String endNodeId) throws NotFoundBean
+    //Создание каталога
+    public String createCatalog(String catalogName, String description) throws NotFoundBean
     {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("startNodeId", startNodeId);
-        parameters.add("endNodeId", endNodeId);
-        //Запрос на получение id для новой картинки
+        parameters.add("catalogName", catalogName);
+        parameters.add("description", description);
         BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
         RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
         HttpHeaders headers = new HttpHeaders();
@@ -42,7 +42,7 @@ public class EdgeWorker  {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(connectionUrl + "node/addedge").queryParams(parameters);
+                .fromHttpUrl(connectionUrl + "catalog/create").queryParams(parameters);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
         HttpEntity<String> response = restTemplate.exchange(
@@ -50,15 +50,12 @@ public class EdgeWorker  {
                 HttpMethod.POST,
                 entity,
                 String.class);
+        return response.getBody();
     }
     
-    //Удаление связи между нодами на gm
-    public void deleteEdge(String startNodeId, String endNodeId) throws NotFoundBean
+    //Получение id и description каталога по имени
+    public JSONObject getCatalog(String catalogeName) throws NotFoundBean
     {
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("startNodeId", startNodeId);
-        parameters.add("endNodeId", endNodeId);
-        //Запрос на получение id для новой картинки
         BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
         RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
         HttpHeaders headers = new HttpHeaders();
@@ -66,13 +63,14 @@ public class EdgeWorker  {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(connectionUrl + "node/deleteedge").queryParams(parameters);
+                .fromHttpUrl(connectionUrl + "catalog/getbyname/"+catalogeName);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
         HttpEntity<String> response = restTemplate.exchange(
                 builder.build().encode().toUri(),
-                HttpMethod.DELETE,
+                HttpMethod.GET,
                 entity,
                 String.class);
+        return new JSONObject(response.getBody());
     }
 }

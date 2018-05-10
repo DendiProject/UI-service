@@ -30,6 +30,7 @@ public class GrafWorker {
         //http://localhost:8083/
     }
     
+    //Получение графа на 1 исполнителя
     public JSONObject getGraph(String userId, String receipeId) throws NotFoundBean
     {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
@@ -57,6 +58,7 @@ public class GrafWorker {
         return result;
     }
     
+    //Получение графа на n-исполнителей
     public JSONObject getParallelGraph(String userId, String receipeId) throws NotFoundBean
     {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
@@ -84,6 +86,7 @@ public class GrafWorker {
         return result;
     }
     
+    //Получение тестового графа
     public JSONObject getTestGraf(String userId, String receipeId) throws NotFoundBean
     {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();

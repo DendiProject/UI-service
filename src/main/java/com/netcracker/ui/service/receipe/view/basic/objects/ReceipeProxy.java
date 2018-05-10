@@ -5,24 +5,15 @@
  */
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
-import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
-import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import javax.servlet.http.Cookie;
-import org.json.JSONObject;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  *
@@ -92,7 +83,7 @@ public class ReceipeProxy  implements Proxy{
         if(connect())
         {
             GMFacade gm = new GMFacade("http://localhost:8083/");
-            return gm.getTestGraf(userId, receipeId);
+            return gm.getGmGrafFacade().getTestGraf(userId, receipeId);
         }
         else
         {
