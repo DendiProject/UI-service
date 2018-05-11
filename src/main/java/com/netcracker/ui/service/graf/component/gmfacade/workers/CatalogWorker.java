@@ -5,8 +5,12 @@
  */
 package com.netcracker.ui.service.graf.component.gmfacade.workers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.receipe.view.basic.objects.Catalog;
+import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortReceipe;
+import java.io.IOException;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -30,11 +34,11 @@ public class CatalogWorker {
     }
     
     //Создание каталога
-    public String createCatalog(String catalogName, String description) throws NotFoundBean
+    public String createCatalog(String catalogName, String descriptionId) throws NotFoundBean
     {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("catalogName", catalogName);
-        parameters.add("description", description);
+        parameters.add("descriptionId", descriptionId);
         BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
         RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
         HttpHeaders headers = new HttpHeaders();
@@ -54,7 +58,7 @@ public class CatalogWorker {
     }
     
     //Получение id и description каталога по имени
-    public JSONObject getCatalog(String catalogeName) throws NotFoundBean
+    public Catalog getCatalog(String catalogeName) throws NotFoundBean, IOException
     {
         BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
         RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
@@ -71,6 +75,10 @@ public class CatalogWorker {
                 HttpMethod.GET,
                 entity,
                 String.class);
-        return new JSONObject(response.getBody());
+        
+        BeansFactory<ObjectMapper> bfOM2 = BeansFactory.getInstance();
+        ObjectMapper mapper = bfOM2.getBean(ObjectMapper.class);
+        return mapper.readValue(response.getBody(),
+                    Catalog.class);
     }
 }

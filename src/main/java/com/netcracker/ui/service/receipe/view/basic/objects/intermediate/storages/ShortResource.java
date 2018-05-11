@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service.receipe.view.basic.objects;
+package com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages;
 
 /**
  *

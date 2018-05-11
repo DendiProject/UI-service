@@ -9,7 +9,7 @@ import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.graf.component.gmfacade.workers.ResourceWorker;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
-import com.netcracker.ui.service.receipe.view.basic.objects.ShortResource;
+import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortResource;
 import java.util.List;
 
 /**

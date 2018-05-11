@@ -34,6 +34,7 @@ import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.netcracker.ui.service.navigator.Navigator;
 import com.netcracker.ui.service.navigator.View;
+import com.netcracker.ui.service.receipe.view.basic.objects.Catalog;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeDataConverter;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeStore;
@@ -56,6 +57,11 @@ import com.vaadin.ui.TextArea;
 import java.util.List;
 import javax.servlet.http.Cookie;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
+import com.netcracker.ui.service.receipe.view.basic.objects.Tag;
+import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ReceipeInformation;
+import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortReceipe;
+import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortResource;
+import org.json.JSONObject;
 /**
  *
  * @author Artem
@@ -72,9 +78,9 @@ public class UiServiceMainUI extends UI{
         GMFacade gm = new GMFacade("http://localhost:8083/");
         Node n = new Node("", "description", "picture");
         n.setLabel("label");
-        Node node = gm.getGmNodeFacade().addNode(n);
-        Edge edge = new Edge();
-        gm.getGmEdgeFacade().addEdge(edge);
+        Node n2 = new Node("", "description2", "picture2");
+        n.setLabel("label");
+        n2.setLabel("label2");
         List<Resource> resources = new ArrayList<>();
         Resource resource1 = new Resource("id", "id", "name222", 2, "литры", "picture", "resource");
         Resource resource2 = new Resource("id2", "id", "name444", 4, "литры", "picture", "ingredient");
@@ -85,30 +91,31 @@ public class UiServiceMainUI extends UI{
         resource1.setResourceId(gm.getGmResourceFacade().addResource(resource1.getName(),resource1.getIngredientOrResource(),resource1.getMeasuring(), "user",resource1.getPictureId()));
         resource2.setResourceId(gm.getGmResourceFacade().addResource(resource2.getName(),resource2.getIngredientOrResource(),resource2.getMeasuring(), "user",resource2.getPictureId()));
         resource3.setResourceId(gm.getGmResourceFacade().addResource(resource3.getName(),resource3.getIngredientOrResource(),resource3.getMeasuring(), "user",resource3.getPictureId()));
-        gm.getGmResourceFacade().getResourcesByLetters("te", "resource", 5);
+        List<ShortResource> loaddresource = gm.getGmResourceFacade().getResourcesByLetters("nam", "resource", 5);
+        String catalogId = gm.getGmCatalogFacade().createCatalog("for receipe22222", "description");
+        String receipeid = gm.getGmReceipeFacade().addReceipe("newReceipe", "very good", catalogId,"userid", true).getReceipeId();
+        String receiperes = gm.getGmReceipeFacade().addReceipeResource(receipeid, "userid", resource1.getResourceId(), 5);//!!!!
+        Node node = gm.getGmNodeFacade().addNode(n,receipeid, "userid");
+        Node node2 = gm.getGmNodeFacade().addNode(n2,receipeid, "userid");
         gm.getGmNodeFacade().addInputResources(node, resources);
         gm.getGmNodeFacade().addOutputResources(node, resources);
-        gm.getGmNodeFacade().getInputResources(node, "resource");
-        gm.getGmNodeFacade().getOutputResources(node, "resource");
-        //gm.getGmTagFacade().addTagToReceipe("id", "name");500 error
-        //gm.getGmTagFacade().getReceipesByTag("name", 5);500 error
-        //gm.getGmTagFacade().getTagsByLetters("letters", 5);500 error
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        gm.getGmNodeFacade().deleteNode(node);
+        List<Resource> testregdg = gm.getGmNodeFacade().getInputResources(node, "resource");
+        List<Resource> testregdggdgdgd = gm.getGmNodeFacade().getOutputResources(node, "resource");
+        Edge edge = new Edge(node.getNodeId(), node2.getNodeId());
+        gm.getGmEdgeFacade().addEdge(edge);
+        gm.getGmReceipeFacade().setReceipeCompleted(receipeid);
+        ReceipeInformation receipeInformation = gm.getGmReceipeFacade().getReceipeInfo(receipeid);
+        List<ShortReceipe> loadingReceipe = gm.getGmReceipeFacade().getPublicAndCompletesReceipesByCatalogId(catalogId, 5);
+        gm.getGmTagFacade().addTagToReceipe(receipeid, "name");
+        //List<ShortReceipe> gdg = gm.getGmTagFacade().getReceipesByTag("name", 5);
+        //List<Tag> gdggdgdg = gm.getGmTagFacade().getTagsByLetters("nam", 5);
+        //gm.getGmNodeFacade().deleteNode(node);
         gm.getGmEdgeFacade().deleteEdge(edge);
-        gm.getGmGrafFacade().getTestGraf("1111", "111111");
-        String catalogId = gm.getGmCatalogFacade().createCatalog("name", "description");
-        String catalogId2 = gm.getGmCatalogFacade().getCatalogsId("name");
-        String catalogDescription = gm.getGmCatalogFacade().getCatalogsDescription("name");
+        JSONObject gdgdhhgdgdgd = gm.getGmGrafFacade().getGraph("userid", receipeid);
+        JSONObject gdgdhhgdgdgd2 = gm.getGmGrafFacade().getParallelGraph("userid", receipeid);
+        gm.getGmReceipeFacade().deleteReceipe(receipeid, "userid");
+        JSONObject gdgdhh = gm.getGmGrafFacade().getTestGraf("1111", "111111");
+        Catalog catalog = gm.getGmCatalogFacade().getCatalog("for receipe22222");
         int d=0;
         
         try {

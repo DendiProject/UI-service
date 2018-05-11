@@ -10,7 +10,7 @@ import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
-import com.netcracker.ui.service.receipe.view.basic.objects.ShortResource;
+import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortResource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +119,7 @@ public class ResourceWorker {
         JSONArray array = new JSONArray(response.getBody());
         List<ShortResource> resources = new ArrayList<>();
         BeansFactory<ObjectMapper> bfOM2 = BeansFactory.getInstance();
-        ObjectMapper mapper = bfOM2.getBean(ObjectMapper.class);;
+        ObjectMapper mapper = bfOM2.getBean(ObjectMapper.class);
         for(int i=0; i<array.length(); i++)
         {
             resources.add(mapper.readValue(array.get(i).toString(),

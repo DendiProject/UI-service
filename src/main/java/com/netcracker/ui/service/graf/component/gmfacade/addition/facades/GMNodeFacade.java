@@ -23,13 +23,13 @@ public class GMNodeFacade {
         //http://localhost:8083/
     }
     
-    public Node addNode(Node node)
+    public Node addNode(Node node, String receipeId, String userId)
     {
         try
         {
             NodeWorker nodeWorker = new NodeWorker(connectionUrl);
             //Cоздание новой ноды на gm
-            node.setNodeId(nodeWorker.getIdForNewNode("1111","1111"));
+            node.setNodeId(nodeWorker.getIdForNewNode(receipeId,userId));
             //Добавление к новой ноде description
             nodeWorker.addNodeDescription(node.getNodeId(), node.getDescription());
             //Добавление к новой ноде label

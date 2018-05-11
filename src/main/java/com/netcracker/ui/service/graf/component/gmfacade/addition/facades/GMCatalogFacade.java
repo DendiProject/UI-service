@@ -7,6 +7,7 @@ package com.netcracker.ui.service.graf.component.gmfacade.addition.facades;
 
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.graf.component.gmfacade.workers.CatalogWorker;
+import com.netcracker.ui.service.receipe.view.basic.objects.Catalog;
 import org.json.JSONObject;
 
 /**
@@ -21,11 +22,11 @@ public class GMCatalogFacade {
         //http://localhost:8083/
     }
     
-    public String createCatalog(String catalogName, String description)
+    public String createCatalog(String catalogName, String descriptionId)
     {
         try{
             CatalogWorker catalogWorker = new CatalogWorker(connectionUrl);
-            return catalogWorker.createCatalog(catalogName, description);
+            return catalogWorker.createCatalog(catalogName, descriptionId);
         }
         catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);
@@ -33,23 +34,10 @@ public class GMCatalogFacade {
         }
     }
     
-    public String getCatalogsId(String catalogeName){
+    public Catalog getCatalog(String catalogeName){
         try{
             CatalogWorker catalogWorker = new CatalogWorker(connectionUrl);
-            JSONObject result = catalogWorker.getCatalog(catalogeName);
-            return result.getString("catalogId");
-        }
-        catch(Exception exception){
-            ExceptionHandler.getInstance().runExceptionhandling(exception);
-            return null;
-        }
-    }
-    
-    public String getCatalogsDescription(String catalogeName){
-        try{
-            CatalogWorker catalogWorker = new CatalogWorker(connectionUrl);
-            JSONObject result = catalogWorker.getCatalog(catalogeName);
-            return result.getString("description");
+            return catalogWorker.getCatalog(catalogeName);
         }
         catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);

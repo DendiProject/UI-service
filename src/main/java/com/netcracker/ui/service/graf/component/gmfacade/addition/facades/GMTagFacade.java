@@ -8,7 +8,7 @@ package com.netcracker.ui.service.graf.component.gmfacade.addition.facades;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.graf.component.gmfacade.workers.ResourceWorker;
 import com.netcracker.ui.service.graf.component.gmfacade.workers.TagWorker;
-import com.netcracker.ui.service.receipe.view.basic.objects.ShortReceipe;
+import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortReceipe;
 import com.netcracker.ui.service.receipe.view.basic.objects.Tag;
 import java.util.List;
 

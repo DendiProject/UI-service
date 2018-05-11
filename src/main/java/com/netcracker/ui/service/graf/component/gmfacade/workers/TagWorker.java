@@ -5,13 +5,16 @@
  */
 package com.netcracker.ui.service.graf.component.gmfacade.workers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
-import com.netcracker.ui.service.receipe.view.basic.objects.ShortReceipe;
+import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortReceipe;
 import com.netcracker.ui.service.receipe.view.basic.objects.Tag;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONArray;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -32,7 +35,7 @@ public class TagWorker {
         this.connectionUrl = connectionUrl;
         //http://localhost:8083/
     }
-    //НЕ ПРОВЕРЕНО
+    
     public void addTagToReceipe(String receipeId,String tagName) throws NotFoundBean{
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("tagName", tagName);
@@ -51,11 +54,9 @@ public class TagWorker {
                 HttpMethod.POST,
                 entity,
                 String.class);
-        int gdggdgd=0;
     }
     
-    //НЕ ПРОВЕРЕНО
-    public List<ShortReceipe> getReceipesByTag(String  tagName, int size ) throws NotFoundBean{
+    public List<ShortReceipe> getReceipesByTag(String  tagName, int size ) throws NotFoundBean, IOException{
         BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
         RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
         HttpHeaders headers = new HttpHeaders();
@@ -73,15 +74,21 @@ public class TagWorker {
                 entity,
                 String.class);
         
-        ShortReceipe shortReceipe = new ShortReceipe();
-        List<ShortReceipe> resources = new ArrayList<>();
-        resources.add(shortReceipe);
+        JSONArray array = new JSONArray(response.getBody());
+        List<ShortReceipe> recepies = new ArrayList<>();
+        BeansFactory<ObjectMapper> bfOM2 = BeansFactory.getInstance();
+        ObjectMapper mapper = bfOM2.getBean(ObjectMapper.class);
+        for(int i=0; i<array.length(); i++)
+        {
+            recepies.add(mapper.readValue(array.get(i).toString(),
+                    ShortReceipe.class));
+        }
         
-        return resources;
+        return recepies;
     }
     
     //НЕ ПРОВЕРЕНО
-    public List<Tag> getTagsByLetters(String  letters, int size ) throws NotFoundBean{
+    public List<Tag> getTagsByLetters(String  letters, int size) throws NotFoundBean, IOException{
         BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
         RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
         HttpHeaders headers = new HttpHeaders();
@@ -99,10 +106,16 @@ public class TagWorker {
                 entity,
                 String.class);
         
-        Tag shortReceipe = new Tag();
-        List<Tag> resources = new ArrayList<>();
-        resources.add(shortReceipe);
+        JSONArray array = new JSONArray(response.getBody());
+        List<Tag> tags = new ArrayList<>();
+        BeansFactory<ObjectMapper> bfOM2 = BeansFactory.getInstance();
+        ObjectMapper mapper = bfOM2.getBean(ObjectMapper.class);
+        for(int i=0; i<array.length(); i++)
+        {
+            tags.add(mapper.readValue(array.get(i).toString(),
+                    Tag.class));
+        }
         
-        return resources;
+        return tags;
     }
 }

@@ -10,7 +10,7 @@ import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
-import com.netcracker.ui.service.receipe.view.basic.objects.ShortResource;
+import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortResource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
