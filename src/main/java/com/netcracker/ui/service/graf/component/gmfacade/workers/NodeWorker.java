@@ -10,7 +10,9 @@ import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
+import com.netcracker.ui.service.receipe.view.basic.objects.ShortResource;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -19,6 +21,7 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -223,8 +226,17 @@ public class NodeWorker {
                 entity,
                 String.class);
         
+        JSONArray array = new JSONArray(response.getBody());
+        List<Resource> resources = new ArrayList<>();
+        BeansFactory<ObjectMapper> bfOM2 = BeansFactory.getInstance();
+        ObjectMapper mapper = bfOM2.getBean(ObjectMapper.class);;
+        for(int i=0; i<array.length(); i++)
+        {
+            resources.add(mapper.readValue(array.get(i).toString(),
+                    Resource.class));
+        }
         
-        return null;
+        return resources;
     }
     
     //Получение исходящих ресурсов для ноды
@@ -248,7 +260,16 @@ public class NodeWorker {
                 entity,
                 String.class);
         
+        JSONArray array = new JSONArray(response.getBody());
+        List<Resource> resources = new ArrayList<>();
+        BeansFactory<ObjectMapper> bfOM2 = BeansFactory.getInstance();
+        ObjectMapper mapper = bfOM2.getBean(ObjectMapper.class);;
+        for(int i=0; i<array.length(); i++)
+        {
+            resources.add(mapper.readValue(array.get(i).toString(),
+                    Resource.class));
+        }
         
-        return null;
+        return resources;
     }
 }

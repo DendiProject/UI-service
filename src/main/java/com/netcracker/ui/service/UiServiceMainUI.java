@@ -76,14 +76,33 @@ public class UiServiceMainUI extends UI{
         Edge edge = new Edge();
         gm.getGmEdgeFacade().addEdge(edge);
         List<Resource> resources = new ArrayList<>();
-        Resource resource1 = new Resource("id", "", "name", 2);
-        Resource resource2 = new Resource("id2", "id", "name2", 4);
-        
+        Resource resource1 = new Resource("id", "id", "name222", 2, "литры", "picture", "resource");
+        Resource resource2 = new Resource("id2", "id", "name444", 4, "литры", "picture", "ingredient");
+        Resource resource3 = new Resource("id2", "id", "name888", 4, "литры", "picture", "resource");
         resources.add(resource1);
         resources.add(resource2);
+        resources.add(resource3);
+        resource1.setResourceId(gm.getGmResourceFacade().addResource(resource1.getName(),resource1.getIngredientOrResource(),resource1.getMeasuring(), "user",resource1.getPictureId()));
+        resource2.setResourceId(gm.getGmResourceFacade().addResource(resource2.getName(),resource2.getIngredientOrResource(),resource2.getMeasuring(), "user",resource2.getPictureId()));
+        resource3.setResourceId(gm.getGmResourceFacade().addResource(resource3.getName(),resource3.getIngredientOrResource(),resource3.getMeasuring(), "user",resource3.getPictureId()));
+        gm.getGmResourceFacade().getResourcesByLetters("te", "resource", 5);
         gm.getGmNodeFacade().addInputResources(node, resources);
         gm.getGmNodeFacade().addOutputResources(node, resources);
         gm.getGmNodeFacade().getInputResources(node, "resource");
+        gm.getGmNodeFacade().getOutputResources(node, "resource");
+        //gm.getGmTagFacade().addTagToReceipe("id", "name");500 error
+        //gm.getGmTagFacade().getReceipesByTag("name", 5);500 error
+        //gm.getGmTagFacade().getTagsByLetters("letters", 5);500 error
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         gm.getGmNodeFacade().deleteNode(node);
         gm.getGmEdgeFacade().deleteEdge(edge);
         gm.getGmGrafFacade().getTestGraf("1111", "111111");

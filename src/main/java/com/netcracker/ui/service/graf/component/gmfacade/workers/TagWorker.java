@@ -5,17 +5,13 @@
  */
 package com.netcracker.ui.service.graf.component.gmfacade.workers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
-import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
-import com.netcracker.ui.service.receipe.view.basic.objects.ShortResource;
-import java.io.IOException;
+import com.netcracker.ui.service.receipe.view.basic.objects.ShortReceipe;
+import com.netcracker.ui.service.receipe.view.basic.objects.Tag;
 import java.util.ArrayList;
 import java.util.List;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,23 +25,17 @@ import org.springframework.web.util.UriComponentsBuilder;
  *
  * @author Artem
  */
-public class ResourceWorker {
+public class TagWorker {
     private String connectionUrl;
 
-    public ResourceWorker(String connectionUrl) {
+    public TagWorker(String connectionUrl) {
         this.connectionUrl = connectionUrl;
         //http://localhost:8083/
     }
-    
-    //Полная версия создания ресурса
-    public String addResource(String name, String ingredientOrResource, 
-            String measuring, String userId, String pictureId) throws NotFoundBean{
+    //НЕ ПРОВЕРЕНО
+    public void addTagToReceipe(String receipeId,String tagName) throws NotFoundBean{
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("name", name);
-        parameters.add("ingredientOrResource", ingredientOrResource);
-        parameters.add("measuring", measuring);
-        parameters.add("userId", userId);
-        parameters.add("pictureId", pictureId);
+        parameters.add("tagName", tagName);
         BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
         RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
         HttpHeaders headers = new HttpHeaders();
@@ -53,7 +43,7 @@ public class ResourceWorker {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(connectionUrl + "resource/addresource").queryParams(parameters);
+                .fromHttpUrl(connectionUrl + "receipe/addtag/"+receipeId).queryParams(parameters);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
         HttpEntity<String> response = restTemplate.exchange(
@@ -61,18 +51,11 @@ public class ResourceWorker {
                 HttpMethod.POST,
                 entity,
                 String.class);
-        String id = response.getBody();
-        
-        return id;
+        int gdggdgd=0;
     }
     
-    //Укороченная версия создания ресурса
-    public String addResource(String name, String ingredientOrResource, 
-            String nodeId) throws NotFoundBean{
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("name", name);
-        parameters.add("ingredientOrResource", ingredientOrResource);
-        parameters.add("nodeId", nodeId);
+    //НЕ ПРОВЕРЕНО
+    public List<ShortReceipe> getReceipesByTag(String  tagName, int size ) throws NotFoundBean{
         BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
         RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
         HttpHeaders headers = new HttpHeaders();
@@ -80,34 +63,8 @@ public class ResourceWorker {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(connectionUrl + "resource/addnoderesource").queryParams(parameters);
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-        HttpEntity<String> response = restTemplate.exchange(
-                builder.build().encode().toUri(),
-                HttpMethod.POST,
-                entity,
-                String.class);
-        String id = response.getBody();
-        
-        return id;
-    }
-    
-    //Поиск ресурсов по первым буквам
-    public List<ShortResource> getResourcesByLetters(String  letters, 
-            String ingredientOrResource, int size) throws NotFoundBean, IOException
-    {
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("ingredientOrResource", ingredientOrResource);
-        parameters.add("page", "0");
-        BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
-        RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept=application/json", MediaType.APPLICATION_JSON_VALUE);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(connectionUrl + "resource/getbyfirstletters/"+letters).queryParams(parameters).queryParam("size", size);
+                .fromHttpUrl(connectionUrl + "receipe/getbytag/"+tagName).
+                queryParam("page", 0).queryParam("size", size);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
         HttpEntity<String> response = restTemplate.exchange(
@@ -116,15 +73,35 @@ public class ResourceWorker {
                 entity,
                 String.class);
         
-        JSONArray array = new JSONArray(response.getBody());
-        List<ShortResource> resources = new ArrayList<>();
-        BeansFactory<ObjectMapper> bfOM2 = BeansFactory.getInstance();
-        ObjectMapper mapper = bfOM2.getBean(ObjectMapper.class);;
-        for(int i=0; i<array.length(); i++)
-        {
-            resources.add(mapper.readValue(array.get(i).toString(),
-                    ShortResource.class));
-        }
+        ShortReceipe shortReceipe = new ShortReceipe();
+        List<ShortReceipe> resources = new ArrayList<>();
+        resources.add(shortReceipe);
+        
+        return resources;
+    }
+    
+    //НЕ ПРОВЕРЕНО
+    public List<Tag> getTagsByLetters(String  letters, int size ) throws NotFoundBean{
+        BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
+        RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept=application/json", MediaType.APPLICATION_JSON_VALUE);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromHttpUrl(connectionUrl + "receipe/getbytag/"+letters).
+                queryParam("page", 0).queryParam("size", size);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        HttpEntity<String> response = restTemplate.exchange(
+                builder.build().encode().toUri(),
+                HttpMethod.GET,
+                entity,
+                String.class);
+        
+        Tag shortReceipe = new Tag();
+        List<Tag> resources = new ArrayList<>();
+        resources.add(shortReceipe);
         
         return resources;
     }

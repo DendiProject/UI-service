@@ -16,13 +16,25 @@ public class GMFacade {
     private GMNodeFacade gmNodeFacade;
     private GMGrafFacade gmGrafFacade;
     private GMCatalogFacade gmCatalogFacade;
+    private GMResourceFacade gmResourceFacade;
+    private GMTagFacade gmTagFacade;
     
     public GMFacade(String connectionUrl) {
         gmEdgeFacade = new GMEdgeFacade(connectionUrl);
         gmNodeFacade = new GMNodeFacade(connectionUrl);
         gmGrafFacade = new GMGrafFacade(connectionUrl);
         gmCatalogFacade = new GMCatalogFacade(connectionUrl);
+        gmResourceFacade = new GMResourceFacade(connectionUrl);
+        gmTagFacade = new GMTagFacade(connectionUrl);
         //http://localhost:8083/
+    }
+
+    public GMTagFacade getGmTagFacade() {
+        return gmTagFacade;
+    }
+
+    public GMResourceFacade getGmResourceFacade() {
+        return gmResourceFacade;
     }
 
     public GMEdgeFacade getGmEdgeFacade() {

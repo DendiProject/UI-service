@@ -14,6 +14,9 @@ public class Resource {
     private String previousNodeId;
     private String name;
     private double resourceNumber;
+    String measuring;
+    String pictureId;
+    String ingredientOrResource;
     
     public Resource()
     {
@@ -21,11 +24,39 @@ public class Resource {
     }
     
     public Resource(String resourceId, String previousNodeId, String name,
-            double resourceNumber){
+            double resourceNumber, String measuring, String pictureId, 
+            String ingredientOrResource){
         this.resourceId = resourceId;
         this.previousNodeId = previousNodeId;
         this.name = name;
         this.resourceNumber = resourceNumber;
+        this.measuring = measuring;
+        this.pictureId = pictureId;
+        this.ingredientOrResource = ingredientOrResource;
+    }
+
+    public String getIngredientOrResource() {
+        return ingredientOrResource;
+    }
+
+    public void setIngredientOrResource(String ingredientOrResource) {
+        this.ingredientOrResource = ingredientOrResource;
+    }
+
+    public String getMeasuring() {
+        return measuring;
+    }
+
+    public void setMeasuring(String measuring) {
+        this.measuring = measuring;
+    }
+
+    public String getPictureId() {
+        return pictureId;
+    }
+
+    public void setPictureId(String pictureId) {
+        this.pictureId = pictureId;
     }
     
     public String getResourceId() {

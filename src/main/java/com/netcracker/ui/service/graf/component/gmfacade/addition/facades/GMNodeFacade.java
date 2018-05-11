@@ -84,7 +84,6 @@ public class GMNodeFacade {
         }
     }
     
-    //ПРОВЕРИТЬ
     public List<Resource> getInputResources(Node node, 
             String ingredientOrResource ){
         try
@@ -100,7 +99,6 @@ public class GMNodeFacade {
         }
     }
     
-    //ПРОВЕРИТЬ
     public List<Resource> getOutputResources(Node node, 
             String ingredientOrResource ){
         try

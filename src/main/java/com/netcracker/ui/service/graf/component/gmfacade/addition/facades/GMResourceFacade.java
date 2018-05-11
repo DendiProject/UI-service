@@ -6,7 +6,11 @@
 package com.netcracker.ui.service.graf.component.gmfacade.addition.facades;
 
 import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.graf.component.gmfacade.workers.ResourceWorker;
+import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
+import com.netcracker.ui.service.receipe.view.basic.objects.ShortResource;
+import java.util.List;
 
 /**
  *
@@ -27,6 +31,35 @@ public class GMResourceFacade {
             ResourceWorker resourceWorker = new ResourceWorker(connectionUrl);
             return resourceWorker.addResource(name, ingredientOrResource, 
                     measuring, userId, pictureId);
+        }
+        catch(Exception exception)
+        {
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+            return null;
+        }
+    }
+    
+    public String addResource(String name, String ingredientOrResource, 
+            String nodeId){
+        try
+        {
+            ResourceWorker resourceWorker = new ResourceWorker(connectionUrl);
+            return resourceWorker.addResource(name, ingredientOrResource, 
+                    nodeId);
+        }
+        catch(Exception exception)
+        {
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+            return null;
+        }
+    }
+    
+    public List<ShortResource> getResourcesByLetters(String  letters, 
+            String ingredientOrResource, int size){
+        try
+        {
+            ResourceWorker resourceWorker = new ResourceWorker(connectionUrl);
+            return resourceWorker.getResourcesByLetters(letters, ingredientOrResource, size);
         }
         catch(Exception exception)
         {
