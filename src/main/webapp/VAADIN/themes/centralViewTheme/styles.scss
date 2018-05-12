@@ -3,85 +3,44 @@
 @import "../shortViewOfRecipeTheme/styles.scss";
 @import "../userPageViewTheme/styles.scss";
 
-@mixin centralViewTheme 
+@mixin centralViewTheme
 {
     @include valo;
     /* Стили слайдера */
     /* HTML5 display-role reset for older browsers */
-    article, aside, details, figcaption, figure, 
-    footer, header, hgroup, menu, nav, section 
+    article, aside, details, figcaption, figure,
+    footer, header, hgroup, menu, nav, section
     {
         display: block;
     }
-    body 
+    body
     {
         line-height: 1;
     }
-    ol, ul 
+    ol, ul
     {
         list-style: none;
     }
-    blockquote, q 
+    blockquote, q
     {
         quotes: none;
     }
     blockquote:before, blockquote:after,
-    q:before, q:after 
+    q:before, q:after
     {
         content: '';
         content: none;
     }
-    table 
+    table
     {
         border-collapse: collapse;
         border-spacing: 0;
     }
-    
+
      /* Страница пользоватедя */
-   #userPicture{
-        width: 250px;
-        height: 250px;
-
-    }
-    #leftBlock{
-        float: left;
-        width: 25%
-    }
-    #mainBlock{
-        float: left;
-        margin-left: 50px;
-
-    }
-    #userPage{
-        margin: 2%;
-    }
-    .first-raw, .second-raw{
-        display: flex;
-        justify-content: center;
-    }
-    .input_fields{
-        margin-left: 10px;
-        margin-right: 10px;
-
-    }
-    button{
-        margin: 1%;
-        height: 1%;
-        width: 250px;
-    }
-    #save{
-        background-color: #00CED1;
-    }
-
-    #userinfo{
-        width: 600px;
-        height: 200px;
-    }
-
-
 
     /* Common */
-    html, body 
+    html, body
     {
             font-size:12px;
             font-family:"Open Sans", serif;
@@ -91,18 +50,18 @@
             color:#aaa;
     }
 
-    .content h1 
+    .content h1
     {
             font-size:48px;
             color:#000;
             text-shadow:0px 1px 1px #f4f4f4;
             text-align:center;
-            padding:60px 0 30px;	
+            padding:60px 0 30px;
     }
 
 
     /* SLIDER */
-    #slider 
+    #slider
     {
             background:#000;
             height:520px;
@@ -111,18 +70,18 @@
             overflow:visible;
             position:relative;
     }
-    #mask 
+    #mask
     {
             overflow:hidden;
             height:520px;
     }
-    #slider ul 
+    #slider ul
     {
             margin:0;
             padding:0;
             position:relative;
     }
-    #slider li 
+    #slider li
     {
             width:100%;
             height:520px;
@@ -131,62 +90,62 @@
             list-style:none;
     }
 
-    #slider li.firstanimation 
+    #slider li.firstanimation
     {
-            -moz-animation:cycle 25s linear infinite;	
+            -moz-animation:cycle 25s linear infinite;
             -webkit-animation:cycle 25s linear infinite;
             //background: url(http://localhost:8008/images/2be975bc-7d92-4a42-b686-527a5cd6c950);
-            webkit-background-size: cover; 
-            moz-background-size: cover; 
-            o-background-size: cover; 
+            webkit-background-size: cover;
+            moz-background-size: cover;
+            o-background-size: cover;
             background-size: 100% 100%;
             background-repeat: no-repeat;
     }
-    #slider li.secondanimation 
+    #slider li.secondanimation
     {
             -moz-animation:cycletwo 25s linear infinite;
             -webkit-animation:cycletwo 25s linear infinite;
-            webkit-background-size: cover; 
-            moz-background-size: cover; 
-            o-background-size: cover; 
+            webkit-background-size: cover;
+            moz-background-size: cover;
+            o-background-size: cover;
             background-size: 100% 100%;
             background-repeat: no-repeat;
     }
-    #slider li.thirdanimation 
+    #slider li.thirdanimation
     {
             -moz-animation:cyclethree 25s linear infinite;
             -webkit-animation:cyclethree 25s linear infinite;
             //background: url(http://localhost:8008/images/f7ffca16-f6c9-429e-a197-8d7d5c1b3828);
-            webkit-background-size: cover; 
-            moz-background-size: cover; 
-            o-background-size: cover; 
+            webkit-background-size: cover;
+            moz-background-size: cover;
+            o-background-size: cover;
             background-size: 100% 100%;
             background-repeat: no-repeat;
     }
-    #slider li.fourthanimation 
+    #slider li.fourthanimation
     {
             -moz-animation:cyclefour 25s linear infinite;
             -webkit-animation:cyclefour 25s linear infinite;
             //background: url(http://localhost:8008/images/2be975bc-7d92-4a42-b686-527a5cd6c950);
-            webkit-background-size: cover; 
-            moz-background-size: cover; 
-            o-background-size: cover; 
+            webkit-background-size: cover;
+            moz-background-size: cover;
+            o-background-size: cover;
             background-size: 100% 100%;
             background-repeat: no-repeat;
     }
-    #slider li.fifthanimation 
+    #slider li.fifthanimation
     {
             -moz-animation:cyclefive 25s linear infinite;
             -webkit-animation:cyclefive 25s linear infinite;
             //background: url(http://localhost:8008/images/75b6f221-8adc-4464-b430-345ea7201224);
-            webkit-background-size: cover; 
-            moz-background-size: cover; 
-            o-background-size: cover; 
+            webkit-background-size: cover;
+            moz-background-size: cover;
+            o-background-size: cover;
             background-size: 100% 100%;
             background-repeat: no-repeat;
     }
 
-    #slider .tooltip 
+    #slider .tooltip
     {
             background:rgba(0,0,0,0.7);
             width:300px;
@@ -195,9 +154,9 @@
             top:250px;
             left:-320px;
             -moz-transition:all 0.3s ease-in-out;
-            -webkit-transition:all 0.3s ease-in-out;  
+            -webkit-transition:all 0.3s ease-in-out;
     }
-    #slider .tooltip h1 
+    #slider .tooltip h1
     {
             color:#fff;
             font-size:24px;
@@ -205,67 +164,67 @@
             line-height:60px;
             padding:0 0 0 20px;
     }
-    #slider li#first:hover .tooltip, 
-    #slider li#second:hover .tooltip, 
-    #slider li#third:hover .tooltip, 
-    #slider li#fourth:hover .tooltip, 
+    #slider li#first:hover .tooltip,
+    #slider li#second:hover .tooltip,
+    #slider li#third:hover .tooltip,
+    #slider li#fourth:hover .tooltip,
     #slider li#fifth:hover .tooltip
     {
             left:0px;
     }
-    #slider:hover li, 
-    #slider:hover .progress-bar 
+    #slider:hover li,
+    #slider:hover .progress-bar
     {
             -moz-animation-play-state:paused;
             -webkit-animation-play-state:paused;
     }
 
     /* PROGRESS BAR */
-    .progress-bar 
-    { 
+    .progress-bar
+    {
             position:relative;
             top:-5px;
-            width:100%; 
+            width:100%;
             height:5px;
             background:#000;
             -moz-animation:fullexpand 25s ease-out infinite;
             -webkit-animation:fullexpand 25s ease-out infinite;
     }
     /* ANIMATION */
-    @-moz-keyframes cycle 
+    @-moz-keyframes cycle
     {
             0%  { top:0px; }
-            4%  { top:0px; } 
-            16% { top:0px; opacity:1; z-index:0; } 
-            20% { top:525px; opacity:0; z-index:0; } 
+            4%  { top:0px; }
+            16% { top:0px; opacity:1; z-index:0; }
+            20% { top:525px; opacity:0; z-index:0; }
             21% { top:-525px; opacity:0; z-index:-1; }
             92% { top:-525px; opacity:0; z-index:0; }
             96% { top:-525px; opacity:0; }
             100%{ top:0px; opacity:1; }
     }
-    @-moz-keyframes cycletwo 
+    @-moz-keyframes cycletwo
     {
             0%  { top:-525px; opacity:0; }
             16% { top:-525px; opacity:0; }
             20% { top:0px; opacity:1; }
-            24% { top:0px; opacity:1; } 
-            36% { top:0px; opacity:1; z-index:0; } 
+            24% { top:0px; opacity:1; }
+            36% { top:0px; opacity:1; z-index:0; }
             40% { top:525px; opacity:0; z-index:0; }
-            41% { top:-525px; opacity:0; z-index:-1; } 
+            41% { top:-525px; opacity:0; z-index:-1; }
             100%{ top:-525px; opacity:0; z-index:-1; }
     }
-    @-moz-keyframes cyclethree 
+    @-moz-keyframes cyclethree
     {
             0%  { top:-525px; opacity:0; }
             36% { top:-525px; opacity:0; }
             40% { top:0px; opacity:1; }
-            44% { top:0px; opacity:1; } 
-            56% { top:0px; opacity:1; } 
+            44% { top:0px; opacity:1; }
+            56% { top:0px; opacity:1; }
             60% { top:525px; opacity:0; z-index:0; }
-            61% { top:-525px; opacity:0; z-index:-1; } 
+            61% { top:-525px; opacity:0; z-index:-1; }
             100%{ top:-525px; opacity:0; z-index:-1; }
     }
-    @-moz-keyframes cyclefour 
+    @-moz-keyframes cyclefour
     {
             0%  { top:-525px; opacity:0; }
             56% { top:-525px; opacity:0; }
@@ -276,7 +235,7 @@
             81% { top:-525px; opacity:0; z-index:-1; }
             100%{ top:-525px; opacity:0; z-index:-1; }
     }
-    @-moz-keyframes cyclefive 
+    @-moz-keyframes cyclefive
     {
             0%  { top:-525px; opacity:0; }
             76% { top:-525px; opacity:0; }
@@ -286,11 +245,11 @@
             100%{ top:525px; opacity:0; z-index:0; }
     }
 
-    @-webkit-keyframes cycle 
+    @-webkit-keyframes cycle
     {
             0%  { top:0px; }
             4%  { top:0px; }
-            16% { top:0px; opacity:1; z-index:0; } 
+            16% { top:0px; opacity:1; z-index:0; }
             20% { top:325px; opacity:0; z-index:0; }
             21% { top:-325px; opacity:0; z-index:-1; }
             50% { top:-325px; opacity:0; z-index:-1; }
@@ -299,29 +258,29 @@
             100%{ top:0px; opacity:1; }
 
     }
-    @-webkit-keyframes cycletwo 
+    @-webkit-keyframes cycletwo
     {
             0%  { top:-325px; opacity:0; }
             16% { top:-325px; opacity:0; }
             20% { top:0px; opacity:1; }
-            24% { top:0px; opacity:1; } 
-            36% { top:0px; opacity:1; z-index:0; } 
+            24% { top:0px; opacity:1; }
+            36% { top:0px; opacity:1; z-index:0; }
             40% { top:325px; opacity:0; z-index:0; }
-            41% { top:-325px; opacity:0; z-index:-1; }  
+            41% { top:-325px; opacity:0; z-index:-1; }
             100%{ top:-325px; opacity:0; z-index:-1; }
     }
-    @-webkit-keyframes cyclethree 
+    @-webkit-keyframes cyclethree
     {
             0%  { top:-325px; opacity:0; }
             36% { top:-325px; opacity:0; }
             40% { top:0px; opacity:1; }
-            44% { top:0px; opacity:1; } 
-            56% { top:0px; opacity:1; z-index:0; } 
-            60% { top:325px; opacity:0; z-index:0; } 
+            44% { top:0px; opacity:1; }
+            56% { top:0px; opacity:1; z-index:0; }
+            60% { top:325px; opacity:0; z-index:0; }
             61% { top:-325px; opacity:0; z-index:-1; }
             100%{ top:-325px; opacity:0; z-index:-1; }
     }
-    @-webkit-keyframes cyclefour 
+    @-webkit-keyframes cyclefour
     {
             0%  { top:-325px; opacity:0; }
             56% { top:-325px; opacity:0; }
@@ -332,7 +291,7 @@
             81% { top:-325px; opacity:0; z-index:-1; }
             100%{ top:-325px; opacity:0; z-index:-1; }
     }
-    @-webkit-keyframes cyclefive 
+    @-webkit-keyframes cyclefive
     {
             0%  { top:-325px; opacity:0; }
             76% { top:-325px; opacity:0; }
@@ -343,49 +302,49 @@
     }
 
     /* ANIMATION BAR */
-    @-moz-keyframes fullexpand 
+    @-moz-keyframes fullexpand
     {
         0%, 20%, 40%, 60%, 80%, 100% { width:0%; opacity:0; }
         4%, 24%, 44%, 64%, 84% { width:0%; opacity:0.3; }
        16%, 36%, 56%, 76%, 96% { width:100%; opacity:0.7; }
        17%, 37%, 57%, 77%, 97% { width:100%; opacity:0.3; }
-       18%, 38%, 58%, 78%, 98% { width:100%; opacity:0; }	
+       18%, 38%, 58%, 78%, 98% { width:100%; opacity:0; }
     }
-    @-webkit-keyframes fullexpand 
+    @-webkit-keyframes fullexpand
     {
         0%, 20%, 40%, 60%, 80%, 100% { width:0%; opacity:0; }
         4%, 24%, 44%, 64%, 84% { width:0%; opacity:0.3; }
        16%, 36%, 56%, 76%, 96% { width:100%; opacity:0.7; }
        17%, 37%, 57%, 77%, 97% { width:100%; opacity:0.3; }
-       18%, 38%, 58%, 78%, 98% { width:100%; opacity:0; }	
+       18%, 38%, 58%, 78%, 98% { width:100%; opacity:0; }
     }
-    
-    
+
+
     /*Стили топа рецептов*/
     .top_recipe
     {
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: space-between;
         flex-direction: column;
         align-items: flex-start;
-        
-        
-        
-        //border: 1px solid black; 
+
+
+
+        //border: 1px solid black;
         height:7%;
         width:15%;
     }
     .top_recipe_information
     {
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: space-between;
         flex-direction: row;
         align-items: center;
-        
-        
-        
+
+
+
         //border: 1px solid red;
         width: 100%;
     }
@@ -399,12 +358,12 @@
         font-family: FontAwesome;
         content: "\f017     ";
     }
-    
-    
+
+
     /*Стили для заголовка топа рецептов*/
     .title_of_the_top_recipes
     {
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: center;
         flex-direction: row;
@@ -414,15 +373,15 @@
         //border: 1px solid black;
         width:100%;
     }
-    
+
     /*
     @media (min-width: 992px) and (max-width: 1200px)
     {
-        input 
+        input
         {
             width: 150px;
         }
-        input:focus 
+        input:focus
         {
             width: 180px;
         }
@@ -437,11 +396,11 @@
     }
     @media (min-width: 1200px) and (max-width: 1400px)
     {
-        input 
+        input
         {
             width: 190px;
         }
-        input:focus 
+        input:focus
         {
             width: 220px;
         }
@@ -452,11 +411,11 @@
     }
     @media (min-width: 1400px)  and (max-width: 1600px)
     {
-        input 
+        input
         {
             width: 220px;
         }
-        input:focus 
+        input:focus
         {
             width: 260px;
         }
@@ -475,14 +434,14 @@
             width:11%;
         }
     }
-    @media (min-height: 601px) 
+    @media (min-height: 601px)
     {
         .top_recipe
         {
             height:5%;
         }
     }
-    @media (min-height: 700px) 
+    @media (min-height: 700px)
     {
         .top_recipe
         {

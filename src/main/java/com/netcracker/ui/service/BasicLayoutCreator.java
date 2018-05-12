@@ -9,23 +9,33 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
+import com.netcracker.ui.service.components.Properties;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
 import com.netcracker.ui.service.menu.component.Menu;
+import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.vaadin.server.Page;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.CustomLayout;
 
 /**
  * Используется для создания базового макета приложения
  * @author Artem
  */
+@SpringComponent
+@UIScope
 public class BasicLayoutCreator{
     public ResponsiveLayout mainLayout;
     public ResponsiveLayout contentRowLayout;
     public Menu menu;
     
+    BeansFactory<Properties> bfP = BeansFactory.getInstance();
+    Properties p;
+    
     public BasicLayoutCreator() throws MenuComponentException, NotFoundBean
     {
+        p = bfP.getBean(Properties.class);
         contentRowLayout = new ResponsiveLayout();
         mainLayout = new ResponsiveLayout();
         CustomLayout mainCustomLayout = new CustomLayout("MainLayout");
@@ -34,32 +44,33 @@ public class BasicLayoutCreator{
         mainLayout.addComponent(mainCustomLayout);
         mainCustomLayout.addComponent(contentRowLayout,"content_row");
         Page.Styles styles = Page.getCurrent().getStyles();
-        styles.add(".v-app {background: url(http://localhost:8008/images/1);webkit-background-size: cover; \n" +
+        String q = "http://"+p.getServerIP()+p.getUiURL()+"/images/1";
+        styles.add(".v-app {background: url(http://"+p.getUiURL()+"/images/1);webkit-background-size: cover; \n" +
 "            moz-background-size: cover; \n" +
 "            o-background-size: cover; \n" +
 "            background-size: 100% 100%;\n" +
 "            background-repeat: no-repeat;}");
-        styles.add("#slider li.firstanimation {background: url(http://localhost:8008/images/s3);webkit-background-size: cover; \n" +
+        styles.add("#slider li.firstanimation {background: url(http://"+p.getUiURL()+"/images/s3);webkit-background-size: cover; \n" +
 "            moz-background-size: cover; \n" +
 "            o-background-size: cover; \n" +
 "            background-size: 100% 100%;\n" +
 "            background-repeat: no-repeat;}}");
-        styles.add("#slider li.secondanimation {background: url(http://localhost:8008/images/s2);webkit-background-size: cover; \n" +
+        styles.add("#slider li.secondanimation {background: url(http://"+p.getUiURL()+"/images/s2);webkit-background-size: cover; \n" +
 "            moz-background-size: cover; \n" +
 "            o-background-size: cover; \n" +
 "            background-size: 100% 100%;\n" +
 "            background-repeat: no-repeat;}}");
-        styles.add("#slider li.thirdanimation {background: url(http://localhost:8008/images/s1);webkit-background-size: cover; \n" +
+        styles.add("#slider li.thirdanimation {background: url(http://"+p.getUiURL()+"/images/s1);webkit-background-size: cover; \n" +
 "            moz-background-size: cover; \n" +
 "            o-background-size: cover; \n" +
 "            background-size: 100% 100%;\n" +
 "            background-repeat: no-repeat;}}");
-        styles.add("#slider li.fourthanimation {background: url(http://localhost:8008/images/s3);webkit-background-size: cover; \n" +
+        styles.add("#slider li.fourthanimation {background: url(http://"+p.getUiURL()+"/images/s3);webkit-background-size: cover; \n" +
 "            moz-background-size: cover; \n" +
 "            o-background-size: cover; \n" +
 "            background-size: 100% 100%;\n" +
 "            background-repeat: no-repeat;}}");
-        styles.add("#slider li.fifthanimation {background: url(http://localhost:8008/images/s2);webkit-background-size: cover; \n" +
+        styles.add("#slider li.fifthanimation {background: url(http://"+p.getUiURL()+"/images/s2);webkit-background-size: cover; \n" +
 "            moz-background-size: cover; \n" +
 "            o-background-size: cover; \n" +
 "            background-size: 100% 100%;\n" +

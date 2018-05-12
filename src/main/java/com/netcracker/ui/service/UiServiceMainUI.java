@@ -47,7 +47,9 @@ import com.vaadin.server.Page;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
+import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.SpringUI;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Image;
@@ -75,273 +77,264 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.web.client.ResourceAccessException;
+
 /**
  *
  * @author Artem
  */
 @Theme("centralViewTheme")
 @SpringUI
-public class UiServiceMainUI extends UI{
-    
-    BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
-    ContentManagerController contentManadgerController;
-    
-    @Override
-    protected void init(VaadinRequest vaadinRequest) {
-      try {
-        CookieHandler ch = new CookieHandler();
-        JWTHandler jwth = new JWTHandler();
-        Cookie userCookie = ch.getCookieByName("userInfo");
-        if (userCookie == null) {
-          createMainLayout();
-        } else {
-          boolean user = jwth.checkUser(userCookie.getValue(), "test");
-          if (user) {
-            createUserLayout();
-          } else {
-            createMainLayout();
-          }
-        }
-      } catch (Exception exception) {
-        ExceptionHandler.getInstance().runExceptionhandling(exception);
+@UIScope
+@SpringComponent
+public class UiServiceMainUI extends UI {
+
+  BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
+  ContentManagerController contentManadgerController;
+
+  @Override
+  protected void init(VaadinRequest vaadinRequest) {
+    try {
+      createMainLayout();
+    } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
+    }
+  }
+
+  private void setUrl(String path) {
+    getPage().setUriFragment(path);
+  }
+
+  private String getUrl() {
+    return getPage().getUriFragment();
+  }
+
+  private ResponsiveLayout createMainLayout() throws MenuComponentException,
+          NotFoundBean {
+    BasicLayoutCreator mainLayer;
+    mainLayer = new BasicLayoutCreator();
+    setSizeFull();//Пользовательский интерфейс на весь экран
+    ResponsiveLayout mainLayout = mainLayer.mainLayout;
+    mainLayout.setStyleName("teststyle");
+
+    mainLayout.setSizeFull();
+    setContent(mainLayout);
+
+    //Создание и добавление видов в навигатор
+    ArrayList<View> newViews = new ArrayList<>();
+
+    newViews.add(new View("Main") {
+      @Override
+      public void draw(LinkedMultiValueMap<String, String> parameters) {
+        mainLayer.contentRowLayout.removeAllComponents();
+        addSliderComponent(mainLayer.contentRowLayout);
+        addTopRecepiesComponent(mainLayer.contentRowLayout);
       }
-    }
-    
-    private void setUrl(String path)
-    {
-        getPage().setUriFragment(path);
-    }
-    
-    private String getUrl()
-    {
-        return getPage().getUriFragment();
-    }
-    
-    private ResponsiveLayout createMainLayout() throws MenuComponentException, 
-            NotFoundBean
-    {
-        BasicLayoutCreator mainLayer;
-        mainLayer = new BasicLayoutCreator();
-        setSizeFull();//Пользовательский интерфейс на весь экран
-        ResponsiveLayout mainLayout = mainLayer.mainLayout;
-        mainLayout.setStyleName("teststyle");
+    });
 
-        mainLayout.setSizeFull();
-        setContent(mainLayout);
+    newViews.add(new View("PageNotFound") {
+      @Override
+      public void draw(LinkedMultiValueMap<String, String> parameters) {
+        mainLayer.contentRowLayout.removeAllComponents();
+        mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("404"));
+      }
+    });
 
-        //Создание и добавление видов в навигатор
-        ArrayList<View> newViews = new ArrayList<>();
+    newViews.add(new View("PageInternalServerError") {
+      @Override
+      public void draw(LinkedMultiValueMap<String, String> parameters) {
+        mainLayer.contentRowLayout.removeAllComponents();
+        mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("500"));
+      }
+    });
 
-        newViews.add(new View("Main") {
-            @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {
-                mainLayer.contentRowLayout.removeAllComponents();
-                addSliderComponent(mainLayer.contentRowLayout);
-                addTopRecepiesComponent(mainLayer.contentRowLayout);
-            }
-        });
-
-        newViews.add(new View("PageNotFound") {
-            @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {
-                mainLayer.contentRowLayout.removeAllComponents();
-                mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("404"));
-            }
-        });
-
-        newViews.add(new View("PageInternalServerError") {
-            @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {
-                mainLayer.contentRowLayout.removeAllComponents();
-                mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("500"));
-            }
-        });
-
-        newViews.add(new View("Recept") {
-            @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {               
-                /*MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+    newViews.add(new View("Recept") {
+      @Override
+      public void draw(LinkedMultiValueMap<String, String> parameters) {
+        /*MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
                 parameters.add("receipeId", "12345");
                 parameters.add("userId","1111");*/
-                ReceipeProxy proxy = new ReceipeProxy();
-                proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters);
+        ReceipeProxy proxy = new ReceipeProxy();
+        proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters);
 
-                ReceipeDataConverter converter = new ReceipeDataConverter();
-                ReceipeStore store = new ReceipeStore(converter);
+        ReceipeDataConverter converter = new ReceipeDataConverter();
+        ReceipeStore store = new ReceipeStore(converter);
 
-                ReceipeView view = new ReceipeView(proxy, store);
-                try
-                {
-                    view.reload();
-                    mainLayer.contentRowLayout.removeAllComponents();
-                    mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
+        ReceipeView view = new ReceipeView(proxy, store);
+        try {
+          view.reload();
+          mainLayer.contentRowLayout.removeAllComponents();
+          mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
+        } catch (Exception exception) {
+          //ДОБАВИТЬ БИН HttpClientErrorException
+          //ДОБАВИТЬ БИН NullPointerException
+          ExceptionHandler.getInstance().runExceptionhandling(exception);
+        }
+      }
+    });
+
+    newViews.add(new View("Search") {
+      @Override
+      public void draw(LinkedMultiValueMap<String, String> parameters) {
+        mainLayer.contentRowLayout.removeAllComponents();
+        mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Рецепты, удовлетворяющие условию поиска:"));
+      }
+    });
+
+    newViews.add(new View("UserPage") {
+      @Override
+      public void draw(LinkedMultiValueMap<String, String> parameters) {
+        mainLayer.contentRowLayout.removeAllComponents();
+        CustomLayout ShortViewOfReceipeLayout = new CustomLayout("UserPageLayout");
+        ShortViewOfReceipeLayout.setHeight("100%");
+        mainLayer.contentRowLayout.setHeight("100%");
+        mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
+        ShortViewOfReceipeLayout.addComponent(new TextField(), "userPageNameFieldAndLable");
+        ShortViewOfReceipeLayout.addComponent(new TextField(), "userPageSecondNameFieldAndLable");
+        ShortViewOfReceipeLayout.addComponent(new Label("Nickname"), "userPageNicknameFieldAndLable");
+        ShortViewOfReceipeLayout.addComponent(new Label("Mail"), "userPageMailFieldAndLable");
+        ShortViewOfReceipeLayout.addComponent(new Label("BirthDate"), "userPageBirthDateFieldAndLable");
+
+        TextArea area = new TextArea();
+        area.setValue("testt esttestte sttesttesttesttest testtesttest"
+                + "testtestt esttesttesttesttesttesttesttesttest"
+                + "testt esttesttesttesttest testtestt esttesttest"
+                + "testtesttestte sttest testtest testtesttest"
+                + "testtestt esttest testtesttesttesttest");
+        area.setHeight("100%");
+        area.setWidth("100%");
+        area.setWordWrap(true);
+        ShortViewOfReceipeLayout.addComponent(area, "userPageAboutOneselfFieldAndLable");
+
+      }
+    });
+    try {
+      Navigator navigator = new Navigator(newViews, "Main", getPage());
+      ExceptionHandler ex = ExceptionHandler.getInstance();
+      ConcreteException notFoundException
+              = new ConcreteException(new ConcreteExceptionHandler() {
+                @Override
+                public void handling(Exception exception) {
+                  try {
+                    navigator.navigateTo("PageNotFound");
+                  } catch (Exception ex1) {
+
+                  }
                 }
-                catch(Exception exception)
-                {
-                    //ДОБАВИТЬ БИН HttpClientErrorException
-                    //ДОБАВИТЬ БИН NullPointerException
-                    ExceptionHandler.getInstance().runExceptionhandling(exception);
+              }, NotFound.class, "", "Page not found.",
+                      BasicImportanceClass.informationMessage);
+      ex.addException(notFoundException);
+
+      ConcreteException internalServerErrorException
+              = new ConcreteException(new ConcreteExceptionHandler() {
+                @Override
+                public void handling(Exception exception) {
+                  try {
+                    navigator.navigateTo("PageInternalServerError");
+                  } catch (Exception ex1) {
+
+                  }
                 }
-            }
-        });
+              }, InternalServerError.class, "", "Internal server error.",
+                      BasicImportanceClass.informationMessage);
+      ex.addException(internalServerErrorException);
 
-        newViews.add(new View("Search") {
-            @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {
-                mainLayer.contentRowLayout.removeAllComponents();
-                mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Рецепты, удовлетворяющие условию поиска:"));
-            }
-        });
-
-        newViews.add(new View("UserPage") {
-           @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {
-                CustomLayout ShortViewOfReceipeLayout = new CustomLayout("UserPageLayout");
-                ShortViewOfReceipeLayout.setHeight("100%");
-                mainLayer.contentRowLayout.setHeight("100%");
-                mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
-            }
-        });
-        try
-        {
-            Navigator navigator = new Navigator(newViews, "Main", getPage());
-            ExceptionHandler ex = ExceptionHandler.getInstance(); 
-            ConcreteException notFoundException = 
-                    new ConcreteException(new ConcreteExceptionHandler() {
-                        @Override
-                        public void handling(Exception exception) {
-                            try {
-                                navigator.navigateTo("PageNotFound");
-                            } catch (Exception ex1) {
-
-                            }
-                        }
-                    }, NotFound.class, "", "Page not found.",
-                    BasicImportanceClass.informationMessage);
-            ex.addException(notFoundException);
-
-            ConcreteException internalServerErrorException = 
-                    new ConcreteException(new ConcreteExceptionHandler() {
-                        @Override
-                        public void handling(Exception exception) {
-                            try {
-                                navigator.navigateTo("PageInternalServerError");
-                            } catch (Exception ex1) {
-
-                            }
-                        }
-                    }, InternalServerError.class, "", "Internal server error.",
-                    BasicImportanceClass.informationMessage);
-            ex.addException(internalServerErrorException);
-
-            getPage().addUriFragmentChangedListener(
-            new Page.UriFragmentChangedListener() {
-                public void uriFragmentChanged(
-                    Page.UriFragmentChangedEvent source) {
-                        try{
-                            navigator.navigateTo(getUrl());
-                        }
-                        catch(Exception exception)
-                        {
-                            ExceptionHandler.getInstance().
-                                    runExceptionhandling(exception);
-                        }
-                }
-            });
-
-            //navigator.load();
+      getPage().addUriFragmentChangedListener(
+              new Page.UriFragmentChangedListener() {
+        public void uriFragmentChanged(
+                Page.UriFragmentChangedEvent source) {
+          try {
             navigator.navigateTo(getUrl());
+          } catch (Exception exception) {
+            ExceptionHandler.getInstance().
+                    runExceptionhandling(exception);
+          }
         }
-        //Следующий набор catch исправлю, сделал так (временно), чтобы здесь не 
-        //обрабатывалось исключение 500 ошибки
-        catch (NoViewAvailable exception) {
-            ExceptionHandler.getInstance().runExceptionhandling(exception);
+      });
+
+      //navigator.load();
+      navigator.navigateTo(getUrl());
+    } //Следующий набор catch исправлю, сделал так (временно), чтобы здесь не 
+    //обрабатывалось исключение 500 ошибки
+    catch (NoViewAvailable exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
+    } catch (InvalidQueryFormat ex) {
+      ExceptionHandler.getInstance().runExceptionhandling(ex);
+    } catch (NotFound ex) {
+      ExceptionHandler.getInstance().runExceptionhandling(ex);
+    }
+    //Создаем подпункты меню
+    ArrayList<MenusButton> mainSubMenus = new ArrayList<>();
+    mainSubMenus.add(new MenusButton("Подпункт1", "idsubMain1", new HandlerForClickingTheButton() {
+      @Override
+      public void onEventClickDo() {
+        try {
+          throw new UiServiceException("Проверка работы с неизвестным "
+                  + "типом исключений");
+        } catch (Exception exception) {
+          ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
-        catch(InvalidQueryFormat ex){
-            ExceptionHandler.getInstance().runExceptionhandling(ex);
+      }
+    }));
+
+    mainSubMenus.add(new MenusButton("Подпункт2", "idsubMain2", new HandlerForClickingTheButton() {
+      @Override
+      public void onEventClickDo() {
+        try {
+          throw new UiServiceException("Проверка работы с неизвестным "
+                  + "типом исключений");
+        } catch (Exception exception) {
+          ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
-        catch(NotFound ex){
-            ExceptionHandler.getInstance().runExceptionhandling(ex);
-        }
-        //Создаем подпункты меню
-        ArrayList<MenusButton> mainSubMenus = new ArrayList<>();
-        mainSubMenus.add(new MenusButton("Подпункт1","idsubMain1", new HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-                try {
-                    throw new UiServiceException("Проверка работы с неизвестным "
-                            + "типом исключений");
-                }
-                catch(Exception exception)
-                {
-                    ExceptionHandler.getInstance().runExceptionhandling(exception);
-                }
-            }
-        }));
+      }
+    }));
+    //создаем кнопку меню, включающую подпункты
+    MenusButton mainBtn = new MenusButton("Главная", "idMain", new HandlerForClickingTheButton() {
+      @Override
+      public void onEventClickDo() {
+        setUrl("Main");
+      }
 
-        mainSubMenus.add(new MenusButton("Подпункт2","idsubMain2", new HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-                try {
-                    throw new UiServiceException("Проверка работы с неизвестным "
-                            + "типом исключений");
-                }
-                catch(Exception exception)
-                {
-                    ExceptionHandler.getInstance().runExceptionhandling(exception);
-                }
-            }
-        }));
-        //создаем кнопку меню, включающую подпункты
-        MenusButton mainBtn = new MenusButton("Главная","idMain", new  HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-                setUrl("Main");
-            }
+    }, mainSubMenus);
 
-        },mainSubMenus);
+    //Создаем одноуровневую кнопки меню
+    MenusButton recepsBtn = new MenusButton("Рецепты", "idRecept", new HandlerForClickingTheButton() {
+      @Override
+      public void onEventClickDo() {
+        setUrl("Recept?userId=1111&receipeId=12343");
+      }
 
+    });
 
-        //Создаем одноуровневую кнопки меню
-        MenusButton recepsBtn = new MenusButton("Рецепты","idRecept", new  HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-                setUrl("Recept?userId=1111&receipeId=12343");
-            }
+    MenusSearchBar search = new MenusSearchBar("idSearch", new HandlerForClickingTheButton() {
+      @Override
+      public void onEventClickDo() {
+        setUrl("Search");
+      }
+
+    });
+
+    try {
+      CookieHandler ch = new CookieHandler();
+      JWTHandler jwth = new JWTHandler();
+      Cookie userCookie = ch.getCookieByName("userInfo");
+      boolean user = jwth.checkUser(userCookie.getValue(), "test");
+      if (userCookie == null || user == false) {
+        MenusButton registration = new MenusButton("Регистрация", "idregistration", new HandlerForClickingTheButton() {
+          @Override
+          public void onEventClickDo() {
+            RegistrationForm modalWindow = new RegistrationForm();
+            addWindow(modalWindow);
+          }
 
         });
 
-        MenusSearchBar search = new MenusSearchBar("idSearch", new  HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-                setUrl("Search");
-            }
-
-        });
-
-        MenusButton registration = new MenusButton("Регистрация", "idregistration", new  HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-                RegistrationForm modalWindow = new RegistrationForm();
-                addWindow(modalWindow);
-            }
-
-        });
-
-        MenusButton signIn = new MenusButton("Войти", "idSignin", new  HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-                AuthorizationForm modalWindow = new AuthorizationForm();
-                addWindow(modalWindow);
-            }
-
-        });
-
-        MenusButton userPageBtn = new MenusButton("Профиль","iduserPage", new  HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-               setUrl("UserPage");
-            }
+        MenusButton signIn = new MenusButton("Войти", "idSignin", new HandlerForClickingTheButton() {
+          @Override
+          public void onEventClickDo() {
+            AuthorizationForm modalWindow = new AuthorizationForm();
+            addWindow(modalWindow);
+            getPage().setUriFragment("Main");
+          }
 
         });
 
@@ -350,413 +343,164 @@ public class UiServiceMainUI extends UI{
         mainLayer.menu.addItem(search);
         mainLayer.menu.addItem(registration);
         mainLayer.menu.addItem(signIn);
-
-        BeansFactory<ButtonsClickListener> bf = BeansFactory.getInstance();
-        ButtonsClickListener clickListener;
-
-        clickListener = bf.getBean(ButtonsClickListener.class);
-        clickListener.addButtonClickListener(new ClickListener() {
+      } else {
+        if (user) {
+          MenusButton userPageBtn = new MenusButton("Профиль", "iduserPage", new HandlerForClickingTheButton() {
             @Override
-            public String getId() {
-                return "addReceipePartsBtn";
+            public void onEventClickDo() {
+              getPage().setUriFragment("UserPage");
             }
 
-            @Override
-            public void onEventDo() {
-                AuthorizationForm modalWindow = new AuthorizationForm();
-                addWindow(modalWindow);
-            }
-        });
-        clickListener.addButtonClickListener(new ClickListener() {
-            @Override
-            public String getId() {
-                return "addReceipeResoursesBtn";
-            }
+          });
 
+          MenusButton exitBtn = new MenusButton("Выход", "idExit", new HandlerForClickingTheButton() {
             @Override
-            public void onEventDo() {
-                int i=0;
+            public void onEventClickDo() {
+              CookieHandler ch = new CookieHandler();
+              ch.getCookieForGuest();
+              getPage().setUriFragment("Main");
+              Page.getCurrent().reload();
             }
-        });
-        return mainLayer.contentRowLayout;
+          });
+
+          mainLayer.menu.addItem(mainBtn);
+          mainLayer.menu.addItem(recepsBtn);
+          mainLayer.menu.addItem(search);
+          mainLayer.menu.addItem(userPageBtn);
+          mainLayer.menu.addItem(exitBtn);
+        }
+      }
+    } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
     }
-    
-      private ResponsiveLayout createUserLayout() throws MenuComponentException, 
-            NotFoundBean
-    {
-        BasicLayoutCreator mainLayer;
-        mainLayer = new BasicLayoutCreator();
-        setSizeFull();//Пользовательский интерфейс на весь экран
-        ResponsiveLayout mainLayout = mainLayer.mainLayout;
-        mainLayout.setStyleName("teststyle");
 
-        mainLayout.setSizeFull();
-        setContent(mainLayout);
+    BeansFactory<ButtonsClickListener> bf = BeansFactory.getInstance();
+    ButtonsClickListener clickListener;
 
-        //Создание и добавление видов в навигатор
-        ArrayList<View> newViews = new ArrayList<>();
+    clickListener = bf.getBean(ButtonsClickListener.class);
+    clickListener.addButtonClickListener(new ClickListener() {
+      @Override
+      public String getId() {
+        return "addReceipePartsBtn";
+      }
 
-        newViews.add(new View("Main") {
-            @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {
-                mainLayer.contentRowLayout.removeAllComponents();
-                addSliderComponent(mainLayer.contentRowLayout);
-                addTopRecepiesComponent(mainLayer.contentRowLayout);
-            }
-        });
+      @Override
+      public void onEventDo() {
+        AuthorizationForm modalWindow = new AuthorizationForm();
+        addWindow(modalWindow);
+      }
+    });
+    clickListener.addButtonClickListener(new ClickListener() {
+      @Override
+      public String getId() {
+        return "addReceipeResoursesBtn";
+      }
 
-        newViews.add(new View("PageNotFound") {
-            @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {
-                mainLayer.contentRowLayout.removeAllComponents();
-                mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("404"));
-            }
-        });
+      @Override
+      public void onEventDo() {
+        int i = 0;
+      }
+    });
 
-        newViews.add(new View("PageInternalServerError") {
-            @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {
-                mainLayer.contentRowLayout.removeAllComponents();
-                mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("500"));
-            }
-        });
+    //Артем, назначь действия на событие onClick для следующих кнопок:
+    clickListener.addButtonClickListener(new ClickListener() {
+      @Override
+      public String getId() {
+        return "userPageSaveBtn";
+      }
 
-        newViews.add(new View("Recept") {
-            @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {               
-                /*MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-                parameters.add("receipeId", "12345");
-                parameters.add("userId","1111");*/
-                ReceipeProxy proxy = new ReceipeProxy();
-                proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters);
+      @Override
+      public void onEventDo() {
+        int i = 0;//Код писать сюда
+      }
+    });
+    clickListener.addButtonClickListener(new ClickListener() {
+      @Override
+      public String getId() {
+        return "userPageCancelBtn";
+      }
 
-                ReceipeDataConverter converter = new ReceipeDataConverter();
-                ReceipeStore store = new ReceipeStore(converter);
+      @Override
+      public void onEventDo() {
+        int i = 0;//Код писать сюда
+      }
+    });
+    clickListener.addButtonClickListener(new ClickListener() {
+      @Override
+      public String getId() {
+        return "userPageLoadFotoBtn";
+      }
 
-                ReceipeView view = new ReceipeView(proxy, store);
-                try
-                {
-                    view.reload();
-                    mainLayer.contentRowLayout.removeAllComponents();
-                    mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
-                }
-                catch(Exception exception)
-                {
-                    //ДОБАВИТЬ БИН HttpClientErrorException
-                    //ДОБАВИТЬ БИН NullPointerException
-                    ExceptionHandler.getInstance().runExceptionhandling(exception);
-                }
-            }
-        });
+      @Override
+      public void onEventDo() {
+        int i = 0;//Код писать сюда
+      }
+    });
+    clickListener.addButtonClickListener(new ClickListener() {
+      @Override
+      public String getId() {
+        return "userPageChangePasswordButtonBtn";
+      }
 
-        newViews.add(new View("Search") {
-            @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {
-                mainLayer.contentRowLayout.removeAllComponents();
-                mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Рецепты, удовлетворяющие условию поиска:"));
-            }
-        });
-
-        newViews.add(new View("UserPage") {
-           @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {
-                CustomLayout ShortViewOfReceipeLayout = new CustomLayout("UserPageLayout");
-                ShortViewOfReceipeLayout.setHeight("100%");
-                mainLayer.contentRowLayout.setHeight("100%");
-                mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
-                ShortViewOfReceipeLayout.addComponent(new Label("Name"), "userPageNameFieldAndLable");
-                ShortViewOfReceipeLayout.addComponent(new Label("SecondName"), "userPageSecondNameFieldAndLable");
-                ShortViewOfReceipeLayout.addComponent(new Label("Nickname"), "userPageNicknameFieldAndLable");
-                ShortViewOfReceipeLayout.addComponent(new Label("Mail"), "userPageMailFieldAndLable");
-                ShortViewOfReceipeLayout.addComponent(new Label("BirthDate"), "userPageBirthDateFieldAndLable");
-                TextArea area = new TextArea();
-                area.setValue("testt esttestte sttesttesttesttest testtesttest"
-                        + "testtestt esttesttesttesttesttesttesttesttest"
-                        + "testt esttesttesttesttest testtestt esttesttest"
-                        + "testtesttestte sttest testtest testtesttest"
-                        + "testtestt esttest testtesttesttesttest");
-                area.setHeight("100%");
-                area.setWidth("100%");
-                area.setWordWrap(true);
-                ShortViewOfReceipeLayout.addComponent(area, "userPageAboutOneselfFieldAndLable");
-                
-                Image topImage = new Image();
-                topImage.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/cake.png")));
-                topImage.setHeight("100%");
-                topImage.setWidth("100%");
-                ShortViewOfReceipeLayout.addComponent(topImage, "userPageImage");
-            }
-        });
-        try
-        {
-            Navigator navigator = new Navigator(newViews, "Main", getPage());
-            ExceptionHandler ex = ExceptionHandler.getInstance(); 
-            ConcreteException notFoundException = 
-                    new ConcreteException(new ConcreteExceptionHandler() {
-                        @Override
-                        public void handling(Exception exception) {
-                            try {
-                                navigator.navigateTo("PageNotFound");
-                            } catch (Exception ex1) {
-
-                            }
-                        }
-                    }, NotFound.class, "", "Page not found.",
-                    BasicImportanceClass.informationMessage);
-            ex.addException(notFoundException);
-
-            ConcreteException internalServerErrorException = 
-                    new ConcreteException(new ConcreteExceptionHandler() {
-                        @Override
-                        public void handling(Exception exception) {
-                            try {
-                                navigator.navigateTo("PageInternalServerError");
-                            } catch (Exception ex1) {
-
-                            }
-                        }
-                    }, InternalServerError.class, "", "Internal server error.",
-                    BasicImportanceClass.informationMessage);
-            ex.addException(internalServerErrorException);
-
-            getPage().addUriFragmentChangedListener(
-            new Page.UriFragmentChangedListener() {
-                public void uriFragmentChanged(
-                    Page.UriFragmentChangedEvent source) {
-                        try{
-                            navigator.navigateTo(getUrl());
-                        }
-                        catch(Exception exception)
-                        {
-                            ExceptionHandler.getInstance().
-                                    runExceptionhandling(exception);
-                        }
-                }
-            });
-
-            //navigator.load();
-            navigator.navigateTo(getUrl());
-        }
-        //Следующий набор catch исправлю, сделал так (временно), чтобы здесь не 
-        //обрабатывалось исключение 500 ошибки
-        catch (NoViewAvailable exception) {
-            ExceptionHandler.getInstance().runExceptionhandling(exception);
-        }
-        catch(InvalidQueryFormat ex){
-            ExceptionHandler.getInstance().runExceptionhandling(ex);
-        }
-        catch(NotFound ex){
-            ExceptionHandler.getInstance().runExceptionhandling(ex);
-        }
-        //Создаем подпункты меню
-        ArrayList<MenusButton> mainSubMenus = new ArrayList<>();
-        mainSubMenus.add(new MenusButton("Подпункт1","idsubMain1", new HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-                try {
-                    throw new UiServiceException("Проверка работы с неизвестным "
-                            + "типом исключений");
-                }
-                catch(Exception exception)
-                {
-                    ExceptionHandler.getInstance().runExceptionhandling(exception);
-                }
-            }
-        }));
-
-        mainSubMenus.add(new MenusButton("Подпункт2","idsubMain2", new HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-                try {
-                    throw new UiServiceException("Проверка работы с неизвестным "
-                            + "типом исключений");
-                }
-                catch(Exception exception)
-                {
-                    ExceptionHandler.getInstance().runExceptionhandling(exception);
-                }
-            }
-        }));
-        //создаем кнопку меню, включающую подпункты
-        MenusButton mainBtn = new MenusButton("Главная","idMain", new  HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-                setUrl("Main");
-            }
-
-        },mainSubMenus);
-
-
-        //Создаем одноуровневую кнопки меню
-        MenusButton recepsBtn = new MenusButton("Рецепты","idRecept", new  HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-                setUrl("Recept?userId=1111&receipeId=12343");
-            }
-
-        });
-
-        MenusSearchBar search = new MenusSearchBar("idSearch", new  HandlerForClickingTheButton(){
-            @Override
-            public void onEventClickDo() {
-                setUrl("Search");
-            }
-
-        });
-
-        MenusButton userPageBtn = new MenusButton("Профиль", "iduserPage", new HandlerForClickingTheButton() {
-        @Override
-        public void onEventClickDo() {
-          getPage().setUriFragment("UserPage");
-        }
-
-      });
-
-      MenusButton exitBtn = new MenusButton("Выход", "idExit", new HandlerForClickingTheButton() {
-        @Override
-        public void onEventClickDo() {
-          CookieHandler ch = new CookieHandler();
-          ch.getCookieForGuest();
-          getPage().setUriFragment("Main");
-          Page.getCurrent().reload();
-        }
-      });
-
-      mainLayer.menu.addItem(mainBtn);
-      mainLayer.menu.addItem(recepsBtn);
-      mainLayer.menu.addItem(search);
-      mainLayer.menu.addItem(userPageBtn);
-      mainLayer.menu.addItem(exitBtn);
-
-        BeansFactory<ButtonsClickListener> bf = BeansFactory.getInstance();
-        ButtonsClickListener clickListener;
-
-        clickListener = bf.getBean(ButtonsClickListener.class);
-        clickListener.addButtonClickListener(new ClickListener() {
-            @Override
-            public String getId() {
-                return "addReceipePartsBtn";
-            }
-
-            @Override
-            public void onEventDo() {
-                AuthorizationForm modalWindow = new AuthorizationForm();
-                addWindow(modalWindow);
-            }
-        });
-        clickListener.addButtonClickListener(new ClickListener() {
-            @Override
-            public String getId() {
-                return "addReceipeResoursesBtn";
-            }
-
-            @Override
-            public void onEventDo() {
-                int i=0;
-            }
-        });
-        
-        //Артем, назначь действия на событие onClick для следующих кнопок:
-        clickListener.addButtonClickListener(new ClickListener() {
-            @Override
-            public String getId() {
-                return "userPageSaveBtn";
-            }
-
-            @Override
-            public void onEventDo() {
-                int i=0;//Код писать сюда
-            }
-        });
-        clickListener.addButtonClickListener(new ClickListener() {
-            @Override
-            public String getId() {
-                return "userPageCancelBtn";
-            }
-
-            @Override
-            public void onEventDo() {
-                int i=0;//Код писать сюда
-            }
-        });
-        clickListener.addButtonClickListener(new ClickListener() {
-            @Override
-            public String getId() {
-                return "userPageLoadFotoBtn";
-            }
-
-            @Override
-            public void onEventDo() {
-                int i=0;//Код писать сюда
-            }
-        });
-        clickListener.addButtonClickListener(new ClickListener() {
-            @Override
-            public String getId() {
-                return "userPageChangePasswordButtonBtn";
-            }
-
-            @Override
-            public void onEventDo() {
-                int i=0;//Код писать сюда
-            }
-        });
-        return mainLayer.contentRowLayout;
-    }
-    
-    private void addSliderComponent(ResponsiveLayout contentRowLayout)
-    {
-        //Создание строки, для добавления конкретного контента на даную страницу
-        ResponsiveRow sliderRow = contentRowLayout.addRow();
-        //Создание custom слоя для добавления слайдера
-        CustomLayout  sliderLayout = new CustomLayout("SliderLayout");
-        sliderRow.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(sliderLayout);
-    }
-    
-    private void addTopRecepiesComponent(ResponsiveLayout contentRowLayout)
-    {
-        //Отрисовка заголовка топа рецептов
-        ResponsiveRow recipeTitle = contentRowLayout.addRow();
-        CustomLayout  topRecipeTitleLayout = new CustomLayout("TopRecipeTitle");
-        recipeTitle.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(topRecipeTitleLayout);
-        //Здесь можно разместить добавление рецептов либо фиксированно, например, топ 5, или
-        //Задать количество по какому-либо другому параметру, например, по нажатию кнопки добавлять
-        //еще несколько к имеющемуся списку
-        for(int i=0;i<8;i++)
-        {
-            //Задание отступа между рецептами
-            ResponsiveRow theDistanceBetweenRecipe = contentRowLayout.addRow();
-            theDistanceBetweenRecipe.setHeight("30px");
-            theDistanceBetweenRecipe.addColumn().withDisplayRules(12, 12, 12, 12);
-            //Отрисовка изображения рецепта
-            ResponsiveRow recipeRow = contentRowLayout.addRow();
-            Image topImage = new Image();
-            topImage.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/cake.png")));
-            topImage.setHeight("70%");
-            topImage.setWidth("100%");
-            recipeRow.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(topImage);
-            //Создание custom макета с поддержкой flexbox
-            CustomLayout  topRecipeLayout = new CustomLayout("TopRecipeLayout");
-            recipeRow.addColumn().withDisplayRules(8, 8, 8, 8).withComponent(topRecipeLayout);
-
-            //Задание информации по каждому из рецептов
-            Label recipesName = new Label("Название");
-            topRecipeLayout.addComponent(recipesName,"recipes_name");
-            Label recipesAuthor = new Label("Автор");
-            topRecipeLayout.addComponent(recipesAuthor,"recipes_author");
-            Button recepiesPartsButton = new Button("Ингридиенты");
-            topRecipeLayout.addComponent(recepiesPartsButton,"parts_recipe_button");
-            Label numberOfServingsLable = new Label(String.valueOf(i));//просто для примера
-            topRecipeLayout.addComponent(numberOfServingsLable,"number_of_servings_lable");
-            Label workingTimesLable = new Label(String.valueOf(i));//просто для примера
-            topRecipeLayout.addComponent(workingTimesLable,"working_times_lable");
-            Button addRecipeToFavoritesButton = new Button("Добавить в избранное");
-            topRecipeLayout.addComponent(addRecipeToFavoritesButton,"add_recipe_to_favorites_button");
+      @Override
+      public void onEventDo() {
+        int i = 0;//Код писать сюда
+      }
+    });
+    return mainLayer.contentRowLayout;
   }
 
-        //Задание отступа до коцна страницы
-        ResponsiveRow theDistanceBetweenBottomAndRecipes = contentRowLayout.addRow();
-        theDistanceBetweenBottomAndRecipes.setHeight("60px");
-        theDistanceBetweenBottomAndRecipes.addColumn().withDisplayRules(12, 12, 12, 12);
+  private void addSliderComponent(ResponsiveLayout contentRowLayout) {
+    //Создание строки, для добавления конкретного контента на даную страницу
+    ResponsiveRow sliderRow = contentRowLayout.addRow();
+    //Создание custom слоя для добавления слайдера
+    CustomLayout sliderLayout = new CustomLayout("SliderLayout");
+    sliderRow.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(sliderLayout);
+  }
+
+  private void addTopRecepiesComponent(ResponsiveLayout contentRowLayout) {
+    //Отрисовка заголовка топа рецептов
+    ResponsiveRow recipeTitle = contentRowLayout.addRow();
+    CustomLayout topRecipeTitleLayout = new CustomLayout("TopRecipeTitle");
+    recipeTitle.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(topRecipeTitleLayout);
+    //Здесь можно разместить добавление рецептов либо фиксированно, например, топ 5, или
+    //Задать количество по какому-либо другому параметру, например, по нажатию кнопки добавлять
+    //еще несколько к имеющемуся списку
+    for (int i = 0; i < 8; i++) {
+      //Задание отступа между рецептами
+      ResponsiveRow theDistanceBetweenRecipe = contentRowLayout.addRow();
+      theDistanceBetweenRecipe.setHeight("30px");
+      theDistanceBetweenRecipe.addColumn().withDisplayRules(12, 12, 12, 12);
+      //Отрисовка изображения рецепта
+      ResponsiveRow recipeRow = contentRowLayout.addRow();
+      Image topImage = new Image();
+      topImage.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/cake.png")));
+      topImage.setHeight("70%");
+      topImage.setWidth("100%");
+      recipeRow.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(topImage);
+      //Создание custom макета с поддержкой flexbox
+      CustomLayout topRecipeLayout = new CustomLayout("TopRecipeLayout");
+      recipeRow.addColumn().withDisplayRules(8, 8, 8, 8).withComponent(topRecipeLayout);
+
+      //Задание информации по каждому из рецептов
+      Label recipesName = new Label("Название");
+      topRecipeLayout.addComponent(recipesName, "recipes_name");
+      Label recipesAuthor = new Label("Автор");
+      topRecipeLayout.addComponent(recipesAuthor, "recipes_author");
+      Button recepiesPartsButton = new Button("Ингридиенты");
+      topRecipeLayout.addComponent(recepiesPartsButton, "parts_recipe_button");
+      Label numberOfServingsLable = new Label(String.valueOf(i));//просто для примера
+      topRecipeLayout.addComponent(numberOfServingsLable, "number_of_servings_lable");
+      Label workingTimesLable = new Label(String.valueOf(i));//просто для примера
+      topRecipeLayout.addComponent(workingTimesLable, "working_times_lable");
+      Button addRecipeToFavoritesButton = new Button("Добавить в избранное");
+      topRecipeLayout.addComponent(addRecipeToFavoritesButton, "add_recipe_to_favorites_button");
     }
+
+    //Задание отступа до коцна страницы
+    ResponsiveRow theDistanceBetweenBottomAndRecipes = contentRowLayout.addRow();
+    theDistanceBetweenBottomAndRecipes.setHeight("60px");
+    theDistanceBetweenBottomAndRecipes.addColumn().withDisplayRules(12, 12, 12, 12);
+  }
+
 }
