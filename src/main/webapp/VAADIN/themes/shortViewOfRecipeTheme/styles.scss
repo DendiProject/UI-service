@@ -37,7 +37,7 @@
 
     .receipeParts{
         width: 100%;
-        height: 38%;
+        height: 35%;
         border: solid 4px green;
         box-sizing:border-box;
     }
@@ -71,7 +71,7 @@
 
     .receipeResourses{
         width: 100%;
-        height: 38%;
+        height: 35%;
         border: solid 4px green;
         box-sizing:border-box;
     }
@@ -105,7 +105,7 @@
 
     .receipeControls{
         width: 100%;
-        height: 24%;
+        height: 30%;
         border: solid 4px green;
         box-sizing:border-box;
     }
@@ -162,7 +162,13 @@
         box-sizing:border-box;
         text-align: center;
     }
-    
+    #networkCreateReceipeBtn{
+        width:100%;
+        height:40px;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
     
     
     

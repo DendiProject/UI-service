@@ -43,7 +43,7 @@ public class InitEvent extends BasicGrafEventHandler{
                 
                 //Вначале нужно сделать запрос на GM для проверки возможности
                 if(false){
-                    graf.setEvent(EventType.addEdge, arguments.toJson());
+                    graf.setEvent(EventType.init, arguments.toJson());
                     //Оповещаю всех слушателей
                     graf.notifyEventListeners(graf.getInitListeners());
                 }
