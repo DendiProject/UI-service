@@ -6,6 +6,7 @@
 package com.netcracker.ui.service.buttonsClickListener.component;
 
 import com.vaadin.annotations.JavaScript;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
 import elemental.json.JsonArray;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
  * Компонент, позволяющий задавать действия на клики по div из блока с контентом
  * @author Artem
  */
+@UIScope
 @JavaScript({"buttonsClickListenerLibrary.js", "buttonsClickListener-connector.js"})
 public class ButtonsClickListener  extends AbstractJavaScriptComponent {
 
