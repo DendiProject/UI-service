@@ -117,14 +117,17 @@ mylibrary.MyGraf = function (element) {
     //Функция добавления ноды, через изменение стейта
     //оповещает java и, следуя своей логике, java вызовет метод добавления 
     //конкретной ноды на стороне js
-    function addNodeSideJS(id, label, image) {
+    function addNodeSideJS(id, label, image, receipeId, userId, newNodesDescription) {
         //Синхронизация состояния
         returnUnswer ={
             newNodesId: id,
             newNodesLable: label,
             newNodesImage: image,
             newNodesX: xClick,
-            newNodesY: yClick
+            newNodesY: yClick,
+            userId: userId,
+            receipeId: receipeId,
+            newNodesDescription: newNodesDescription
         };
         //Обновление состояния
         self.click();
@@ -277,7 +280,9 @@ mylibrary.MyGraf = function (element) {
     //Кнопки для вызовов функций графа со стороны js
     var addNodeBtn = document.getElementById("networkAddNode");
     addNodeBtn.onclick = function(event){
-        addNodeSideJS(767686,"newNode","https://png.icons8.com/edit-property/nolan/64");
+        var a = receipeId;
+        var b = userId;
+        addNodeSideJS(767686,"newNode","https://png.icons8.com/edit-property/nolan/64", receipeId, userId,"description");
     };
      
     var addEdgeBtn = document.getElementById("networkAddEdge");

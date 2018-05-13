@@ -24,11 +24,13 @@ public class Node implements Serializable
         
     }
     
-    public Node(String _nodeId, String _description, String _pictureId)
+    public Node(String _nodeId, String _description, String _pictureId, 
+            String _label)
     {
         nodeId = _nodeId;
         description = _description;
         pictureId = _pictureId;
+        label = _label;
     }
 
     public String getLabel() {

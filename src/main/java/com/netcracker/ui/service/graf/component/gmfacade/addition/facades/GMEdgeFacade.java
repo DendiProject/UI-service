@@ -21,29 +21,15 @@ public class GMEdgeFacade {
         //http://localhost:8083/
     }
     
-    public void addEdge(Edge edge)
+    public void addEdge(Edge edge) throws Exception
     {
-        try
-        {
-            EdgeWorker edgeWorker = new EdgeWorker(connectionUrl);
-            edgeWorker.addEdge(edge.getStartNodeId(), edge.getEndNodeId());
-        }
-        catch(Exception exception)
-        {
-            ExceptionHandler.getInstance().runExceptionhandling(exception);
-        }
+        EdgeWorker edgeWorker = new EdgeWorker(connectionUrl);
+        edgeWorker.addEdge(edge.getStartNodeId(), edge.getEndNodeId());
     }
     
-    public void deleteEdge(Edge edge)
+    public void deleteEdge(Edge edge) throws Exception
     {
-        try
-        {
-            EdgeWorker edgeWorker = new EdgeWorker(connectionUrl);
-            edgeWorker.deleteEdge(edge.getStartNodeId(), edge.getEndNodeId());
-        }
-        catch(Exception exception)
-        {
-            ExceptionHandler.getInstance().runExceptionhandling(exception);
-        }
+        EdgeWorker edgeWorker = new EdgeWorker(connectionUrl);
+        edgeWorker.deleteEdge(edge.getStartNodeId(), edge.getEndNodeId());
     }
 }

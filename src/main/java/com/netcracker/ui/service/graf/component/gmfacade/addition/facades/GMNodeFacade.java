@@ -6,6 +6,7 @@
 package com.netcracker.ui.service.graf.component.gmfacade.addition.facades;
 
 import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.gmfacade.workers.NodeWorker;
 import java.util.List;
@@ -23,39 +24,24 @@ public class GMNodeFacade {
         //http://localhost:8083/
     }
     
-    public Node addNode(Node node, String receipeId, String userId)
+    public Node addNode(Node node, String receipeId, String userId) throws Exception
     {
-        try
-        {
-            NodeWorker nodeWorker = new NodeWorker(connectionUrl);
-            //Cоздание новой ноды на gm
-            node.setNodeId(nodeWorker.getIdForNewNode(receipeId,userId));
-            //Добавление к новой ноде description
-            nodeWorker.addNodeDescription(node.getNodeId(), node.getDescription());
-            //Добавление к новой ноде label
-            nodeWorker.addNodeLabel(node.getNodeId(), node.getLabel());
-            //Добавление к новой ноде picture
-            nodeWorker.addNodePicture(node.getNodeId(), node.getPictureId());
-            return node;
-        }
-        catch(Exception exception)
-        {
-            ExceptionHandler.getInstance().runExceptionhandling(exception);
-            return null;
-        }
+        NodeWorker nodeWorker = new NodeWorker(connectionUrl);
+        //Cоздание новой ноды на gm
+        node.setNodeId(nodeWorker.getIdForNewNode(receipeId,userId));
+        //Добавление к новой ноде description
+        nodeWorker.addNodeDescription(node.getNodeId(), node.getDescription());
+        //Добавление к новой ноде label
+        nodeWorker.addNodeLabel(node.getNodeId(), node.getLabel());
+        //Добавление к новой ноде picture
+        nodeWorker.addNodePicture(node.getNodeId(), node.getPictureId());
+        return node;
     }
     
-    public void deleteNode(Node node)
+    public void deleteNode(Node node) throws Exception
     {
-        try
-        {
-            NodeWorker nodeWorker = new NodeWorker(connectionUrl);
-            nodeWorker.deleteNode(node.getNodeId());
-        }
-        catch(Exception exception)
-        {
-            ExceptionHandler.getInstance().runExceptionhandling(exception);
-        }
+        NodeWorker nodeWorker = new NodeWorker(connectionUrl);
+        nodeWorker.deleteNode(node.getNodeId());
     }
     
     public void addInputResources(Node node, List<Resource> resources)

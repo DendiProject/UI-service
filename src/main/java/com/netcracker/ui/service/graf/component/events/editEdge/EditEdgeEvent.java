@@ -7,6 +7,8 @@ package com.netcracker.ui.service.graf.component.events.editEdge;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Graf;
 import com.netcracker.ui.service.graf.component.eventTypes.EventType;
 import com.netcracker.ui.service.graf.component.events.BasicGrafEventHandler;
@@ -41,7 +43,13 @@ public class EditEdgeEvent extends BasicGrafEventHandler{
             {
                 //Вначале нужно сделать запрос на GM для проверки возможности 
                 //редактирования связи
-                if(true){
+                Edge newEdge = new Edge(state.editableEdgesNewIdFrom, 
+                        state.editableEdgesNewIdTo);
+                Edge oldEdge = new Edge(state.editableEdgesOldIdFrom, 
+                        state.editableEdgesOldIdTo);
+                try{
+                    graf.getGmFacade().getGmEdgeFacade().deleteEdge(oldEdge);
+                    graf.getGmFacade().getGmEdgeFacade().addEdge(newEdge);
                     graf.editEdge(state.editableEdgesOldIdFrom, 
                             state.editableEdgesOldIdTo, 
                             state.editableEdgesNewIdFrom, 
@@ -50,10 +58,10 @@ public class EditEdgeEvent extends BasicGrafEventHandler{
                     //Оповещаю всех слушателей
                     graf.notifyEventListeners(graf.getEditEdgeListeners());
                 }
-                else
-                {
+                catch(Exception exception){
                     //Иначе уведомление пользователя о том, что связь не может 
                     //быть таким образом отредактированна
+                    ExceptionHandler.getInstance().runExceptionhandling(exception);
                 }
             }
             else
