@@ -145,7 +145,7 @@ public class UiServiceMainUI extends UI{
             @Override
             public void draw(LinkedMultiValueMap<String, String> parameters) {
                 mainLayer.contentRowLayout.removeAllComponents();
-                mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("404"));
+                mainLayer.contentRowLayout.addRow().addComponent(new Label("404"));
             }
         });
 
@@ -435,7 +435,7 @@ public class UiServiceMainUI extends UI{
 
                 ReceipeView view = new ReceipeView(proxy, store);
                 try
-                {
+                { 
                     view.reload();
                     mainLayer.contentRowLayout.removeAllComponents();
                     mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);

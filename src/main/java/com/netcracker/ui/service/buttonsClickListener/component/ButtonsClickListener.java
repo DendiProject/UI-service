@@ -6,8 +6,10 @@
 package com.netcracker.ui.service.buttonsClickListener.component;
 
 import com.vaadin.annotations.JavaScript;
+import com.vaadin.server.Page;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
+import com.vaadin.ui.Notification;
 import elemental.json.JsonArray;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,6 +37,12 @@ public class ButtonsClickListener  extends AbstractJavaScriptComponent {
                 {
                     if(listeners.get(i).getId().equals(arguments.getString(0)))
                     {
+                      new Notification("This is a error",
+                        "Нельзя добавить два обработчика "
+                        + "ошибок одного типа: ",
+                        Notification.Type.ERROR_MESSAGE, true)
+                                .show(Page.getCurrent());
+                      
                         listeners.get(i).onEventDo();
                     }
                 }
