@@ -16,4 +16,6 @@ import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException
 public interface Proxy {
     Boolean connect();
     Object load();//Выполнение запроса на бэкенд
+    String getUserId();
+    String getReceipeId();
 }

@@ -31,9 +31,11 @@ public class ReceipeView implements View{
     public Graf graf;
     private final PresenterObserver presenter;
     public Receipe receipe;
+    private Proxy proxy;
     
     public ReceipeView(Proxy proxy, StoreSubject store)
     {
+        this.proxy = proxy;
         presenter = new ReceipePresenter(proxy, store, (ReceipeView)this);
     }
     
@@ -56,7 +58,8 @@ public class ReceipeView implements View{
         contentRowLayout.addComponent(ShortViewOfReceipeLayout);
         
         graf = new Graf();
-        graf.setInitCollections(receipe.nodes, receipe.edges);
+        graf.setInitCollections(receipe.nodes, receipe.edges, proxy.getUserId(),
+                proxy.getReceipeId());
         ShortViewOfReceipeLayout.addComponent(graf,"panelWithGraf");
         //Пример добавления слушателя на клик по ЛЮБОЙ ноде
         /*graf.addHandlerForClickingOnNode(new ClickOnNodeEventListener() {

@@ -4,31 +4,56 @@
 {
     @include valo;
     
-    .CreateReceipeView
+    .createRecipeView
     {
         width: 100%;
         height: 100%;
 
+
         display: -webkit-flex; 
         display: flex;
-        justify-content: flex-start;
-        align-items:flex-end;
+        justify-content: space-around;
+        align-items:center;
+        flex-direction: column;
     }
-    .createReceipeImage
+    .panelWithInformation
     {
-        width: 40%;
-        height: 92%;
+        width: 100%;
+        height: 90%;
         box-sizing:border-box;
 
         display: -webkit-flex; 
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
         align-items:center;
+    }
+    .panelWithButtons
+    {
+        width: 100%;
+        height: 10%;
+        box-sizing:border-box;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+    }
+    .panelWithImageAndLable
+    {
+        width: 40%;
+        height: 100%;
+        box-sizing:border-box;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+        flex-direction: column;
     }
     .createReceipeInputsAndLables
     {
-        width: 55%;
-        height: 92%;
+        width: 60%;
+        height: 100%;
 
         display: -webkit-flex; 
         display: flex;
@@ -37,7 +62,7 @@
     }
     .createReceipeInputs
     {
-        width: 65%;
+        width: 60%;
         height: 100%;
         box-sizing:border-box;
 
@@ -49,7 +74,7 @@
     }
     .createReceipeLables
     {
-        width: 25%;
+        width: 30%;
         height: 100%;
         box-sizing:border-box;
 
@@ -62,42 +87,112 @@
     .createReceipeInputCatalog
     {
         width: 100%;
-        height: 10%;
+        height: 7%;
         box-sizing:border-box;
     }
     .createReceipeInputReceipeName
     {
         width: 100%;
-        height: 10%;
+        height: 7%;
         box-sizing:border-box;
     }
     .createReceipeInputDescription
     {
         width: 100%;
-        height: 25%;
+        height: 15%;
         box-sizing:border-box;
     }
     .createReceipeInputPublicOrPrivate
     {
         width: 100%;
-        height: 10%;
+        height: 7%;
         box-sizing:border-box;
     }
     .createReceipeInputTags
     {
         width: 100%;
-        height: 25%;
+        height: 15%;
         box-sizing:border-box;
     }
-    #createReceipeBtn
+    .CreateReceipesImage
     {
         width: 100%;
-        height: 10%;
+        height: 85%;
+        box-sizing:border-box;
+
+
+
+
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        align-items:center;
     }
-    #emptyBtn
+    .CreateReceipesLable
     {
         width: 100%;
-        height: 10%;
+        height: 15%;
+        box-sizing:border-box;
+
+
+
+
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        align-items:flex-start;
+    }
+    .CreateRecipeDoneBtn
+    {
+        width: 15%;
+        height: 85%;
+        box-sizing:border-box;
+
+
+
+
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        align-items:center;
+    }
+    .CreateRecipeCancelBtn
+    {
+        width: 15%;
+        height: 85%;
+        box-sizing:border-box;
+
+
+
+
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        align-items:center;
+    }
+    .createReceipeLoadFotoBtn
+    {
+        width: 80%;
+        height: 50%;
+        box-sizing:border-box;
+
+
+
+
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        align-items:center;
     }
 }
 @include createReceipeViewTheme;

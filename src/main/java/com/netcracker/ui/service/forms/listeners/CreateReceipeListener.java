@@ -13,6 +13,5 @@ import java.util.List;
  * @author Artem
  */
 public interface CreateReceipeListener {
-    void onCreate(String catalog, String recipeName, String description, 
-            boolean isPublic, List<Tag> tags);
+    void onCreate(String recipeId, String userId);
 }

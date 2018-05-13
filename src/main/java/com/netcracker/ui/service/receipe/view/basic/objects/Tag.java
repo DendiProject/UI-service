@@ -10,5 +10,13 @@ package com.netcracker.ui.service.receipe.view.basic.objects;
  * @author Artem
  */
 public class Tag {
-    
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    } 
 }

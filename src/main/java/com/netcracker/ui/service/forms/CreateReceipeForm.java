@@ -6,31 +6,25 @@
 package com.netcracker.ui.service.forms;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
-import com.netcracker.ui.service.beans.factory.BeansFactory;
-import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
-import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
-import com.netcracker.ui.service.exception.ExceptionHandler;
-import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.content.handler.CookieHandler;
+import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
-import com.netcracker.ui.service.graf.component.Graf;
-import com.netcracker.ui.service.menu.component.Menu;
+import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.receipe.view.basic.objects.Tag;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import javax.servlet.http.Cookie;
 
 /**
  *
@@ -40,6 +34,8 @@ public class CreateReceipeForm  extends Window {
     
     private String catalog = null;
     private String recipeName = null;
+    private String recipeId = null;
+    private String userId = null;
     private String description = null; 
     private boolean isPublic = true;
     private List<Tag> tags = null;
@@ -119,13 +115,23 @@ public class CreateReceipeForm  extends Window {
         publicOrPrivateBox.setEmptySelectionAllowed(false);
         mainCustomLayout.addComponent(publicOrPrivateBox,"createReceipeInputPublicOrPrivate");
         mainCustomLayout.addComponent(new Label("Денис, добавь сюда таблицу!"),"createReceipeInputTags");
+        //Получение id пользователя
+        CookieHandler ch2 = new CookieHandler();
+        JWTHandler jwth2 = new JWTHandler();
+        Cookie userCookie2 = ch2.getCookieByName("userInfo");
+        userId = jwth2.readUserId(userCookie2.getValue(), "test");
+        
         Button create = new Button("Создать рецепт");
         create.setHeight("100%");
         create.setWidth("100%");
         create.addClickListener(e -> {
-            if(catalog != null & recipeName != null & description !=null){
-                listener.onCreate(catalog, recipeName, description, isPublic, 
-                        tags);
+            //Создание каталога, или, если он существует, то получение его id
+            GMFacade gm = new GMFacade("http://localhost:8083/");
+            
+            if(catalog != null & recipeId != null & description !=null & 
+                    userId != null){
+                //listener.onCreate(catalog, recipeId, userId, description, 
+                  //      isPublic, tags);
                 this.close();
             }
         });

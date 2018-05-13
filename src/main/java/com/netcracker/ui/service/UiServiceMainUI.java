@@ -63,6 +63,7 @@ import com.netcracker.ui.service.receipe.view.basic.objects.Tag;
 import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ReceipeInformation;
 import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortReceipe;
 import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortResource;
+import com.netcracker.ui.service.views.CreateRecipeView;
 import org.json.JSONObject;
 /**
  *
@@ -458,39 +459,44 @@ public class UiServiceMainUI extends UI{
             }
         });
 
-        newViews.add(new View("Recept") {
+        newViews.add(new View("RecipeConfigurator") {
             @Override
             public void draw(LinkedMultiValueMap<String, String> parameters) {               
-                CreateReceipeForm createReceipeForm = new CreateReceipeForm(
+                mainLayer.contentRowLayout.removeAllComponents();
+                mainLayer.contentRowLayout.setHeight("100%");
+                CreateRecipeView createRecipeView = new CreateRecipeView(
                         new CreateReceipeListener() {
-                    @Override
-                    public void onCreate(String catalog, String recipeName, 
-                    String description,  boolean isPublic, List<Tag> tags) {
-                        /*MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-                        parameters.add("receipeId", "12345");
-                        parameters.add("userId","1111");*/
-                        ReceipeProxy proxy = new ReceipeProxy();
-                        proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters.getFirst("userId"), parameters.getFirst("receipeId"));
+                        @Override
+                        public void onCreate(String recipeId, 
+                                String userId) {
+                            ReceipeProxy proxy = new ReceipeProxy();
+                            proxy.setConfig(
+                                    "http://localhost:8083/", 
+                                    userId, recipeId);
 
-                        ReceipeDataConverter converter = new ReceipeDataConverter();
-                        ReceipeStore store = new ReceipeStore(converter);
+                            ReceipeDataConverter converter = 
+                                    new ReceipeDataConverter();
+                            ReceipeStore store = new ReceipeStore(converter);
 
-                        ReceipeView view = new ReceipeView(proxy, store);
-                        try
-                        {
-                            view.reload();
-                            mainLayer.contentRowLayout.removeAllComponents();
-                            mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
+                            ReceipeView view = new ReceipeView(proxy, store);
+                            try
+                            {
+                                view.reload();
+                                mainLayer.contentRowLayout.removeAllComponents();
+                                mainLayer.contentRowLayout = view.drawReceipe(
+                                        mainLayer.contentRowLayout);
+                            }
+                            catch(Exception exception)
+                            {
+                                //ДОБАВИТЬ БИН HttpClientErrorException
+                                //ДОБАВИТЬ БИН NullPointerException
+                                ExceptionHandler.getInstance().
+                                        runExceptionhandling(exception);
+                            }
                         }
-                        catch(Exception exception)
-                        {
-                            //ДОБАВИТЬ БИН HttpClientErrorException
-                            //ДОБАВИТЬ БИН NullPointerException
-                            ExceptionHandler.getInstance().runExceptionhandling(exception);
-                        }
-                    }
                 });
-                addWindow(createReceipeForm);
+                mainLayer.contentRowLayout.addComponent(
+                        createRecipeView.create());
             }
         });
 
@@ -633,13 +639,22 @@ public class UiServiceMainUI extends UI{
 
 
         //Создаем одноуровневую кнопки меню
+        /*ДЛЯ ВЬЮ, КОТОРАЯ ПРОСТО ОТРИСОВЫВАЕТ РЕЦЕПТ ВРЕМЕННО НЕ ПОДДЕРЖИВАЕТСЯ
         MenusButton recepsBtn = new MenusButton("Рецепты","idRecept", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                setUrl("Recept?userId=1111&receipeId=12343");
+                setUrl("Recept?receipeId=12343");
+            }
+
+        });*/
+        MenusButton recepsBtn = new MenusButton("Рецепты","idRecept", new  HandlerForClickingTheButton(){
+            @Override
+            public void onEventClickDo() {
+                setUrl("RecipeConfigurator");
             }
 
         });
+        
 
         MenusSearchBar search = new MenusSearchBar("idSearch", new  HandlerForClickingTheButton(){
             @Override

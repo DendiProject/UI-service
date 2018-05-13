@@ -4,6 +4,8 @@ var mylibrary = mylibrary || {};
 mylibrary.MyGraf = function (element) {
     var nodes = null;
     var edges = null;
+    var receipeId = "";
+    var userId = "";
     var network = null;
     var self = this; // Can't use this inside the function
     var seed = 2;
@@ -27,6 +29,8 @@ mylibrary.MyGraf = function (element) {
             nodes: state.nodes,
             edges: state.edges
         };
+        receipeId = state.receipeId;
+        userId = state.userId;
         // create a network
         var container = document.getElementById('mynetwork');
         var options = {

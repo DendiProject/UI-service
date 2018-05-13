@@ -177,17 +177,18 @@ public class Graf extends AbstractJavaScriptComponent {
     }
     
     public void setInitCollections(ArrayList<Node> nodesCollection, 
-            ArrayList<Edge> edgesCollection) {
+            ArrayList<Edge> edgesCollection, String userId, String receipeId) {
         getState().nodes = nodesCollection;
         getState().edges = edgesCollection;
         setEvent(EventType.init,
-                convertInitDataToRighFormat(nodesCollection, edgesCollection));
+                convertInitDataToRighFormat(nodesCollection, edgesCollection, 
+                        userId, receipeId));
     }
     
     //Вернет строку в Json формате, с именами переменных, требуемых на 
     //стороне JS  
     private String convertInitDataToRighFormat(ArrayList<Node> nodesCollection, 
-            ArrayList<Edge> edgesCollection)
+            ArrayList<Edge> edgesCollection, String userId, String receipeId)
     {
         JSONObject result =new JSONObject();
         JSONArray nodes = new JSONArray();
@@ -214,6 +215,8 @@ public class Graf extends AbstractJavaScriptComponent {
         
         result.put("nodes", nodes);
         result.put("edges", edges);
+        result.put("receipeId", receipeId);
+        result.put("userId", userId);
         
         return result.toString();
     }

@@ -22,12 +22,16 @@ import org.springframework.web.client.RestTemplate;
 
 public class ReceipeProxy  implements Proxy{
     private String connectionUrl;
-    public String userId;
-    public String receipeId;
-    
-    private RestTemplate restTemplate;
-    
-    
+    private String userId;
+    private String receipeId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getReceipeId() {
+        return receipeId;
+    }
     
     public void setConfig(String connectionUrl, String userId, String receipeId)
     {
@@ -35,6 +39,7 @@ public class ReceipeProxy  implements Proxy{
         this.userId = userId;
         this.receipeId = receipeId;
     }
+    
     //Проверка прав пользователя
     @Override
     public Boolean connect(){
@@ -82,7 +87,7 @@ public class ReceipeProxy  implements Proxy{
     public Object load() {
         if(connect())
         {
-            GMFacade gm = new GMFacade("http://localhost:8083/");
+            GMFacade gm = new GMFacade(connectionUrl);
             return gm.getGmGrafFacade().getTestGraf(userId, receipeId);
         }
         else
