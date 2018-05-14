@@ -15,6 +15,8 @@ import com.netcracker.ui.service.graf.component.events.BasicGrafEventHandler;
 import com.netcracker.ui.service.graf.component.events.clickOnNode.ClickOnNodeState;
 import elemental.json.JsonArray;
 import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -71,6 +73,49 @@ public class AddNodeEvent extends BasicGrafEventHandler{
             else
             {
                 giveNextHandlerWork(arguments);
+            }
+        }
+        catch(Exception ex)
+        {
+
+        }
+    }
+    
+    public void handleEvent(JSONObject arguments) {
+        try
+        {
+            //Попытка распарсить данные, если не получается-отдать следующему
+            BeansFactory<ObjectMapper> bf = BeansFactory.getInstance();
+            ObjectMapper mapper = bf.getBean(ObjectMapper.class);
+            state = mapper.readValue(arguments.toString(),AddNodeState.class);
+            if(state.stateReady)
+            {
+                Node newNode = new Node(state.newNodesId, 
+                        state.newNodesDescription, state.newNodesImage, 
+                        state.newNodesLable);
+                //Вначале нужно сделать запрос на GM для проверки возможности создания ноды
+                try{
+                    graf.getGmFacade().getGmNodeFacade().addNode(newNode, 
+                            graf.receipeId, graf.userId);
+                    graf.addNode(state.newNodesImage, state.newNodesLable, 
+                            state.newNodesId, state.newNodesDescription);
+                    JSONArray array = new JSONArray();
+                    array.put(arguments);
+                    graf.setEvent(EventType.addNode, array.toString());
+                    //Оповещаю всех слушателей
+                    graf.notifyEventListeners(graf.getAddNodeListeners());
+                }
+                catch(Exception exception){
+                    //Иначе уведомление пользователя о том, что нода не может 
+                    //быть создана
+                    ExceptionHandler.getInstance().runExceptionhandling(exception);
+                }
+                if(true){
+                    
+                }
+                else{
+                    
+                }
             }
         }
         catch(Exception ex)

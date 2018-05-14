@@ -17,6 +17,7 @@ import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.forms.AddStepForm;
 import com.netcracker.ui.service.forms.listeners.LoadFormListener;
 import com.netcracker.ui.service.graf.component.Graf;
+import com.netcracker.ui.service.graf.component.eventTypes.EventType;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
@@ -24,6 +25,8 @@ import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
 import com.vaadin.ui.CustomLayout;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -80,7 +83,17 @@ public class ReceipeView implements View{
                 @Override
                 public void onEventDo() {
                     AddStepForm addStepForm = new AddStepForm((node) -> {
-                        //graf.getAddNodeEvent().handleEvent(arguments);
+                        //Формирование JSON объекта  
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("newNodesId", node.getNodeId());
+                        jsonObject.put("newNodesLable",node.getLabel());
+                        jsonObject.put("newNodesImage",node.getPictureId());
+                        jsonObject.put("newNodesX","");
+                        jsonObject.put("newNodesY","");
+                        jsonObject.put("userId","");
+                        jsonObject.put("receipeId","");
+                        jsonObject.put("newNodesDescription",node.getDescription());
+                        graf.getAddNodeEvent().handleEvent(jsonObject);
                     }, proxy.getReceipeId(), proxy.getUserId());
                     listener.onCreate(addStepForm);
                     //addWindow(addStepForm);

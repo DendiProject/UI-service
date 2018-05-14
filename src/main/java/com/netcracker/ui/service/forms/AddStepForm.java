@@ -112,7 +112,7 @@ public class AddStepForm  extends Window {
         stepsLable.setWidth("100%");
         stepsLable.addValueChangeListener((event) -> {
             if(!event.getValue().equals("")){
-                stepLable = event.toString();
+                stepLable = event.getValue();
             }
             else
             {
@@ -128,7 +128,7 @@ public class AddStepForm  extends Window {
         area.setWordWrap(true);
         area.addValueChangeListener((event) -> {
             if(!event.getValue().equals("")){
-                stepDescription = event.toString();
+                stepDescription = event.getValue();
             }
             else
             {
