@@ -43,6 +43,7 @@ public class Graf extends AbstractJavaScriptComponent {
     private ArrayList<EventListener> deleteEdgeListeners = new ArrayList<EventListener>();
     private ArrayList<EventListener> deleteNodeListeners = new ArrayList<EventListener>();
     private ArrayList<EventListener> initNodeListeners = new ArrayList<EventListener>();
+    private AddNodeEvent addNodeEvent;
     public String userId;
     public String receipeId;
     private GMFacade gmFacade;
@@ -64,7 +65,7 @@ public class Graf extends AbstractJavaScriptComponent {
         editEdgeEvent.setNext(deleteEdgeEvent);
         AddEdgeEvent addEdgeEvent = new AddEdgeEvent(this);
         addEdgeEvent.setNext(editEdgeEvent);
-        AddNodeEvent addNodeEvent = new AddNodeEvent(this);
+        addNodeEvent = new AddNodeEvent(this);
         addNodeEvent.setNext(addEdgeEvent);
         ClickOnNodeEvent firstPartCheinOfHandlersEvent = new ClickOnNodeEvent(this);
         firstPartCheinOfHandlersEvent.setNext(addNodeEvent);
@@ -79,6 +80,10 @@ public class Graf extends AbstractJavaScriptComponent {
         getState().nodes = new ArrayList<>();
         getState().edges = new ArrayList<>();
         clickOnNodeListeners = new ArrayList<>();
+    }
+
+    public AddNodeEvent getAddNodeEvent() {
+        return addNodeEvent;
     }
 
     public GMFacade getGmFacade() {

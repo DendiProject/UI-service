@@ -279,12 +279,12 @@ mylibrary.MyGraf = function (element) {
     
     
     //Кнопки для вызовов функций графа со стороны js
-    var addNodeBtn = document.getElementById("networkAddNode");
+    /*var addNodeBtn = document.getElementById("networkAddNode");
     addNodeBtn.onclick = function(event){
         var a = receipeId;
         var b = userId;
         addNodeSideJS(767686,"newNode","https://png.icons8.com/edit-property/nolan/64", receipeId, userId,"description");
-    };
+    };*/
      
     var addEdgeBtn = document.getElementById("networkAddEdge");
     addEdgeBtn.onclick = function(event){

@@ -80,7 +80,7 @@ public class ReceipeView implements View{
                 @Override
                 public void onEventDo() {
                     AddStepForm addStepForm = new AddStepForm((node) -> {
-
+                        //graf.getAddNodeEvent().handleEvent(arguments);
                     }, proxy.getReceipeId(), proxy.getUserId());
                     listener.onCreate(addStepForm);
                     //addWindow(addStepForm);
