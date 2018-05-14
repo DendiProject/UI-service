@@ -26,6 +26,7 @@ import com.netcracker.ui.service.exception.importanceTypes.BasicImportanceClass;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.navigator.NotFound;
+import com.netcracker.ui.service.forms.AddStepForm;
 import com.netcracker.ui.service.forms.CreateReceipeForm;
 import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
 import com.netcracker.ui.service.graf.component.Edge;
@@ -212,7 +213,10 @@ public class UiServiceMainUI extends UI{
                 {
                     view.reload();
                     mainLayer.contentRowLayout.removeAllComponents();
-                    mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
+                    mainLayer.contentRowLayout = view.drawReceipe(mainLayer.
+                            contentRowLayout, (form) -> {
+                                addWindow(form);
+                    });
                 }
                 catch(Exception exception)
                 {
@@ -484,7 +488,9 @@ public class UiServiceMainUI extends UI{
                                 view.reload();
                                 mainLayer.contentRowLayout.removeAllComponents();
                                 mainLayer.contentRowLayout = view.drawReceipe(
-                                        mainLayer.contentRowLayout);
+                                        mainLayer.contentRowLayout, (form) -> {
+                                            addWindow(form);
+                                });
                             }
                             catch(Exception exception)
                             {
@@ -700,8 +706,10 @@ public class UiServiceMainUI extends UI{
 
             @Override
             public void onEventDo() {
-                AuthorizationForm modalWindow = new AuthorizationForm();
-                addWindow(modalWindow);
+                //AddStepForm addStepForm = new AddStepForm((node) -> {
+                    
+                //});
+                //addWindow(addStepForm);
             }
         });
         clickListener.addButtonClickListener(new ClickListener() {

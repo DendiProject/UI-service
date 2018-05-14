@@ -9,10 +9,13 @@ import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
 import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
+import com.netcracker.ui.service.forms.AddStepForm;
+import com.netcracker.ui.service.forms.listeners.LoadFormListener;
 import com.netcracker.ui.service.graf.component.Graf;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
@@ -51,7 +54,8 @@ public class ReceipeView implements View{
     }
 
     @Override
-    public ResponsiveLayout drawReceipe(ResponsiveLayout contentRowLayout) {
+    public ResponsiveLayout drawReceipe(ResponsiveLayout contentRowLayout, 
+            LoadFormListener listener) {
         CustomLayout ShortViewOfReceipeLayout = new CustomLayout("ShortViewOfRecipeLayout");
         ShortViewOfReceipeLayout.setHeight("100%");
         contentRowLayout.setHeight("100%");
@@ -61,6 +65,31 @@ public class ReceipeView implements View{
         graf.setInitCollections(receipe.nodes, receipe.edges, proxy.getUserId(),
                 proxy.getReceipeId());
         ShortViewOfReceipeLayout.addComponent(graf,"panelWithGraf");
+        
+        BeansFactory<ButtonsClickListener> bf = BeansFactory.getInstance();
+        ButtonsClickListener clickListener;
+        
+        try{
+            clickListener = bf.getBean(ButtonsClickListener.class);
+            clickListener.addButtonClickListener(new ClickListener() {
+                @Override
+                public String getId() {
+                    return "networkAddNodeBtn";
+                }
+
+                @Override
+                public void onEventDo() {
+                    AddStepForm addStepForm = new AddStepForm((node) -> {
+
+                    }, proxy.getReceipeId(), proxy.getUserId());
+                    listener.onCreate(addStepForm);
+                    //addWindow(addStepForm);
+                }
+            });
+        }
+        catch(Exception exception){
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+        }
         //Пример добавления слушателя на клик по ЛЮБОЙ ноде
         /*graf.addHandlerForClickingOnNode(new ClickOnNodeEventListener() {
             @Override

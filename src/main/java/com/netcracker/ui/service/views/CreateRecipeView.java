@@ -12,10 +12,12 @@ import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.forms.AuthorizationForm;
 import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.receipe.view.basic.objects.Tag;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
@@ -29,6 +31,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
 
 /**
@@ -58,8 +62,9 @@ public class CreateRecipeView {
         mainLayout.setHeight("100%");
         mainCustomLayout.setHeight("100%");
         mainLayout.addComponent(mainCustomLayout);
+        String imageName = "http://localhost:8008/images/s3";
         Image image = new Image();
-        image.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/AddReceipeImage.jpg")));
+        image.setSource(new ExternalResource(imageName));
         image.setHeight("100%");
         image.setWidth("100%");
         mainCustomLayout.addComponent(image, "CreateReceipesImage");
@@ -188,28 +193,34 @@ public class CreateRecipeView {
                 @Override
                 public void onEventDo() {
                     //Создание каталога, или, если он существует, то получение его id
-                    GMFacade gm = new GMFacade("http://localhost:8083/");
-                    if(catalogName != null && descriptionCatalog != null){
-                        
-                        catalogId = gm.getGmCatalogFacade().createCatalog(
-                                catalogName, descriptionCatalog);
-                        if(recipeName != null && descriptionRecipe != null && 
-                                catalogId != null && userId!= null){
-                            
-                            recipeId = gm.getGmReceipeFacade().addReceipe(
-                                    recipeName, descriptionRecipe, catalogId, 
-                                    userId, isPublic).getReceipeId();
+                    BeansFactory<GMFacade> bf = BeansFactory.getInstance();
+                    try {
+                        GMFacade gmFacade = bf.getBean(GMFacade.class);
+                        if(catalogName != null && descriptionCatalog != null){
 
-                            //Добавление всех тегов
-                            for(int i=0; i<tegs.size();i++){
-                                gm.getGmTagFacade().addTagToReceipe(recipeId, 
-                                        tegs.get(i).getName());
-                            }
-                            
-                            if(recipeId != null){
-                                listener.onCreate(recipeId, userId);
+                            catalogId = gmFacade.getGmCatalogFacade().createCatalog(
+                                    catalogName, descriptionCatalog);
+                            if(recipeName != null && descriptionRecipe != null && 
+                                    catalogId != null && userId!= null){
+
+                                recipeId = gmFacade.getGmReceipeFacade().addReceipe(
+                                        recipeName, descriptionRecipe, catalogId, 
+                                        userId, isPublic).getReceipeId();
+
+                                //Добавление всех тегов
+                                for(int i=0; i<tegs.size();i++){
+                                    gmFacade.getGmTagFacade().addTagToReceipe(recipeId, 
+                                            tegs.get(i).getName());
+                                }
+
+                                if(recipeId != null){
+                                    listener.onCreate(recipeId, userId);
+                                }
                             }
                         }
+                    }
+                    catch (NotFoundBean exception) {
+                        ExceptionHandler.getInstance().runExceptionhandling(exception);
                     }
                 }
             });

@@ -1,10 +1,9 @@
 @import "../valo/valo.scss";
 
-@mixin createReceipeViewTheme 
+@mixin addStepViewTheme 
 {
     @include valo;
-    
-    .createRecipeView
+    .addStepView
     {
         width: 100%;
         height: 100%;
@@ -16,7 +15,7 @@
         align-items:center;
         flex-direction: column;
     }
-    .panelWithInformation
+    .addStepPanelWithInformation
     {
         width: 100%;
         height: 90%;
@@ -27,7 +26,7 @@
         justify-content: space-around;
         align-items:center;
     }
-    .panelWithButtons
+    .addStepPanelWithButtons
     {
         width: 100%;
         height: 10%;
@@ -38,41 +37,39 @@
         justify-content: space-around;
         align-items:center;
     }
-    .panelWithImageAndLable
+    .addStepDoneBtn
     {
-        width: 40%;
-        height: 100%;
+        width: 25%;
+        height: 85%;
         box-sizing:border-box;
 
-        display: -webkit-flex; 
-        display: flex;
-        justify-content: space-around;
-        align-items:center;
-        flex-direction: column;
-    }
-    .createReceipeInputsAndLables
-    {
-        width: 60%;
-        height: 100%;
+
+
+
+
 
         display: -webkit-flex; 
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
         align-items:center;
     }
-    .createReceipeInputs
+    .addStepCancelBtn
     {
-        width: 60%;
-        height: 100%;
+        width: 25%;
+        height: 85%;
         box-sizing:border-box;
 
+
+
+
+
+
         display: -webkit-flex; 
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
         align-items:center;
-        flex-direction: column;
     }
-    .createReceipeLables
+    .addStepFirstColumn
     {
         width: 30%;
         height: 100%;
@@ -80,119 +77,128 @@
 
         display: -webkit-flex; 
         display: flex;
+        justify-content: space-between;
+        align-items:center;
+        flex-direction: column;
+    }
+    .addStepSecondColumn
+    {
+        width: 65%;
+        height: 100%;
+        box-sizing:border-box;
+    }
+    .addStepImage
+    {
+        width: 100%;
+        height: 60%;
+        box-sizing:border-box;
+    }
+    .addStepButtonAddImage
+    {
+        width: 100%;
+        height: 15%;
+        box-sizing:border-box;
+    }
+    .addStepImageWithButton
+    {
+        width: 100%;
+        height: 70%;
+        box-sizing:border-box;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-between;
+        align-items:center;
+        flex-direction: column;
+    }
+    .addStepNameAndLable
+    {
+        width: 100%;
+        height: 15%;
+        box-sizing:border-box;
+
+        display: -webkit-flex; 
+        display: flex;
         justify-content: space-around;
         align-items:center;
         flex-direction: column;
     }
-    .createReceipeInputCatalog
+    .addStepName
     {
         width: 100%;
-        height: 7%;
+        height: 25%;
         box-sizing:border-box;
     }
-    .createReceipeInputReceipeName
-    {
-        width: 100%;
-        height: 7%;
-        box-sizing:border-box;
-    }
-    .createReceipeInputDescription
+    .addStepNameLable
     {
         width: 100%;
         height: 15%;
         box-sizing:border-box;
     }
-    .createReceipeInputPublicOrPrivate
+    .addStepCaptionAndItems
     {
         width: 100%;
-        height: 7%;
+        height: 100%;
         box-sizing:border-box;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+        flex-direction: column;
     }
-    .createReceipeInputTags
+    .addStepCaption
     {
         width: 100%;
-        height: 15%;
+        height: 12%;
         box-sizing:border-box;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
     }
-    .CreateReceipesImage
+    .addStepItems
     {
         width: 100%;
-        height: 65%;
+        height: 88%;
         box-sizing:border-box;
 
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+        flex-wrap: wrap;
+    }
+    .addStepItem
+    {
+        width: 48%;
+        height: 48%;
+        box-sizing:border-box;
 
-
-
-
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+        flex-direction: column;
+    }
+    .addStepSubItemLable
+    {
+        width: 100%;
+        height: 20%;
+        box-sizing:border-box;
 
         display: -webkit-flex; 
         display: flex;
         justify-content: center;
         align-items:center;
     }
-    .CreateReceipesLable
+    .addStepSubItemContent
     {
         width: 100%;
-        height: 35%;
+        height: 80%;
         box-sizing:border-box;
-
-
-
-
-
-
-        display: -webkit-flex; 
-        display: flex;
-        justify-content: center;
-        align-items:flex-start;
-    }
-    .CreateRecipeDoneBtn
-    {
-        width: 15%;
-        height: 85%;
-        box-sizing:border-box;
-
-
-
-
-
-
-        display: -webkit-flex; 
-        display: flex;
-        justify-content: center;
-        align-items:center;
-    }
-    .CreateRecipeCancelBtn
-    {
-        width: 15%;
-        height: 85%;
-        box-sizing:border-box;
-
-
-
-
-
-
-        display: -webkit-flex; 
-        display: flex;
-        justify-content: center;
-        align-items:center;
-    }
-    .createReceipeLoadFotoBtn
-    {
-        width: 80%;
-        height: 30%;
-        box-sizing:border-box;
-
-
-
-
-
-
-        display: -webkit-flex; 
-        display: flex;
-        justify-content: center;
-        align-items:center;
+        border: solid 2px red;
     }
 }
-@include createReceipeViewTheme;
+@include addStepViewTheme;
