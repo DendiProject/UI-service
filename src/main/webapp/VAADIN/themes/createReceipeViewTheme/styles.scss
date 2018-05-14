@@ -1,0 +1,198 @@
+@import "../valo/valo.scss";
+
+@mixin createReceipeViewTheme 
+{
+    @include valo;
+    
+    .createRecipeView
+    {
+        width: 100%;
+        height: 100%;
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+        flex-direction: column;
+    }
+    .panelWithInformation
+    {
+        width: 100%;
+        height: 90%;
+        box-sizing:border-box;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+    }
+    .panelWithButtons
+    {
+        width: 100%;
+        height: 10%;
+        box-sizing:border-box;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+    }
+    .panelWithImageAndLable
+    {
+        width: 40%;
+        height: 100%;
+        box-sizing:border-box;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+        flex-direction: column;
+    }
+    .createReceipeInputsAndLables
+    {
+        width: 60%;
+        height: 100%;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+    }
+    .createReceipeInputs
+    {
+        width: 60%;
+        height: 100%;
+        box-sizing:border-box;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+        flex-direction: column;
+    }
+    .createReceipeLables
+    {
+        width: 30%;
+        height: 100%;
+        box-sizing:border-box;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+        flex-direction: column;
+    }
+    .createReceipeInputCatalog
+    {
+        width: 100%;
+        height: 7%;
+        box-sizing:border-box;
+    }
+    .createReceipeInputReceipeName
+    {
+        width: 100%;
+        height: 7%;
+        box-sizing:border-box;
+    }
+    .createReceipeInputDescription
+    {
+        width: 100%;
+        height: 15%;
+        box-sizing:border-box;
+    }
+    .createReceipeInputPublicOrPrivate
+    {
+        width: 100%;
+        height: 7%;
+        box-sizing:border-box;
+    }
+    .createReceipeInputTags
+    {
+        width: 100%;
+        height: 15%;
+        box-sizing:border-box;
+    }
+    .CreateReceipesImage
+    {
+        width: 100%;
+        height: 65%;
+        box-sizing:border-box;
+
+
+
+
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        align-items:center;
+    }
+    .CreateReceipesLable
+    {
+        width: 100%;
+        height: 35%;
+        box-sizing:border-box;
+
+
+
+
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        align-items:flex-start;
+    }
+    .CreateRecipeDoneBtn
+    {
+        width: 15%;
+        height: 85%;
+        box-sizing:border-box;
+
+
+
+
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        align-items:center;
+    }
+    .CreateRecipeCancelBtn
+    {
+        width: 15%;
+        height: 85%;
+        box-sizing:border-box;
+
+
+
+
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        align-items:center;
+    }
+    .createReceipeLoadFotoBtn
+    {
+        width: 80%;
+        height: 30%;
+        box-sizing:border-box;
+
+
+
+
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        align-items:center;
+    }
+}
+@include createReceipeViewTheme;

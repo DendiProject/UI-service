@@ -40,16 +40,16 @@ public class InitEvent extends BasicGrafEventHandler{
             state = mapper.readValue(arguments.getObject(0).toString(),InitState.class);
             if(state.stateReady)
             {
-                
+                /*
                 //Вначале нужно сделать запрос на GM для проверки возможности
                 if(false){
-                    graf.setEvent(EventType.addEdge, arguments.toJson());
+                    graf.setEvent(EventType.init, arguments.toJson());
                     //Оповещаю всех слушателей
                     graf.notifyEventListeners(graf.getInitListeners());
                 }
                 else{
                     //Иначе уведомление пользователя о том, 
-                }
+                }*/
             }
             else
             {

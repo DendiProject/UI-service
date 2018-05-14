@@ -18,6 +18,8 @@ public class InitState {
     public ArrayList<Edge> edges;
     public boolean stateReady = false;
     private int numberOfNonEmptyFeelds = 0;
+    String receipeId;
+    String userId;
     
     public InitState()
     {

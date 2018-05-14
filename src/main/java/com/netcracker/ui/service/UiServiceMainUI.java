@@ -14,8 +14,6 @@ import com.jarektoro.responsivelayout.ResponsiveRow;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
 import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
-import com.netcracker.ui.service.security.SecurityTokenHandler;
-import com.netcracker.ui.service.security.StartupHousekeeper;
 import com.netcracker.ui.service.content.handler.ContentManagerController;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.JWTHandler;
@@ -28,15 +26,18 @@ import com.netcracker.ui.service.exception.importanceTypes.BasicImportanceClass;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.navigator.NotFound;
-import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
-import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
-import com.netcracker.ui.service.exception.receipe.view.ShortViewException;
+import com.netcracker.ui.service.forms.AddStepForm;
+import com.netcracker.ui.service.forms.CreateReceipeForm;
+import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
+import com.netcracker.ui.service.graf.component.Edge;
+import com.netcracker.ui.service.graf.component.Node;
+import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
 import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.netcracker.ui.service.navigator.Navigator;
-import com.netcracker.ui.service.navigator.RecipientOfTheCurrentPage;
 import com.netcracker.ui.service.navigator.View;
+import com.netcracker.ui.service.receipe.view.basic.objects.Catalog;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeDataConverter;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeStore;
@@ -44,7 +45,6 @@ import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Page;
-import com.vaadin.server.Page.Styles;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringUI;
@@ -52,29 +52,20 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import java.io.File;
 import java.util.ArrayList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.Upload;
-import java.awt.FileDialog;
-import java.awt.Frame;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Map;
-import java.util.logging.Level;
+import java.util.List;
 import javax.servlet.http.Cookie;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.web.client.ResourceAccessException;
+import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
+import com.netcracker.ui.service.receipe.view.basic.objects.Tag;
+import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ReceipeInformation;
+import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortReceipe;
+import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortResource;
+import com.netcracker.ui.service.views.CreateRecipeView;
+import org.json.JSONObject;
 /**
  *
  * @author Artem
@@ -88,23 +79,71 @@ public class UiServiceMainUI extends UI{
     
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-      try {
-        CookieHandler ch = new CookieHandler();
-        JWTHandler jwth = new JWTHandler();
-        Cookie userCookie = ch.getCookieByName("userInfo");
-        if (userCookie == null) {
-          createMainLayout();
-        } else {
-          boolean user = jwth.checkUser(userCookie.getValue(), "test");
-          if (user) {
-            createUserLayout();
-          } else {
-            createMainLayout();
-          }
+        /*CookieHandler ch2 = new CookieHandler();
+        JWTHandler jwth2 = new JWTHandler();
+        Cookie userCookie2 = ch2.getCookieByName("userInfo");
+        String userid = jwth2.readUserId(userCookie2.getValue(), "test");
+        GMFacade gm = new GMFacade("http://localhost:8083/");
+        Node n = new Node("", "description", "picture");
+        n.setLabel("label");
+        Node n2 = new Node("", "description2", "picture2");
+        n.setLabel("label");
+        n2.setLabel("label2");
+        List<Resource> resources = new ArrayList<>();
+        Resource resource1 = new Resource("id", "id", "name222", 2, "литры", "picture", "resource");
+        Resource resource2 = new Resource("id2", "id", "name444", 4, "литры", "picture", "ingredient");
+        Resource resource3 = new Resource("id2", "id", "name888", 4, "литры", "picture", "resource");
+        resources.add(resource1);
+        resources.add(resource2);
+        resources.add(resource3);
+        resource1.setResourceId(gm.getGmResourceFacade().addResource(resource1.getName(),resource1.getIngredientOrResource(),resource1.getMeasuring(), "user",resource1.getPictureId()));
+        resource2.setResourceId(gm.getGmResourceFacade().addResource(resource2.getName(),resource2.getIngredientOrResource(),resource2.getMeasuring(), "user",resource2.getPictureId()));
+        resource3.setResourceId(gm.getGmResourceFacade().addResource(resource3.getName(),resource3.getIngredientOrResource(),resource3.getMeasuring(), "user",resource3.getPictureId()));
+        List<ShortResource> loaddresource = gm.getGmResourceFacade().getResourcesByLetters("nam", "resource", 5);
+        String catalogId = gm.getGmCatalogFacade().createCatalog("for receipe22222", "description");
+        String receipeid = gm.getGmReceipeFacade().addReceipe("newReceipe", "very good", catalogId,userid, true).getReceipeId();
+        String receiperes = gm.getGmReceipeFacade().addReceipeResource(receipeid, userid, resource1.getResourceId(), 5);
+        Node node = gm.getGmNodeFacade().addNode(n,receipeid, userid);
+        Node node2 = gm.getGmNodeFacade().addNode(n2,receipeid, userid);
+        gm.getGmNodeFacade().addInputResources(node, resources);
+        gm.getGmNodeFacade().addOutputResources(node, resources);
+        List<Resource> testregdg = gm.getGmNodeFacade().getInputResources(node, "resource");
+        List<Resource> testregdggdgdgd = gm.getGmNodeFacade().getOutputResources(node, "resource");
+        Edge edge = new Edge(node.getNodeId(), node2.getNodeId());
+        gm.getGmEdgeFacade().addEdge(edge);
+        gm.getGmReceipeFacade().setReceipeCompleted(receipeid);
+        ReceipeInformation receipeInformation = gm.getGmReceipeFacade().getReceipeInfo(receipeid);
+        List<ShortReceipe> loadingReceipe = gm.getGmReceipeFacade().getPublicAndCompletesReceipesByCatalogId(catalogId, 5);
+        gm.getGmTagFacade().addTagToReceipe(receipeid, "name");
+        //List<ShortReceipe> gdg = gm.getGmTagFacade().getReceipesByTag("name", 5);
+        //List<Tag> gdggdgdg = gm.getGmTagFacade().getTagsByLetters("nam", 5);
+        //gm.getGmNodeFacade().deleteNode(node);
+        gm.getGmEdgeFacade().deleteEdge(edge);
+        JSONObject gdgdhhgdgdgd = gm.getGmGrafFacade().getGraph(userid, receipeid);
+        JSONObject gdgdhhgdgdgd2 = gm.getGmGrafFacade().getParallelGraph(userid, receipeid);
+        gm.getGmReceipeFacade().deleteReceipe(receipeid, userid);
+        JSONObject gdgdhh = gm.getGmGrafFacade().getTestGraf("1111", "111111");
+        //Catalog catalog = gm.getGmCatalogFacade().getCatalog("for receipe22222");
+        int d=0;*/
+        
+        try {
+            CookieHandler ch = new CookieHandler();
+            JWTHandler jwth = new JWTHandler();
+            Cookie userCookie = ch.getCookieByName("userInfo");
+            if (userCookie == null) {
+              createMainLayout();
+            } else {
+              boolean user = jwth.checkUser(userCookie.getValue(), "test");
+              if (user) {
+                createUserLayout();
+              } else {
+                createMainLayout();
+              }
+            }
+          } 
+        catch (Exception exception) {
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
-      } catch (Exception exception) {
-        ExceptionHandler.getInstance().runExceptionhandling(exception);
-      }
     }
     
     private void setUrl(String path)
@@ -164,7 +203,7 @@ public class UiServiceMainUI extends UI{
                 parameters.add("receipeId", "12345");
                 parameters.add("userId","1111");*/
                 ReceipeProxy proxy = new ReceipeProxy();
-                proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters);
+                proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters.getFirst("userId"), parameters.getFirst("receipeId"));
 
                 ReceipeDataConverter converter = new ReceipeDataConverter();
                 ReceipeStore store = new ReceipeStore(converter);
@@ -174,7 +213,10 @@ public class UiServiceMainUI extends UI{
                 {
                     view.reload();
                     mainLayer.contentRowLayout.removeAllComponents();
-                    mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
+                    mainLayer.contentRowLayout = view.drawReceipe(mainLayer.
+                            contentRowLayout, (form) -> {
+                                addWindow(form);
+                    });
                 }
                 catch(Exception exception)
                 {
@@ -421,31 +463,46 @@ public class UiServiceMainUI extends UI{
             }
         });
 
-        newViews.add(new View("Recept") {
+        newViews.add(new View("RecipeConfigurator") {
             @Override
             public void draw(LinkedMultiValueMap<String, String> parameters) {               
-                /*MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-                parameters.add("receipeId", "12345");
-                parameters.add("userId","1111");*/
-                ReceipeProxy proxy = new ReceipeProxy();
-                proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters);
+                mainLayer.contentRowLayout.removeAllComponents();
+                mainLayer.contentRowLayout.setHeight("100%");
+                CreateRecipeView createRecipeView = new CreateRecipeView(
+                        new CreateReceipeListener() {
+                        @Override
+                        public void onCreate(String recipeId, 
+                                String userId) {
+                            ReceipeProxy proxy = new ReceipeProxy();
+                            proxy.setConfig(
+                                    "http://localhost:8083/", 
+                                    userId, recipeId);
 
-                ReceipeDataConverter converter = new ReceipeDataConverter();
-                ReceipeStore store = new ReceipeStore(converter);
+                            ReceipeDataConverter converter = 
+                                    new ReceipeDataConverter();
+                            ReceipeStore store = new ReceipeStore(converter);
 
-                ReceipeView view = new ReceipeView(proxy, store);
-                try
-                {
-                    view.reload();
-                    mainLayer.contentRowLayout.removeAllComponents();
-                    mainLayer.contentRowLayout = view.drawReceipe(mainLayer.contentRowLayout);
-                }
-                catch(Exception exception)
-                {
-                    //ДОБАВИТЬ БИН HttpClientErrorException
-                    //ДОБАВИТЬ БИН NullPointerException
-                    ExceptionHandler.getInstance().runExceptionhandling(exception);
-                }
+                            ReceipeView view = new ReceipeView(proxy, store);
+                            try
+                            {
+                                view.reload();
+                                mainLayer.contentRowLayout.removeAllComponents();
+                                mainLayer.contentRowLayout = view.drawReceipe(
+                                        mainLayer.contentRowLayout, (form) -> {
+                                            addWindow(form);
+                                });
+                            }
+                            catch(Exception exception)
+                            {
+                                //ДОБАВИТЬ БИН HttpClientErrorException
+                                //ДОБАВИТЬ БИН NullPointerException
+                                ExceptionHandler.getInstance().
+                                        runExceptionhandling(exception);
+                            }
+                        }
+                });
+                mainLayer.contentRowLayout.addComponent(
+                        createRecipeView.create());
             }
         });
 
@@ -588,13 +645,22 @@ public class UiServiceMainUI extends UI{
 
 
         //Создаем одноуровневую кнопки меню
+        /*ДЛЯ ВЬЮ, КОТОРАЯ ПРОСТО ОТРИСОВЫВАЕТ РЕЦЕПТ ВРЕМЕННО НЕ ПОДДЕРЖИВАЕТСЯ
         MenusButton recepsBtn = new MenusButton("Рецепты","idRecept", new  HandlerForClickingTheButton(){
             @Override
             public void onEventClickDo() {
-                setUrl("Recept?userId=1111&receipeId=12343");
+                setUrl("Recept?receipeId=12343");
+            }
+
+        });*/
+        MenusButton recepsBtn = new MenusButton("Рецепты","idRecept", new  HandlerForClickingTheButton(){
+            @Override
+            public void onEventClickDo() {
+                setUrl("RecipeConfigurator");
             }
 
         });
+        
 
         MenusSearchBar search = new MenusSearchBar("idSearch", new  HandlerForClickingTheButton(){
             @Override
@@ -640,8 +706,10 @@ public class UiServiceMainUI extends UI{
 
             @Override
             public void onEventDo() {
-                AuthorizationForm modalWindow = new AuthorizationForm();
-                addWindow(modalWindow);
+                //AddStepForm addStepForm = new AddStepForm((node) -> {
+                    
+                //});
+                //addWindow(addStepForm);
             }
         });
         clickListener.addButtonClickListener(new ClickListener() {
@@ -653,6 +721,18 @@ public class UiServiceMainUI extends UI{
             @Override
             public void onEventDo() {
                 int i=0;
+            }
+        });
+        
+        clickListener.addButtonClickListener(new ClickListener() {
+            @Override
+            public String getId() {
+                return "networkCreateReceipeBtn";
+            }
+
+            @Override
+            public void onEventDo() {
+                
             }
         });
         
