@@ -34,11 +34,11 @@ public class CatalogWorker {
     }
     
     //Создание каталога
-    public String createCatalog(String catalogName, String descriptionId) throws NotFoundBean
+    public String createCatalog(String catalogName, String description) throws NotFoundBean
     {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("catalogName", catalogName);
-        parameters.add("descriptionId", descriptionId);
+        parameters.add("description", description);
         BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
         RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
         HttpHeaders headers = new HttpHeaders();

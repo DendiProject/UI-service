@@ -182,13 +182,13 @@ public class Graf extends AbstractJavaScriptComponent {
     public void deleteNode(String deleteNodesId){
         for(int i = 0; i< getState().nodes.size();i++)
         {
-            if(getState().nodes.get(i).getNodeId() == deleteNodesId)
+            if(getState().nodes.get(i).getNodeId().equals(deleteNodesId))
             {
                 //Удаление связей этой ноды
                 for(int j=0; j<getState().edges.size();j++)
                 {
-                    if(getState().edges.get(j).getStartNodeId() == deleteNodesId | 
-                            getState().edges.get(j).getEndNodeId() == deleteNodesId){
+                    if(getState().edges.get(j).getStartNodeId().equals(deleteNodesId) | 
+                            getState().edges.get(j).getEndNodeId().equals(deleteNodesId)){
                         getState().edges.remove(j);
                     }
                 }

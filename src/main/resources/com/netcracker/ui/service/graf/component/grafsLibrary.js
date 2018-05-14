@@ -264,6 +264,7 @@ mylibrary.MyGraf = function (element) {
         {
             var id = network.getSelectedNodes()[0];
             deleteNodeSideJS(id);
+            return;
         }
         //Если пользователь хочет удалить связь, то он кликает именно на ней и нода
         //в таком случае не выделится

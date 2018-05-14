@@ -36,12 +36,12 @@ public class ReceipeWorker {
         //http://localhost:8083/
     }
     
-    public ShortReceipe addReceipe(String name, String descriptionId, 
+    public ShortReceipe addReceipe(String name, String description, 
             String catalogId, String userId, boolean isPublic) 
             throws NotFoundBean, IOException{
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("name", name);
-        parameters.add("descriptionId", descriptionId);
+        parameters.add("description", description);
         parameters.add("catalogId", catalogId);
         parameters.add("userId", userId);
         BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
