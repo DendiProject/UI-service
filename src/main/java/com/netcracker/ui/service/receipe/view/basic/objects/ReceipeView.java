@@ -99,6 +99,17 @@ public class ReceipeView implements View{
                     //addWindow(addStepForm);
                 }
             });
+            clickListener.addButtonClickListener(new ClickListener() {
+                @Override
+                public String getId() {
+                    return "networkCreateReceipeBtn";
+                }
+
+                @Override
+                public void onEventDo() {
+                    graf.getGmFacade().getGmReceipeFacade().setReceipeCompleted(proxy.getReceipeId());
+                }
+            });
         }
         catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);
