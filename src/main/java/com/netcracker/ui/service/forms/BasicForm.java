@@ -40,7 +40,6 @@ public class BasicForm extends Window
       try {
         BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
         ContentManagerController controller = bfCMC.getBean(ContentManagerController.class);
-       // FileResource dogPicture = new FileResource(new File(controller.getImage("dog")));
         img.setSource(new ExternalResource(controller.getImage("dog")));      
         img.setHeight("400");
         image.setWidth("400px");

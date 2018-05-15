@@ -1,8 +1,10 @@
 spring:
   application:
     name: user-service
-server.ip: localhost
-server.port: 8008
+server.ip: 
+  92.53.91.47
+server.port: 
+  8008
 idp:
   url: localhost:8181
 ui:

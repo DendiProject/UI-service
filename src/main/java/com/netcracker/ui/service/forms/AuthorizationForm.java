@@ -93,11 +93,13 @@ public class AuthorizationForm extends BasicForm {
             n.show(Page.getCurrent());
             Thread.sleep(1300);
             AuthorizationForm.this.close();
-            //Page.getCurrent().reload();
+            Page.getCurrent().reload();
+            break;
           case 409:
             Notification q = new Notification("Вы ввели неверную почту или пароль");
             q.setDelayMsec(1300);
             q.show(Page.getCurrent());
+            break;
         }   
 
         postRequest.wr.close();
