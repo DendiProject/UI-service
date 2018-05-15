@@ -9,6 +9,7 @@ import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.forms.listeners.AddStepListener;
+import com.netcracker.ui.service.forms.listeners.NoReadyReceipeListener;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.vaadin.server.ExternalResource;
@@ -28,10 +29,8 @@ public class NoReadyReceipeForm  extends Window {
     private String stepLable = null;
     private String stepDescription = null;
     
-    public NoReadyReceipeForm() 
+    public NoReadyReceipeForm(NoReadyReceipeListener listener) 
     {         
-       
-        
         ResponsiveLayout mainLayout = new ResponsiveLayout();
         CustomLayout mainCustomLayout = new CustomLayout("NoReadyReceipeForm");
         mainLayout.setHeight("100%");
@@ -50,7 +49,8 @@ public class NoReadyReceipeForm  extends Window {
         okBtn.setHeight("100%");
         okBtn.setWidth("100%");
         okBtn.addClickListener(e -> {
-            
+            listener.onCreate(true, "1111");
+            this.close();
         });
         mainCustomLayout.addComponent(okBtn,"noReadyReceipeViewOkBtn");
         
@@ -58,7 +58,8 @@ public class NoReadyReceipeForm  extends Window {
         cancelBtn.setHeight("100%");
         cancelBtn.setWidth("100%");
         cancelBtn.addClickListener(e -> {
-            
+            listener.onCreate(false, "");
+            this.close();
         });
         mainCustomLayout.addComponent(cancelBtn,"noReadyReceipeViewCancelBtn");
        

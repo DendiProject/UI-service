@@ -84,7 +84,7 @@ public class ReceipeView implements View{
 
                 @Override
                 public void onEventDo() {
-                    /*AddStepForm addStepForm = new AddStepForm((node) -> {
+                    AddStepForm addStepForm = new AddStepForm((node) -> {
                         //Формирование JSON объекта  
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("newNodesId", node.getNodeId());
@@ -98,9 +98,7 @@ public class ReceipeView implements View{
                         graf.getAddNodeEvent().handleEvent(jsonObject);
                     }, proxy.getReceipeId(), proxy.getUserId());
                     listener.onCreate(addStepForm);
-                    //addWindow(addStepForm);*/
-                    NoReadyReceipeForm noReadyReceipeForm  = new NoReadyReceipeForm();
-                    listener.onCreate(noReadyReceipeForm);
+                    //addWindow(addStepForm);
                 }
             });
             clickListener.addButtonClickListener(new ClickListener() {
