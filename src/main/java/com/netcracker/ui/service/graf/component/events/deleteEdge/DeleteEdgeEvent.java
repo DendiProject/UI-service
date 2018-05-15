@@ -7,6 +7,8 @@ package com.netcracker.ui.service.graf.component.events.deleteEdge;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Graf;
 import com.netcracker.ui.service.graf.component.eventTypes.EventType;
 import com.netcracker.ui.service.graf.component.events.BasicGrafEventHandler;
@@ -40,15 +42,18 @@ public class DeleteEdgeEvent extends BasicGrafEventHandler{
             if(state.stateReady)
             {
                 //Вначале нужно сделать запрос на GM для проверки возможности удаления связи
-                if(true){
+                Edge oldEdge = new Edge(state.deleteEdgeFrom, state.deleteEdgeTo);
+                try{
+                    graf.getGmFacade().getGmEdgeFacade().deleteEdge(oldEdge);
                     graf.deleteEdge(state.deleteEdgeFrom, state.deleteEdgeTo);
                     graf.setEvent(EventType.deleteEdge, arguments.toJson());
                     //Оповещаю всех слушателей
                     graf.notifyEventListeners(graf.getDeleteEdgeListeners());
                 }
-                else{
+                catch(Exception exception){
                     //Иначе уведомление пользователя о том, что связь не может 
                     //быть удалена
+                    ExceptionHandler.getInstance().runExceptionhandling(exception);
                 }
             }
             else

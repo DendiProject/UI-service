@@ -7,6 +7,8 @@ package com.netcracker.ui.service.graf.component.events.addEdge;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Graf;
 import com.netcracker.ui.service.graf.component.eventTypes.EventType;
 import com.netcracker.ui.service.graf.component.events.BasicGrafEventHandler;
@@ -41,7 +43,9 @@ public class AddEdgeEvent extends BasicGrafEventHandler{
             if(state.stateReady)
             {
                 //Вначале нужно сделать запрос на GM для проверки возможности создания связи
-                if(true){
+                Edge newEdge = new Edge(state.newEdgesFrom, state.newEdgesTo);
+                try{
+                    graf.getGmFacade().getGmEdgeFacade().addEdge(newEdge);
                     graf.addEdge(state.newEdgesFrom, state.newEdgesTo);
                     //JSONObject eventStateInJSONFormat = new JSONObject();
                     //eventStateInJSONFormat = arguments.toJson();
@@ -49,13 +53,10 @@ public class AddEdgeEvent extends BasicGrafEventHandler{
                     //Оповещаю всех слушателей
                     graf.notifyEventListeners(graf.getAddEdgeListeners());
                 }
-                else{
+                catch(Exception exception){
                     //Иначе уведомление пользователя о том, что связь не может 
                     //быть создана
-                    //JSONObject eventStateInJSONFormat = new JSONObject();
-                    //eventStateInJSONFormat.put("deleteEdgeFrom", state.newEdgesFrom);
-                    //eventStateInJSONFormat.put("deleteEdgeTo", state.newEdgesTo);
-                    //graf.setEvent(EventType.deleteEdge, eventStateInJSONFormat.toString());
+                    ExceptionHandler.getInstance().runExceptionhandling(exception);
                 }
             }
             else

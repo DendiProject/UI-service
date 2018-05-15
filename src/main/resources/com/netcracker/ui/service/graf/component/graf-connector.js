@@ -37,7 +37,7 @@ function() {
             var state = JSON.parse(this.getState().eventStateInJSONFormat);
             mygraf.deleteNodeSideJAVA(state[0].deleteNodesId);
         }
-        this.getState().event = "";
+        //this.getState().event = "";
     };
 
     // Pass user interaction to the server-side

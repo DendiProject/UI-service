@@ -14,6 +14,8 @@ import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException
  * @author Artem
  */
 public interface Proxy {
-    Boolean connect() throws InternalServerError;
-    Object load() throws NotFoundBean,InternalServerError;//Выполнение запроса на бэкенд
+    Boolean connect();
+    Object load();//Выполнение запроса на бэкенд
+    String getUserId();
+    String getReceipeId();
 }

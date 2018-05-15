@@ -13,11 +13,14 @@ package com.netcracker.ui.service.graf.component.events.addNode;
 public class AddNodeState{
     public String newNodesId;
     public String newNodesLable;
+    public String newNodesDescription;
     public String newNodesImage;
     public int newNodesX;
     public int newNodesY;
     public boolean stateReady = false;
     private int numberOfNonEmptyFeelds = 0;
+    public String userId;
+    public String receipeId;
     
     public AddNodeState()
     {
@@ -25,7 +28,8 @@ public class AddNodeState{
     }
     
     public AddNodeState(String _newNodesId, String _newNodesLable, 
-            String _newNodesImage, int _newNodesX, int _newNodesY)
+            String _newNodesImage, int _newNodesX, int _newNodesY, 
+            String _userId, String _receipeId, String _newNodeDescription)
     {
         newNodesId = _newNodesId;
         newNodesLable = _newNodesLable;
@@ -33,6 +37,31 @@ public class AddNodeState{
         newNodesX = _newNodesX;
         newNodesY = _newNodesY;
         stateReady = true;
+        userId = _userId;
+        receipeId = _receipeId;
+        newNodesDescription = _newNodeDescription;
+    }
+    
+    public String getUserId()
+    {
+        return newNodesId;
+    }
+    
+    public void setUserId(String  userId)
+    {
+        this.userId = userId;
+        checkState();
+    }
+    
+    public String getReceipeId()
+    {
+        return newNodesId;
+    }
+    
+    public void setReceipeId(String  receipeId)
+    {
+        this.receipeId = receipeId;
+        checkState();
     }
     
     public String getNewNodesId()
@@ -93,7 +122,7 @@ public class AddNodeState{
     private void checkState()
     {
         numberOfNonEmptyFeelds++;
-        if(numberOfNonEmptyFeelds == 5)
+        if(numberOfNonEmptyFeelds == 7)
         {
             stateReady = true;
         }

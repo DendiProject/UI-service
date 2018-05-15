@@ -5,6 +5,9 @@
  */
 package com.netcracker.ui.service.graf.component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.graf.component.eventTypes.EventType;
 import com.netcracker.ui.service.graf.component.events.EventListener;
 import com.vaadin.annotations.JavaScript;
@@ -18,6 +21,7 @@ import com.netcracker.ui.service.graf.component.events.clickOnNode.ClickOnNodeEv
 import com.netcracker.ui.service.graf.component.events.deleteEdge.DeleteEdgeEvent;
 import com.netcracker.ui.service.graf.component.events.deleteNode.DeleteNodeEvent;
 import com.netcracker.ui.service.graf.component.events.editEdge.EditEdgeEvent;
+import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -32,15 +36,27 @@ import org.json.JSONObject;
 public class Graf extends AbstractJavaScriptComponent {
     
     //Массивы слушателей событий
-    private ArrayList<EventListener> clickOnNodeListeners;
-    private ArrayList<EventListener> addNodeListeners;
-    private ArrayList<EventListener> addEdgeListeners;
-    private ArrayList<EventListener> editEdgeListeners;
-    private ArrayList<EventListener> deleteEdgeListeners;
-    private ArrayList<EventListener> deleteNodeListeners;
-    private ArrayList<EventListener> initNodeListeners;
+    private ArrayList<EventListener> clickOnNodeListeners = new ArrayList<EventListener>();
+    private ArrayList<EventListener> addNodeListeners = new ArrayList<EventListener>();
+    private ArrayList<EventListener> addEdgeListeners = new ArrayList<EventListener>();
+    private ArrayList<EventListener> editEdgeListeners = new ArrayList<EventListener>();
+    private ArrayList<EventListener> deleteEdgeListeners = new ArrayList<EventListener>();
+    private ArrayList<EventListener> deleteNodeListeners = new ArrayList<EventListener>();
+    private ArrayList<EventListener> initNodeListeners = new ArrayList<EventListener>();
+    private AddNodeEvent addNodeEvent;
+    public String userId;
+    public String receipeId;
+    private GMFacade gmFacade;
     
     public Graf() {
+        try{
+            BeansFactory<GMFacade> bf = BeansFactory.getInstance();
+            GMFacade gmFacade = bf.getBean(GMFacade.class);
+            this.gmFacade = gmFacade;
+        }
+        catch(Exception exception){
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+        }
         //Конфигурирование цепочки обработчиков событий
         DeleteNodeEvent deleteNodeEvent = new DeleteNodeEvent(this);
         DeleteEdgeEvent deleteEdgeEvent = new DeleteEdgeEvent(this);
@@ -49,7 +65,7 @@ public class Graf extends AbstractJavaScriptComponent {
         editEdgeEvent.setNext(deleteEdgeEvent);
         AddEdgeEvent addEdgeEvent = new AddEdgeEvent(this);
         addEdgeEvent.setNext(editEdgeEvent);
-        AddNodeEvent addNodeEvent = new AddNodeEvent(this);
+        addNodeEvent = new AddNodeEvent(this);
         addNodeEvent.setNext(addEdgeEvent);
         ClickOnNodeEvent firstPartCheinOfHandlersEvent = new ClickOnNodeEvent(this);
         firstPartCheinOfHandlersEvent.setNext(addNodeEvent);
@@ -64,6 +80,14 @@ public class Graf extends AbstractJavaScriptComponent {
         getState().nodes = new ArrayList<>();
         getState().edges = new ArrayList<>();
         clickOnNodeListeners = new ArrayList<>();
+    }
+
+    public AddNodeEvent getAddNodeEvent() {
+        return addNodeEvent;
+    }
+
+    public GMFacade getGmFacade() {
+        return gmFacade;
     }
     
     //Установка флага события, он обрабатывается на js и затем сбрасывается 
@@ -106,16 +130,19 @@ public class Graf extends AbstractJavaScriptComponent {
     //Добавление ноды с обработчиком клика, вызывается
     //через изменение стейта со стороны js
     public void addNode(String newNodesimageUrl, String newNodesLabel, 
-            String newNodesId, HandlerForClickingTheNode handler) {
-        Node node = new Node(newNodesimageUrl, newNodesId, newNodesLabel);
+            String newNodesId, String newNodeDescription,
+            HandlerForClickingTheNode handler) {
+        Node node = new Node(newNodesId, newNodeDescription, newNodesimageUrl, 
+                newNodesLabel);
         node.setHandlerForClickingTheNode(handler);
         getState().nodes.add(node);
     }
     
     //Добавление ноды, вызывается через изменение стейта со стороны js
     public void addNode(String newNodesimageUrl, String newNodesLabel, 
-            String newNodesId) {
-        Node node = new Node(newNodesimageUrl, newNodesId, newNodesLabel);
+            String newNodesId, String newNodeDescription) {
+        Node node = new Node(newNodesId, newNodeDescription, newNodesimageUrl, 
+                newNodesLabel);
         getState().nodes.add(node);
     }
     
@@ -160,13 +187,13 @@ public class Graf extends AbstractJavaScriptComponent {
     public void deleteNode(String deleteNodesId){
         for(int i = 0; i< getState().nodes.size();i++)
         {
-            if(getState().nodes.get(i).getNodeId() == deleteNodesId)
+            if(getState().nodes.get(i).getNodeId().equals(deleteNodesId))
             {
                 //Удаление связей этой ноды
                 for(int j=0; j<getState().edges.size();j++)
                 {
-                    if(getState().edges.get(j).getStartNodeId() == deleteNodesId | 
-                            getState().edges.get(j).getEndNodeId() == deleteNodesId){
+                    if(getState().edges.get(j).getStartNodeId().equals(deleteNodesId) | 
+                            getState().edges.get(j).getEndNodeId().equals(deleteNodesId)){
                         getState().edges.remove(j);
                     }
                 }
@@ -177,17 +204,20 @@ public class Graf extends AbstractJavaScriptComponent {
     }
     
     public void setInitCollections(ArrayList<Node> nodesCollection, 
-            ArrayList<Edge> edgesCollection) {
+            ArrayList<Edge> edgesCollection, String userId, String receipeId) {
         getState().nodes = nodesCollection;
         getState().edges = edgesCollection;
         setEvent(EventType.init,
-                convertInitDataToRighFormat(nodesCollection, edgesCollection));
+                convertInitDataToRighFormat(nodesCollection, edgesCollection, 
+                        userId, receipeId));
+        this.userId = userId;
+        this.receipeId = receipeId;
     }
     
     //Вернет строку в Json формате, с именами переменных, требуемых на 
     //стороне JS  
     private String convertInitDataToRighFormat(ArrayList<Node> nodesCollection, 
-            ArrayList<Edge> edgesCollection)
+            ArrayList<Edge> edgesCollection, String userId, String receipeId)
     {
         JSONObject result =new JSONObject();
         JSONArray nodes = new JSONArray();
@@ -214,6 +244,8 @@ public class Graf extends AbstractJavaScriptComponent {
         
         result.put("nodes", nodes);
         result.put("edges", edges);
+        result.put("receipeId", receipeId);
+        result.put("userId", userId);
         
         return result.toString();
     }
