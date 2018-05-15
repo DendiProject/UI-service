@@ -15,6 +15,7 @@ import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.forms.AddStepForm;
+import com.netcracker.ui.service.forms.NoReadyReceipeForm;
 import com.netcracker.ui.service.forms.listeners.LoadFormListener;
 import com.netcracker.ui.service.graf.component.Graf;
 import com.netcracker.ui.service.graf.component.eventTypes.EventType;
@@ -83,7 +84,7 @@ public class ReceipeView implements View{
 
                 @Override
                 public void onEventDo() {
-                    AddStepForm addStepForm = new AddStepForm((node) -> {
+                    /*AddStepForm addStepForm = new AddStepForm((node) -> {
                         //Формирование JSON объекта  
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("newNodesId", node.getNodeId());
@@ -97,7 +98,9 @@ public class ReceipeView implements View{
                         graf.getAddNodeEvent().handleEvent(jsonObject);
                     }, proxy.getReceipeId(), proxy.getUserId());
                     listener.onCreate(addStepForm);
-                    //addWindow(addStepForm);
+                    //addWindow(addStepForm);*/
+                    NoReadyReceipeForm noReadyReceipeForm  = new NoReadyReceipeForm();
+                    listener.onCreate(noReadyReceipeForm);
                 }
             });
             clickListener.addButtonClickListener(new ClickListener() {
