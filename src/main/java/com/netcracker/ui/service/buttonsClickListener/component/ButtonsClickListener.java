@@ -16,7 +16,6 @@ import java.util.ArrayList;
  * Компонент, позволяющий задавать действия на клики по div из блока с контентом
  * @author Artem
  */
-@UIScope
 @JavaScript({"buttonsClickListenerLibrary.js", "buttonsClickListener-connector.js"})
 public class ButtonsClickListener  extends AbstractJavaScriptComponent {
 
@@ -46,7 +45,7 @@ public class ButtonsClickListener  extends AbstractJavaScriptComponent {
     
     public void addButtonClickListener(ClickListener clickListener)
     {
-        listeners.add(clickListener);
+          listeners.add(clickListener);
     }
     
     public String getValue(){

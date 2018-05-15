@@ -14,6 +14,9 @@ import com.jarektoro.responsivelayout.ResponsiveRow;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
 import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
+import com.netcracker.ui.service.buttonsClickListener.component.SessionStorageHelper;
+import com.netcracker.ui.service.components.PostUserData;
+import com.netcracker.ui.service.components.Properties;
 import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.netcracker.ui.service.security.StartupHousekeeper;
 import com.netcracker.ui.service.content.handler.ContentManagerController;
@@ -42,6 +45,7 @@ import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeStore;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeView;
 import com.vaadin.annotations.Theme;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.Styles;
@@ -66,6 +70,7 @@ import org.springframework.util.MultiValueMap;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.Upload;
+import com.vaadin.ui.Window;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.FileNotFoundException;
@@ -73,10 +78,15 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.controller;
 
 /**
  *
@@ -84,8 +94,6 @@ import org.springframework.web.client.ResourceAccessException;
  */
 @Theme("centralViewTheme")
 @SpringUI
-@UIScope
-@SpringComponent
 public class UiServiceMainUI extends UI {
 
   BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
@@ -118,7 +126,9 @@ public class UiServiceMainUI extends UI {
 
     mainLayout.setSizeFull();
     setContent(mainLayout);
-
+    TextField fName = new TextField();
+    TextField sName = new TextField();
+    TextField email = new TextField();
     //Создание и добавление видов в навигатор
     ArrayList<View> newViews = new ArrayList<>();
 
@@ -127,7 +137,11 @@ public class UiServiceMainUI extends UI {
       public void draw(LinkedMultiValueMap<String, String> parameters) {
         mainLayer.contentRowLayout.removeAllComponents();
         addSliderComponent(mainLayer.contentRowLayout);
-        addTopRecepiesComponent(mainLayer.contentRowLayout);
+        try {
+          addTopRecepiesComponent(mainLayer.contentRowLayout);
+        } catch (Exception ex) {
+          java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
       }
     });
 
@@ -188,18 +202,15 @@ public class UiServiceMainUI extends UI {
         ShortViewOfReceipeLayout.setHeight("100%");
         mainLayer.contentRowLayout.setHeight("100%");
         mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
-        ShortViewOfReceipeLayout.addComponent(new TextField(), "userPageNameFieldAndLable");
-        ShortViewOfReceipeLayout.addComponent(new TextField(), "userPageSecondNameFieldAndLable");
-        ShortViewOfReceipeLayout.addComponent(new Label("Nickname"), "userPageNicknameFieldAndLable");
-        ShortViewOfReceipeLayout.addComponent(new Label("Mail"), "userPageMailFieldAndLable");
+        
+         
+        ShortViewOfReceipeLayout.addComponent(fName, "userPageNameFieldAndLable");
+        ShortViewOfReceipeLayout.addComponent(sName, "userPageSecondNameFieldAndLable");
+        ShortViewOfReceipeLayout.addComponent(email, "userPageMailFieldAndLable");
         ShortViewOfReceipeLayout.addComponent(new Label("BirthDate"), "userPageBirthDateFieldAndLable");
 
         TextArea area = new TextArea();
-        area.setValue("testt esttestte sttesttesttesttest testtesttest"
-                + "testtestt esttesttesttesttesttesttesttesttest"
-                + "testt esttesttesttesttest testtestt esttesttest"
-                + "testtesttestte sttest testtest testtesttest"
-                + "testtestt esttest testtesttesttesttest");
+        area.setValue("");
         area.setHeight("100%");
         area.setWidth("100%");
         area.setWordWrap(true);
@@ -333,7 +344,6 @@ public class UiServiceMainUI extends UI {
           public void onEventClickDo() {
             AuthorizationForm modalWindow = new AuthorizationForm();
             addWindow(modalWindow);
-            getPage().setUriFragment("Main");
           }
 
         });
@@ -348,7 +358,30 @@ public class UiServiceMainUI extends UI {
           MenusButton userPageBtn = new MenusButton("Профиль", "iduserPage", new HandlerForClickingTheButton() {
             @Override
             public void onEventClickDo() {
-              getPage().setUriFragment("UserPage");
+              try {
+                getPage().setUriFragment("UserPage");
+//                BeansFactory<Properties> bfP = BeansFactory.getInstance();
+//                Properties p = bfP.getBean(Properties.class);
+//                BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
+//                RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
+//                UserDto dto =  restTemplate.getForObject("http://"+p.getIdpURL()+"/idpsecure/getUserData", UserDto.class);
+//                System.out.println(dto);
+////                getPage().setUriFragment("UserPage");
+////                
+////                BeansFactory<SecurityTokenHandler> bfSTH = BeansFactory.getInstance();
+////                SecurityTokenHandler tokenStore = bfSTH.getBean(SecurityTokenHandler.class);
+////                UserDto userInfo = new UserDto();
+////                CookieHandler ch = new CookieHandler();
+////
+////                userInfo.setId(new JWTHandler().readUserId(ch.getCookieByName("userInfo").getValue(), "test"));
+////                PostUserData post = new PostUserData("http://"+p.getIdpURL()+"/idpsecure/getUserData", userInfo, tokenStore.getToken());
+////                int response = post.con.getResponseCode();
+              } catch (Exception ex) {
+                java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
+              }
+      
+
+              
             }
 
           });
@@ -358,8 +391,10 @@ public class UiServiceMainUI extends UI {
             public void onEventClickDo() {
               CookieHandler ch = new CookieHandler();
               ch.getCookieForGuest();
+             
               getPage().setUriFragment("Main");
-              Page.getCurrent().reload();
+               Page.getCurrent().reload();
+              
             }
           });
 
@@ -373,11 +408,10 @@ public class UiServiceMainUI extends UI {
     } catch (Exception exception) {
       ExceptionHandler.getInstance().runExceptionhandling(exception);
     }
-
-    BeansFactory<ButtonsClickListener> bf = BeansFactory.getInstance();
-    ButtonsClickListener clickListener;
-
-    clickListener = bf.getBean(ButtonsClickListener.class);
+    
+    ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+    ButtonsClickListener clickListener = new SessionStorageHelper().getListener(attr);
+    
     clickListener.addButtonClickListener(new ClickListener() {
       @Override
       public String getId() {
@@ -411,7 +445,37 @@ public class UiServiceMainUI extends UI {
 
       @Override
       public void onEventDo() {
-        int i = 0;//Код писать сюда
+        try {
+          BeansFactory<Properties> bfP = BeansFactory.getInstance();
+          Properties p = bfP.getBean(Properties.class);
+          BeansFactory<SecurityTokenHandler> bfSTH = BeansFactory.getInstance();
+          SecurityTokenHandler tokenStore = bfSTH.getBean(SecurityTokenHandler.class);
+          UserDto userInfo = new UserDto();
+          CookieHandler ch = new CookieHandler();
+          
+          userInfo.setName(fName.getValue());
+          userInfo.setLastname(sName.getValue());
+          userInfo.setEmail(email.getValue());
+          userInfo.setId(new JWTHandler().readUserId(ch.getCookieByName("userInfo").getValue(), "test"));
+          PostUserData post = new PostUserData("http://"+p.getIdpURL()+"/idpsecure/saveUserData", userInfo, tokenStore.getToken());
+          int response = post.con.getResponseCode();
+          
+          switch (response){
+            case 200:
+              Notification n = new Notification("Данные успешно сохранены");
+              n.setDelayMsec(2000);
+              n.show(Page.getCurrent());
+              break;
+            case 415:
+              Notification q = new Notification("Вы ввели неверные данные");
+              q.setDelayMsec(2000);
+              q.show(Page.getCurrent());
+              break;
+          }
+          
+        } catch (Exception ex) {
+          java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
       }
     });
     clickListener.addButtonClickListener(new ClickListener() {
@@ -434,7 +498,8 @@ public class UiServiceMainUI extends UI {
       @Override
       public void onEventDo() {
         int i = 0;//Код писать сюда
-      }
+       
+    }
     });
     clickListener.addButtonClickListener(new ClickListener() {
       @Override
@@ -458,7 +523,7 @@ public class UiServiceMainUI extends UI {
     sliderRow.addColumn().withDisplayRules(12, 12, 12, 12).withComponent(sliderLayout);
   }
 
-  private void addTopRecepiesComponent(ResponsiveLayout contentRowLayout) {
+  private void addTopRecepiesComponent(ResponsiveLayout contentRowLayout) throws NotFoundBean {
     //Отрисовка заголовка топа рецептов
     ResponsiveRow recipeTitle = contentRowLayout.addRow();
     CustomLayout topRecipeTitleLayout = new CustomLayout("TopRecipeTitle");
@@ -467,6 +532,8 @@ public class UiServiceMainUI extends UI {
     //Задать количество по какому-либо другому параметру, например, по нажатию кнопки добавлять
     //еще несколько к имеющемуся списку
     for (int i = 0; i < 8; i++) {
+      BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
+      ContentManagerController controller = bfCMC.getBean(ContentManagerController.class);
       //Задание отступа между рецептами
       ResponsiveRow theDistanceBetweenRecipe = contentRowLayout.addRow();
       theDistanceBetweenRecipe.setHeight("30px");
@@ -474,7 +541,7 @@ public class UiServiceMainUI extends UI {
       //Отрисовка изображения рецепта
       ResponsiveRow recipeRow = contentRowLayout.addRow();
       Image topImage = new Image();
-      topImage.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/cake.png")));
+      topImage.setSource(new ExternalResource(controller.getImage("cake")));
       topImage.setHeight("70%");
       topImage.setWidth("100%");
       recipeRow.addColumn().withDisplayRules(2, 2, 2, 2).withComponent(topImage);
@@ -502,5 +569,5 @@ public class UiServiceMainUI extends UI {
     theDistanceBetweenBottomAndRecipes.setHeight("60px");
     theDistanceBetweenBottomAndRecipes.addColumn().withDisplayRules(12, 12, 12, 12);
   }
-
+  
 }
