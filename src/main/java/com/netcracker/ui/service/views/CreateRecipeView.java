@@ -19,12 +19,15 @@ import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.receipe.view.basic.objects.Tag;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import java.io.File;
@@ -48,6 +51,7 @@ public class CreateRecipeView {
     private String descriptionCatalog = null;
     private String descriptionRecipe = null; 
     private boolean isPublic = true;
+    private boolean createNewCatalog = false;
     private List<Tag> tegs = null;
     CreateReceipeListener listener;
     private boolean noListenCatalog = false;
@@ -70,9 +74,9 @@ public class CreateRecipeView {
         mainCustomLayout.addComponent(image, "CreateReceipesImage");
         mainCustomLayout.addComponent(new Label("Предустановленный Каталог"),"createReceipeLableCatalog");
         mainCustomLayout.addComponent(new Label("Новый Каталог"),"createReceipeLableCatalog2");
-        mainCustomLayout.addComponent(new Label("Описание каталогa"),"createReceipeLableDescriptionCatalog");
         mainCustomLayout.addComponent(new Label("Описание рецепта"),"createReceipeLableDescriptionRecipe");
-        mainCustomLayout.addComponent(new Label("Название"),"createReceipeLableReceipeName");
+        mainCustomLayout.addComponent(new Label("Название рецепта"),"createReceipeLableReceipeName");
+        mainCustomLayout.addComponent(new Label("Доступ"),"createReceipeLablePublicOrPrivate");
         mainCustomLayout.addComponent(new Label("Описание"),"createReceipeLableDescription");
         mainCustomLayout.addComponent(new Label("Теги"),"createReceipeLableTags");
         tegs = new ArrayList<>();
@@ -89,7 +93,6 @@ public class CreateRecipeView {
                 descriptionCatalog = null;
             }
         });
-        mainCustomLayout.addComponent(catalogArea,"createReceipeInputDescriptionCatalog");
         ComboBox catalogCB = new ComboBox();
         
         
@@ -99,6 +102,8 @@ public class CreateRecipeView {
         
         catalogCB.setItems("Тест1", "Тест2", "Тест3", "Тест4");
         TextField receipesCatalog = new TextField();
+        CheckBox useNewCatalog = new CheckBox("Создать новый");
+        mainCustomLayout.addComponent(catalogCB,"createReceipeInputCatalog");
         catalogCB.addValueChangeListener((event) -> {
             if(event.getValue() != null){
                 if(!event.getValue().toString().equals("")){
@@ -115,7 +120,7 @@ public class CreateRecipeView {
         });
         catalogCB.setWidth("100%");
         catalogCB.setHeight("100%");
-        mainCustomLayout.addComponent(catalogCB,"createReceipeInputCatalog");
+        //mainCustomLayout.addComponent(catalogCB,"createReceipeInputCatalog");
         receipesCatalog.setWidth("100%");
         receipesCatalog.setHeight("100%");
         receipesCatalog.addValueChangeListener((event) -> {
@@ -129,7 +134,7 @@ public class CreateRecipeView {
                 catalogName = null;
             }
         });
-        mainCustomLayout.addComponent(receipesCatalog,"createReceipeInputCatalog2");
+        mainCustomLayout.addComponent(useNewCatalog,"createReceipeInputCatalog2");
         TextField receipesName = new TextField();
         receipesName.setWidth("100%");
         receipesName.setHeight("100%");
@@ -157,6 +162,25 @@ public class CreateRecipeView {
             }
         });
         mainCustomLayout.addComponent(recipeArea,"createReceipeInputDescriptionRecipe");
+        
+        useNewCatalog.addValueChangeListener((event) -> {
+            if(event.getValue()){
+                mainCustomLayout.addComponent(receipesCatalog,"createReceipeInputCatalog");
+                mainCustomLayout.addComponent(new Label("Описание нового каталогa"),"createReceipeLableDescriptionCatalog");
+                mainCustomLayout.addComponent(catalogArea,"createReceipeInputDescriptionCatalog");
+                mainCustomLayout.addComponent(new Label("Название нового каталога"),"createReceipeLableCatalog");
+                createNewCatalog = event.getValue();
+                catalogName = null;
+            }
+            else{
+                mainCustomLayout.addComponent(catalogCB,"createReceipeInputCatalog");
+                mainCustomLayout.addComponent(new Label("Предустановленный Каталог"),"createReceipeLableCatalog");
+                mainCustomLayout.addComponent(new Label(""),"createReceipeLableDescriptionCatalog");
+                mainCustomLayout.addComponent(new Label(""),"createReceipeInputDescriptionCatalog");
+                createNewCatalog = event.getValue();
+            }
+        });
+        
         ComboBox publicOrPrivateBox = new ComboBox();
         publicOrPrivateBox.addValueChangeListener((event) -> {
             if(event.getValue().equals("Публичный")){
@@ -196,27 +220,59 @@ public class CreateRecipeView {
                     BeansFactory<GMFacade> bf = BeansFactory.getInstance();
                     try {
                         GMFacade gmFacade = bf.getBean(GMFacade.class);
-                        if(catalogName != null && descriptionCatalog != null){
+                        if(catalogName != null){
+                            if(createNewCatalog == false | 
+                                    descriptionCatalog != null){
+                                    catalogId = gmFacade.getGmCatalogFacade().
+                                            createCatalog(catalogName, 
+                                                    descriptionCatalog);
+                                if(recipeName != null && 
+                                        descriptionRecipe != null && 
+                                        catalogId != null && userId!= null){
+                                            recipeId = gmFacade.
+                                                    getGmReceipeFacade().
+                                                    addReceipe(recipeName, 
+                                                            descriptionRecipe, 
+                                                            catalogId,userId, 
+                                                            isPublic).
+                                                    getReceipeId();
 
-                            catalogId = gmFacade.getGmCatalogFacade().createCatalog(
-                                    catalogName, descriptionCatalog);
-                            if(recipeName != null && descriptionRecipe != null && 
-                                    catalogId != null && userId!= null){
+                                    //Добавление всех тегов
+                                    for(int i=0; i<tegs.size();i++){
+                                        gmFacade.getGmTagFacade().
+                                                addTagToReceipe(recipeId, 
+                                                tegs.get(i).getName());
+                                    }
 
-                                recipeId = gmFacade.getGmReceipeFacade().addReceipe(
-                                        recipeName, descriptionRecipe, catalogId, 
-                                        userId, isPublic).getReceipeId();
-
-                                //Добавление всех тегов
-                                for(int i=0; i<tegs.size();i++){
-                                    gmFacade.getGmTagFacade().addTagToReceipe(recipeId, 
-                                            tegs.get(i).getName());
+                                    if(recipeId != null){
+                                        listener.onCreate(recipeId, userId);
+                                    }
                                 }
-
-                                if(recipeId != null){
-                                    listener.onCreate(recipeId, userId);
+                                else{
+                                    new Notification("This is a error",
+                                    "Пожалуйста, проверьте, возможно, Вы не "
+                                            + "заполнили поля с название рецепта "
+                                            + "или его описанием",
+                                    Notification.Type.ERROR_MESSAGE, true)
+                                    .show(Page.getCurrent());
                                 }
                             }
+                            else{
+                                new Notification("This is a error",
+                                    "Пожалуйста, введите описание нового "
+                                            + "каталога",
+                                    Notification.Type.ERROR_MESSAGE, true)
+                                .show(Page.getCurrent());
+                            }
+                        }
+                        else
+                        {
+                            new Notification("This is a error",
+                                    "Пожалуйста, Введите новое название "
+                                            + "каталога или выберите его из "
+                                            + "спика",
+                                    Notification.Type.ERROR_MESSAGE, true)
+                            .show(Page.getCurrent());
                         }
                     }
                     catch (NotFoundBean exception) {
