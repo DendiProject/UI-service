@@ -28,6 +28,7 @@ import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.navigator.NotFound;
 import com.netcracker.ui.service.forms.AddStepForm;
 import com.netcracker.ui.service.forms.CreateReceipeForm;
+import com.netcracker.ui.service.forms.NoReadyReceipeForm;
 import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
 import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Node;
@@ -38,6 +39,7 @@ import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.netcracker.ui.service.navigator.Navigator;
 import com.netcracker.ui.service.navigator.View;
 import com.netcracker.ui.service.receipe.view.basic.objects.Catalog;
+import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeDataConverter;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeStore;
@@ -61,6 +63,7 @@ import java.util.List;
 import javax.servlet.http.Cookie;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
 import com.netcracker.ui.service.receipe.view.basic.objects.Tag;
+import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.GraphDto;
 import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ReceipeInformation;
 import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortReceipe;
 import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ShortResource;
@@ -468,7 +471,18 @@ public class UiServiceMainUI extends UI{
             public void draw(LinkedMultiValueMap<String, String> parameters) {               
                 mainLayer.contentRowLayout.removeAllComponents();
                 mainLayer.contentRowLayout.setHeight("100%");
-                CreateRecipeView createRecipeView = new CreateRecipeView(
+                //Получение id пользователя
+                CookieHandler ch2 = new CookieHandler();
+                JWTHandler jwth2 = new JWTHandler();
+                Cookie userCookie2 = ch2.getCookieByName("userInfo");
+                String userId = jwth2.readUserId(userCookie2.getValue(), 
+                        "test");
+                
+                
+                String noFinishRecipeId = checkNonFinishRecipe(userId);
+                if(noFinishRecipeId == null){
+                    //Если нет незаконченного рецепта
+                    CreateRecipeView createRecipeView = new CreateRecipeView(
                         new CreateReceipeListener() {
                         @Override
                         public void onCreate(String recipeId, 
@@ -483,26 +497,89 @@ public class UiServiceMainUI extends UI{
                             ReceipeStore store = new ReceipeStore(converter);
 
                             ReceipeView view = new ReceipeView(proxy, store);
-                            try
-                            {
-                                view.reload();
-                                mainLayer.contentRowLayout.removeAllComponents();
-                                mainLayer.contentRowLayout = view.drawReceipe(
-                                        mainLayer.contentRowLayout, (form) -> {
-                                            addWindow(form);
-                                });
-                            }
-                            catch(Exception exception)
-                            {
-                                //ДОБАВИТЬ БИН HttpClientErrorException
-                                //ДОБАВИТЬ БИН NullPointerException
-                                ExceptionHandler.getInstance().
-                                        runExceptionhandling(exception);
-                            }
+                            Receipe emtyReceipe = new Receipe("", 
+                                    new ArrayList<Node>(), new ArrayList<>());
+                            view.setNewViewsData(emtyReceipe);
+                            mainLayer.contentRowLayout.
+                                    removeAllComponents();
+                            mainLayer.contentRowLayout = view.
+                                    drawReceipe(
+                                    mainLayer.contentRowLayout, (form) 
+                                            -> {addWindow(form);
+                            });
                         }
-                });
-                mainLayer.contentRowLayout.addComponent(
-                        createRecipeView.create());
+                    });
+                    mainLayer.contentRowLayout.addComponent(
+                            createRecipeView.create());
+                }
+                else{
+                    //Если есть незаконченный рецепт, то вызов окна
+                    NoReadyReceipeForm noReadyReceipeForm = new 
+                        NoReadyReceipeForm((resume, recipeId) -> {
+                            if(resume == true){
+                                ReceipeProxy proxy = new ReceipeProxy();
+                                proxy.setConfig("http://localhost:8083/", userId, recipeId);
+
+                                ReceipeDataConverter converter = 
+                                        new ReceipeDataConverter();
+                                ReceipeStore store = new ReceipeStore(converter);
+
+                                ReceipeView view = new ReceipeView(proxy, store);
+                                try{
+                                    view.reload();
+                                    mainLayer.contentRowLayout.
+                                            removeAllComponents();
+                                    mainLayer.contentRowLayout = view.
+                                            drawReceipe(
+                                            mainLayer.contentRowLayout, 
+                                                (form) -> {addWindow(form);
+                                    });
+                                }
+                                catch(Exception exception){
+                                    //ДОБАВИТЬ БИН HttpClientErrorException
+                                    //ДОБАВИТЬ БИН NullPointerException
+                                    ExceptionHandler.getInstance().
+                                            runExceptionhandling(exception);
+                                }
+                            }
+                            else{
+                                CreateRecipeView createRecipeView = 
+                                    new CreateRecipeView(
+                                    new CreateReceipeListener() {
+                                    @Override
+                                    public void onCreate(String recipeId, 
+                                            String userId) {
+                                        ReceipeProxy proxy = new ReceipeProxy();
+                                        proxy.setConfig(
+                                                "http://localhost:8083/", 
+                                                userId, recipeId);
+
+                                        ReceipeDataConverter converter = 
+                                                new ReceipeDataConverter();
+                                        ReceipeStore store = 
+                                                new ReceipeStore(converter);
+
+                                        ReceipeView view = 
+                                                new ReceipeView(proxy, store);
+                                        Receipe emtyReceipe = new Receipe("", 
+                                            new ArrayList<Node>(),
+                                                new ArrayList<>());
+                                            view.setNewViewsData(emtyReceipe);
+                                            mainLayer.contentRowLayout.
+                                                    removeAllComponents();
+                                            mainLayer.contentRowLayout = view.
+                                                    drawReceipe(
+                                                    mainLayer.contentRowLayout, (form) 
+                                                            -> {addWindow(form);
+                                            });
+                                    }
+                                });
+                                mainLayer.contentRowLayout.addComponent(
+                                        createRecipeView.create());
+                            }
+                    });
+                    addWindow(noReadyReceipeForm);
+                }
             }
         });
 
@@ -832,11 +909,18 @@ public class UiServiceMainUI extends UI{
             topRecipeLayout.addComponent(workingTimesLable,"working_times_lable");
             Button addRecipeToFavoritesButton = new Button("Добавить в избранное");
             topRecipeLayout.addComponent(addRecipeToFavoritesButton,"add_recipe_to_favorites_button");
-  }
+        }
 
         //Задание отступа до коцна страницы
         ResponsiveRow theDistanceBetweenBottomAndRecipes = contentRowLayout.addRow();
         theDistanceBetweenBottomAndRecipes.setHeight("60px");
         theDistanceBetweenBottomAndRecipes.addColumn().withDisplayRules(12, 12, 12, 12);
+    }
+    
+    //Функция проверки наличия незавершенного рецепта пользователем
+    //При успехе вернет рецепт с нодами
+    private String checkNonFinishRecipe(String userId){
+        //Добавить запрос на получение незавершенного рецепта
+        return "111111";
     }
 }
