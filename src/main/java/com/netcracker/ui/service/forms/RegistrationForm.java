@@ -22,6 +22,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.UI;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.File;
@@ -66,7 +67,7 @@ public class RegistrationForm extends BasicForm {
   BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
   SecurityTokenHandler tokenStore;
 
-  public RegistrationForm() {
+  public RegistrationForm(UI ui) {
     super();
     super.information.addComponent(email);
     super.information.addComponent(password);
@@ -103,6 +104,8 @@ public class RegistrationForm extends BasicForm {
               Notification n = new Notification("Вы зарегестрированы");
               n.show(Page.getCurrent());
               RegistrationForm.this.close();
+              ui.getPage().setUriFragment("Main");
+              Page.getCurrent().reload();
 
               PostUserData authRequest = new PostUserData(
                       "http://localhost:8181/idpsecure/authorization", userInfo, secureToken);
@@ -130,4 +133,6 @@ public class RegistrationForm extends BasicForm {
     }
     );
   }
+
+  
 }

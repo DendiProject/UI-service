@@ -63,8 +63,7 @@ public class Navigator {
         //Если пуcто, то отобразить дефолтный вид 
         if(path == null)
         {
-            CookieHandler ch = new CookieHandler();
-            ch.guestEnter();
+            
             load();
             return;
         }
@@ -104,7 +103,9 @@ public class Navigator {
             for(int i=0; i<views.size(); i++)
             {
                 if(views.get(i).name.equals(pageNameAndParameters[0]))
-                {
+                {   
+                    CookieHandler ch = new CookieHandler();
+                    ch.guestEnter();
                     views.get(i).draw(parameters);
                     return;
                 }

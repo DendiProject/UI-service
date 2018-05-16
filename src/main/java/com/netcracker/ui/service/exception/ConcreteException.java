@@ -33,6 +33,7 @@ public class ConcreteException {
         this.exceptionMessage = exceptionMessage;
         this.moreAboutException = moreAboutException;
         this.exceptionType = exceptionType;
+        
     }
     
     public Class getType()
@@ -67,7 +68,7 @@ public class ConcreteException {
         }
         if(exceptionType instanceof ErrorMessage){
             //Обработка логером
-            logger.error("Information: "+moreAboutException+"Exception message: "+exception.getMessage());
+            logger.error("Information: "+moreAboutException+"Exception message: "+exception.getMessage(), exception);
             //Обработка нотификацией
             if(!exceptionMessage.equals(""))
             {

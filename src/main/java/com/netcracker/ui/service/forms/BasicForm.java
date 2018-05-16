@@ -5,6 +5,10 @@
  */
 package com.netcracker.ui.service.forms;
 
+import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.content.handler.ContentManagerController;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinService;
 
@@ -14,6 +18,8 @@ import com.vaadin.ui.Image;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -31,8 +37,11 @@ public class BasicForm extends Window
 
     public BasicForm() 
     {         
-        img.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/Images/1.png")));      
-        img.setHeight("460");
+      try {
+        BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
+        ContentManagerController controller = bfCMC.getBean(ContentManagerController.class);
+        img.setSource(new ExternalResource(controller.getImage("dog")));      
+        img.setHeight("400");
         image.setWidth("400px");
         //image.setHeight("480px");
         image.setMargin(false);
@@ -45,5 +54,8 @@ public class BasicForm extends Window
         windowContent.setMargin(false);
         setResizable(false);
         setModal(true);   
+      } catch (NotFoundBean ex) {
+        Logger.getLogger(BasicForm.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
 }

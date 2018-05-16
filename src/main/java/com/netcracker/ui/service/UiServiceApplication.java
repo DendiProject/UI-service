@@ -8,6 +8,7 @@ import com.netcracker.ui.service.beans.factory.ButtonsClickListenerBean;
 import com.netcracker.ui.service.beans.factory.ContentManadgerControllerBean;
 import com.netcracker.ui.service.beans.factory.GMFacadeBean;
 import com.netcracker.ui.service.beans.factory.ObjectMapperBean;
+import com.netcracker.ui.service.beans.factory.PropertiesBean;
 import com.netcracker.ui.service.beans.factory.RestTemplateBean;
 import com.netcracker.ui.service.beans.factory.TokenStoreBean;
 import com.netcracker.ui.service.exception.ConcreteException;
@@ -47,6 +48,7 @@ public class UiServiceApplication {
         bf.addBean(new RestTemplateBean());
         bf.addBean(new ContentManadgerControllerBean());
         bf.addBean(new TokenStoreBean());
+        bf.addBean(new PropertiesBean());
         ExceptionHandler ex = ExceptionHandler.getInstance(); 
         ConcreteException connectionErrorException = 
                 new ConcreteException(new ConcreteExceptionHandler() {
