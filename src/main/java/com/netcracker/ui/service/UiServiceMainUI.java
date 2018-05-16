@@ -31,15 +31,21 @@ import com.netcracker.ui.service.exception.importanceTypes.BasicImportanceClass;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.navigator.NotFound;
+import com.netcracker.ui.service.forms.ExitForm;
+import com.netcracker.ui.service.forms.NoReadyReceipeForm;
+import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
+import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
 import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.netcracker.ui.service.navigator.Navigator;
 import com.netcracker.ui.service.navigator.View;
+import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeDataConverter;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeStore;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeView;
+import com.netcracker.ui.service.views.CreateRecipeView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
@@ -71,7 +77,7 @@ public class UiServiceMainUI extends UI {
 
   BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
   ContentManagerController contentManadgerController;
-
+  
   @Override
   protected void init(VaadinRequest vaadinRequest) {
     try {
@@ -180,38 +186,122 @@ public class UiServiceMainUI extends UI {
       }
     });
 
-    newViews.add(new View("Recept") {
-      @Override
-      public void draw(LinkedMultiValueMap<String, String> parameters) {
-        /*MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-                parameters.add("receipeId", "12345");
-                parameters.add("userId","1111");*/
+    newViews.add(new View("RecipeConfigurator") {
+            @Override
+            public void draw(LinkedMultiValueMap<String, String> parameters) {               
+                mainLayer.contentRowLayout.removeAllComponents();
+                mainLayer.contentRowLayout.setHeight("100%");
+                //Получение id пользователя
+                CookieHandler ch2 = new CookieHandler();
+                JWTHandler jwth2 = new JWTHandler();
+                Cookie userCookie2 = ch2.getCookieByName("userInfo");
+                String userId = jwth2.readUserId(userCookie2.getValue(), 
+                        "test");
+                
+                
+                String noFinishRecipeId = checkNonFinishRecipe(userId);
+                if(noFinishRecipeId == null){
+                    //Если нет незаконченного рецепта
+                    CreateRecipeView createRecipeView = new CreateRecipeView(
+                        new CreateReceipeListener() {
+                        @Override
+                        public void onCreate(String recipeId, 
+                                String userId) {
+                            ReceipeProxy proxy = new ReceipeProxy();
+                            proxy.setConfig(
+                                    "http://localhost:8083/", 
+                                    userId, recipeId);
 
-                ReceipeProxy proxy = new ReceipeProxy();
-                proxy.setConfig("http://localhost:8083/graph/gettestgraph", parameters.getFirst("userId"), parameters.getFirst("receipeId"));
+                            ReceipeDataConverter converter = 
+                                    new ReceipeDataConverter();
+                            ReceipeStore store = new ReceipeStore(converter);
 
-                ReceipeDataConverter converter = new ReceipeDataConverter();
-                ReceipeStore store = new ReceipeStore(converter);
-
-                ReceipeView view = new ReceipeView(proxy, store);
-                try
-                {
-                    view.reload();
-                    mainLayer.contentRowLayout.removeAllComponents();
-                    mainLayer.contentRowLayout = view.drawReceipe(mainLayer.
-                            contentRowLayout, (form) -> {
-                                addWindow(form);
+                            ReceipeView view = new ReceipeView(proxy, store);
+                            Receipe emtyReceipe = new Receipe("", 
+                                    new ArrayList<Node>(), new ArrayList<>());
+                            view.setNewViewsData(emtyReceipe);
+                            mainLayer.contentRowLayout.
+                                    removeAllComponents();
+                            mainLayer.contentRowLayout = view.
+                                    drawReceipe(
+                                    mainLayer.contentRowLayout, (form) 
+                                            -> {addWindow(form);
+                            });
+                        }
                     });
+                    mainLayer.contentRowLayout.addComponent(
+                            createRecipeView.create());
                 }
-                catch(Exception exception)
-                {
-                    //ДОБАВИТЬ БИН HttpClientErrorException
-                    //ДОБАВИТЬ БИН NullPointerException
-                    ExceptionHandler.getInstance().runExceptionhandling(exception);
+                else{
+                    //Если есть незаконченный рецепт, то вызов окна
+                    NoReadyReceipeForm noReadyReceipeForm = new 
+                        NoReadyReceipeForm((resume, recipeId) -> {
+                            if(resume == true){
+                                ReceipeProxy proxy = new ReceipeProxy();
+                                proxy.setConfig("http://localhost:8083/", userId, recipeId);
+
+                                ReceipeDataConverter converter = 
+                                        new ReceipeDataConverter();
+                                ReceipeStore store = new ReceipeStore(converter);
+
+                                ReceipeView view = new ReceipeView(proxy, store);
+                                try{
+                                    view.reload();
+                                    mainLayer.contentRowLayout.
+                                            removeAllComponents();
+                                    mainLayer.contentRowLayout = view.
+                                            drawReceipe(
+                                            mainLayer.contentRowLayout, 
+                                                (form) -> {addWindow(form);
+                                    });
+                                }
+                                catch(Exception exception){
+                                    //ДОБАВИТЬ БИН HttpClientErrorException
+                                    //ДОБАВИТЬ БИН NullPointerException
+                                    ExceptionHandler.getInstance().
+                                            runExceptionhandling(exception);
+                                }
+                            }
+                            else{
+                                CreateRecipeView createRecipeView = 
+                                    new CreateRecipeView(
+                                    new CreateReceipeListener() {
+                                    @Override
+                                    public void onCreate(String recipeId, 
+                                            String userId) {
+                                        ReceipeProxy proxy = new ReceipeProxy();
+                                        proxy.setConfig(
+                                                "http://localhost:8083/", 
+                                                userId, recipeId);
+
+                                        ReceipeDataConverter converter = 
+                                                new ReceipeDataConverter();
+                                        ReceipeStore store = 
+                                                new ReceipeStore(converter);
+
+                                        ReceipeView view = 
+                                                new ReceipeView(proxy, store);
+                                        Receipe emtyReceipe = new Receipe("", 
+                                            new ArrayList<Node>(),
+                                                new ArrayList<>());
+                                            view.setNewViewsData(emtyReceipe);
+                                            mainLayer.contentRowLayout.
+                                                    removeAllComponents();
+                                            mainLayer.contentRowLayout = view.
+                                                    drawReceipe(
+                                                    mainLayer.contentRowLayout, (form) 
+                                                            -> {addWindow(form);
+                                            });
+                                    }
+                                });
+                                mainLayer.contentRowLayout.addComponent(
+                                        createRecipeView.create());
+                            }
+                    });
+                    addWindow(noReadyReceipeForm);
                 }
             }
         });
-
 
     newViews.add(new View("Search") {
       @Override
@@ -229,8 +319,7 @@ public class UiServiceMainUI extends UI {
         ShortViewOfReceipeLayout.setHeight("100%");
         mainLayer.contentRowLayout.setHeight("100%");
         mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
-        
-         
+
         ShortViewOfReceipeLayout.addComponent(fName, "userPageNameFieldAndLable");
         ShortViewOfReceipeLayout.addComponent(sName, "userPageSecondNameFieldAndLable");
         ShortViewOfReceipeLayout.addComponent(email, "userPageMailFieldAndLable");
@@ -338,9 +427,8 @@ public class UiServiceMainUI extends UI {
     MenusButton recepsBtn = new MenusButton("Рецепты", "idRecept", new HandlerForClickingTheButton() {
       @Override
       public void onEventClickDo() {
-        setUrl("Recept?userId=1111&receipeId=12343");
+        setUrl("RecipeConfigurator");
       }
-
     });
 
     MenusSearchBar search = new MenusSearchBar("idSearch", new HandlerForClickingTheButton() {
@@ -348,40 +436,55 @@ public class UiServiceMainUI extends UI {
       public void onEventClickDo() {
         setUrl("Search");
       }
-
     });
 
     try {
       CookieHandler ch = new CookieHandler();
       JWTHandler jwth = new JWTHandler();
       Cookie userCookie = ch.getCookieByName("userInfo");
-      boolean user = jwth.checkUser(userCookie.getValue(), "test");
-      if (userCookie == null || user == false) {
+      if (userCookie == null) {
         MenusButton registration = new MenusButton("Регистрация", "idregistration", new HandlerForClickingTheButton() {
           @Override
           public void onEventClickDo() {
-            RegistrationForm modalWindow = new RegistrationForm();
+            RegistrationForm modalWindow = new RegistrationForm(UI.getCurrent());
             addWindow(modalWindow);
           }
-
         });
-
         MenusButton signIn = new MenusButton("Войти", "idSignin", new HandlerForClickingTheButton() {
           @Override
           public void onEventClickDo() {
-            AuthorizationForm modalWindow = new AuthorizationForm();
+            AuthorizationForm modalWindow = new AuthorizationForm(UI.getCurrent());
             addWindow(modalWindow);
           }
-
         });
-
         mainLayer.menu.addItem(mainBtn);
         mainLayer.menu.addItem(recepsBtn);
         mainLayer.menu.addItem(search);
+        mainLayer.menu.addItem(signIn);
         mainLayer.menu.addItem(registration);
-
       } else {
-        if (user) {
+        boolean user = jwth.checkUser(userCookie.getValue(), "test");
+        if (user == false) {
+          MenusButton registration = new MenusButton("Регистрация", "idregistration", new HandlerForClickingTheButton() {
+            @Override
+            public void onEventClickDo() {
+              RegistrationForm modalWindow = new RegistrationForm(UI.getCurrent());
+              addWindow(modalWindow);
+            }
+          });
+          MenusButton signIn = new MenusButton("Войти", "idSignin", new HandlerForClickingTheButton() {
+            @Override
+            public void onEventClickDo() {
+              AuthorizationForm modalWindow = new AuthorizationForm(UI.getCurrent());
+              addWindow(modalWindow);
+            }
+          });
+          mainLayer.menu.addItem(mainBtn);
+          mainLayer.menu.addItem(recepsBtn);
+          mainLayer.menu.addItem(search);
+          mainLayer.menu.addItem(signIn);
+          mainLayer.menu.addItem(registration);
+        } else {
           MenusButton userPageBtn = new MenusButton("Профиль", "iduserPage", new HandlerForClickingTheButton() {
             @Override
             public void onEventClickDo() {
@@ -406,11 +509,7 @@ public class UiServiceMainUI extends UI {
               } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
               }
-      
-
-              
             }
-
           });
 
           MenusButton exitBtn = new MenusButton("Выход", "idExit", new HandlerForClickingTheButton() {
@@ -418,10 +517,7 @@ public class UiServiceMainUI extends UI {
             public void onEventClickDo() {
               CookieHandler ch = new CookieHandler();
               ch.getCookieForGuest();
-             
-              getPage().setUriFragment("Main");
-               Page.getCurrent().reload();
-              
+              new ExitForm(UI.getCurrent());
             }
           });
 
@@ -435,10 +531,10 @@ public class UiServiceMainUI extends UI {
     } catch (Exception exception) {
       ExceptionHandler.getInstance().runExceptionhandling(exception);
     }
-    
+
     ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
     ButtonsClickListener clickListener = new SessionStorageHelper().getListener(attr);
-    
+
     clickListener.addButtonClickListener(new ClickListener() {
       @Override
       public String getId() {
@@ -447,7 +543,7 @@ public class UiServiceMainUI extends UI {
 
       @Override
       public void onEventDo() {
-        AuthorizationForm modalWindow = new AuthorizationForm();
+        AuthorizationForm modalWindow = new AuthorizationForm(UI.getCurrent());
         addWindow(modalWindow);
       }
     });
@@ -479,15 +575,15 @@ public class UiServiceMainUI extends UI {
           SecurityTokenHandler tokenStore = bfSTH.getBean(SecurityTokenHandler.class);
           UserDto userInfo = new UserDto();
           CookieHandler ch = new CookieHandler();
-          
+
           userInfo.setName(fName.getValue());
           userInfo.setLastname(sName.getValue());
           userInfo.setEmail(email.getValue());
           userInfo.setId(new JWTHandler().readUserId(ch.getCookieByName("userInfo").getValue(), "test"));
-          PostUserData post = new PostUserData("http://"+p.getIdpURL()+"/idpsecure/saveUserData", userInfo, tokenStore.getToken());
+          PostUserData post = new PostUserData("http://" + p.getIdpURL() + "/idpsecure/saveUserData", userInfo, tokenStore.getToken());
           int response = post.con.getResponseCode();
-          
-          switch (response){
+
+          switch (response) {
             case 200:
               Notification n = new Notification("Данные успешно сохранены");
               n.setDelayMsec(2000);
@@ -499,7 +595,7 @@ public class UiServiceMainUI extends UI {
               q.show(Page.getCurrent());
               break;
           }
-          
+
         } catch (Exception ex) {
           java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -510,7 +606,6 @@ public class UiServiceMainUI extends UI {
       public String getId() {
         return "userPageCancelBtn";
       }
-
 
       @Override
       public void onEventDo() {
@@ -526,8 +621,8 @@ public class UiServiceMainUI extends UI {
       @Override
       public void onEventDo() {
         int i = 0;//Код писать сюда
-       
-    }
+
+      }
     });
     clickListener.addButtonClickListener(new ClickListener() {
       @Override
@@ -596,6 +691,12 @@ public class UiServiceMainUI extends UI {
     ResponsiveRow theDistanceBetweenBottomAndRecipes = contentRowLayout.addRow();
     theDistanceBetweenBottomAndRecipes.setHeight("60px");
     theDistanceBetweenBottomAndRecipes.addColumn().withDisplayRules(12, 12, 12, 12);
-  }
-  
+  } 
+   //Функция проверки наличия незавершенного рецепта пользователем
+    //При успехе вернет рецепт с нодами 
+   private String checkNonFinishRecipe(String userId){
+        //Добавить запрос на получение незавершенного рецепта
+        return "111111";
+    }
+
 }

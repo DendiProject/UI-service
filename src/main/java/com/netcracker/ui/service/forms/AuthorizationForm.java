@@ -41,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import com.netcracker.ui.service.security.SecurityTokenHandler;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -66,7 +67,7 @@ public class AuthorizationForm extends BasicForm {
   SecurityTokenHandler tokenStore;
 
   // HttpClientBuilder builder = HttpClientBuilder.create().setDefaultCookieStore(cookieStore);
-  public AuthorizationForm() {
+  public AuthorizationForm(UI ui) {
     super();
     super.information.addComponent(email);
     super.information.addComponent(password);
@@ -93,7 +94,9 @@ public class AuthorizationForm extends BasicForm {
             n.show(Page.getCurrent());
             Thread.sleep(1300);
             AuthorizationForm.this.close();
+            ui.getPage().setUriFragment("Main");
             Page.getCurrent().reload();
+           
             break;
           case 409:
             Notification q = new Notification("Вы ввели неверную почту или пароль");
