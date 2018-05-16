@@ -31,7 +31,12 @@ import com.netcracker.ui.service.exception.importanceTypes.BasicImportanceClass;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.navigator.NotFound;
+
 import com.netcracker.ui.service.forms.ExitForm;
+
+import com.netcracker.ui.service.forms.AddStepForm;
+import com.netcracker.ui.service.forms.CreateReceipeForm;
+
 import com.netcracker.ui.service.forms.NoReadyReceipeForm;
 import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
 import com.netcracker.ui.service.graf.component.Node;
@@ -40,6 +45,10 @@ import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.netcracker.ui.service.navigator.Navigator;
 import com.netcracker.ui.service.navigator.View;
+
+
+import com.netcracker.ui.service.receipe.view.basic.objects.Catalog;
+
 import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeDataConverter;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
@@ -48,8 +57,10 @@ import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeView;
 import com.netcracker.ui.service.views.CreateRecipeView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.FileResource;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
@@ -66,6 +77,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.Cookie;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
+import java.io.File;
+
 
 /**
  *
@@ -300,6 +313,46 @@ public class UiServiceMainUI extends UI {
                     });
                     addWindow(noReadyReceipeForm);
                 }
+
+            }
+        });
+
+        newViews.add(new View("Search") {
+            @Override
+            public void draw(LinkedMultiValueMap<String, String> parameters) {
+                mainLayer.contentRowLayout.removeAllComponents();
+                mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Рецепты, удовлетворяющие условию поиска:"));
+            }
+        });
+
+        newViews.add(new View("UserPage") {
+           @Override
+            public void draw(LinkedMultiValueMap<String, String> parameters) {
+                CustomLayout ShortViewOfReceipeLayout = new CustomLayout("UserPageLayout");
+                ShortViewOfReceipeLayout.setHeight("100%");
+                mainLayer.contentRowLayout.setHeight("100%");
+                mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
+                ShortViewOfReceipeLayout.addComponent(new Label("Name"), "userPageNameFieldAndLable");
+                ShortViewOfReceipeLayout.addComponent(new Label("SecondName"), "userPageSecondNameFieldAndLable");
+                ShortViewOfReceipeLayout.addComponent(new Label("Nickname"), "userPageNicknameFieldAndLable");
+                ShortViewOfReceipeLayout.addComponent(new Label("Mail"), "userPageMailFieldAndLable");
+                ShortViewOfReceipeLayout.addComponent(new Label("BirthDate"), "userPageBirthDateFieldAndLable");
+                TextArea area = new TextArea();
+                area.setValue("testt esttestte sttesttesttesttest testtesttest"
+                        + "testtestt esttesttesttesttesttesttesttesttest"
+                        + "testt esttesttesttesttest testtestt esttesttest"
+                        + "testtesttestte sttest testtest testtesttest"
+                        + "testtestt esttest testtesttesttesttest");
+                area.setHeight("100%");
+                area.setWidth("100%");
+                area.setWordWrap(true);
+                ShortViewOfReceipeLayout.addComponent(area, "userPageAboutOneselfFieldAndLable");
+                
+                Image topImage = new Image();
+                topImage.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/cake.png")));
+                topImage.setHeight("100%");
+                topImage.setWidth("100%");
+                ShortViewOfReceipeLayout.addComponent(topImage, "userPageImage");
             }
         });
 
@@ -687,6 +740,9 @@ public class UiServiceMainUI extends UI {
       topRecipeLayout.addComponent(addRecipeToFavoritesButton, "add_recipe_to_favorites_button");
     }
 
+    
+
+
     //Задание отступа до коцна страницы
     ResponsiveRow theDistanceBetweenBottomAndRecipes = contentRowLayout.addRow();
     theDistanceBetweenBottomAndRecipes.setHeight("60px");
@@ -698,5 +754,5 @@ public class UiServiceMainUI extends UI {
         //Добавить запрос на получение незавершенного рецепта
         return "111111";
     }
-
 }
+
