@@ -86,8 +86,9 @@ public class UiServiceMainUI extends UI{
         JWTHandler jwth2 = new JWTHandler();
         Cookie userCookie2 = ch2.getCookieByName("userInfo");
         String userid = jwth2.readUserId(userCookie2.getValue(), "test");
-        GMFacade gm = new GMFacade("http://localhost:8083/");
-        Node n = new Node("", "description", "picture");
+        //String userid = "111111111111111";
+        GMFacade gm = new GMFacade("http://localhost:8083/");*/
+        /*Node n = new Node("", "description", "picture");
         n.setLabel("label");
         Node n2 = new Node("", "description2", "picture2");
         n.setLabel("label");
@@ -104,7 +105,7 @@ public class UiServiceMainUI extends UI{
         resource3.setResourceId(gm.getGmResourceFacade().addResource(resource3.getName(),resource3.getIngredientOrResource(),resource3.getMeasuring(), "user",resource3.getPictureId()));
         List<ShortResource> loaddresource = gm.getGmResourceFacade().getResourcesByLetters("nam", "resource", 5);
         String catalogId = gm.getGmCatalogFacade().createCatalog("for receipe22222", "description");
-        String receipeid = gm.getGmReceipeFacade().addReceipe("newReceipe", "very good", catalogId,userid, true).getReceipeId();
+        String receipeid = gm.getGmReceipeFacade().addReceipe("Какое-то длинное длинное длинное длинное длинное длинное длинное длинное длинное Название рецепта", "Какое-то длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное Описание рецепта", catalogId,userid, true).getReceipeId();
         String receiperes = gm.getGmReceipeFacade().addReceipeResource(receipeid, userid, resource1.getResourceId(), 5);
         Node node = gm.getGmNodeFacade().addNode(n,receipeid, userid);
         Node node2 = gm.getGmNodeFacade().addNode(n2,receipeid, userid);
@@ -114,9 +115,9 @@ public class UiServiceMainUI extends UI{
         List<Resource> testregdggdgdgd = gm.getGmNodeFacade().getOutputResources(node, "resource");
         Edge edge = new Edge(node.getNodeId(), node2.getNodeId());
         gm.getGmEdgeFacade().addEdge(edge);
-        gm.getGmReceipeFacade().setReceipeCompleted(receipeid);
-        ReceipeInformation receipeInformation = gm.getGmReceipeFacade().getReceipeInfo(receipeid);
-        List<ShortReceipe> loadingReceipe = gm.getGmReceipeFacade().getPublicAndCompletesReceipesByCatalogId(catalogId, 5);
+        gm.getGmReceipeFacade().setReceipeCompleted(receipeid);*/
+        //ReceipeInformation receipeInformation = gm.getGmReceipeFacade().getReceipeInfo("026de89d-c3de-4981-b198-900335dc550a");
+        /*List<ShortReceipe> loadingReceipe = gm.getGmReceipeFacade().getPublicAndCompletesReceipesByCatalogId(catalogId, 5);
         gm.getGmTagFacade().addTagToReceipe(receipeid, "name");
         //List<ShortReceipe> gdg = gm.getGmTagFacade().getReceipesByTag("name", 5);
         //List<Tag> gdggdgdg = gm.getGmTagFacade().getTagsByLetters("nam", 5);
@@ -128,6 +129,7 @@ public class UiServiceMainUI extends UI{
         JSONObject gdgdhh = gm.getGmGrafFacade().getTestGraf("1111", "111111");
         //Catalog catalog = gm.getGmCatalogFacade().getCatalog("for receipe22222");
         int d=0;*/
+        //int gdgdgdgd=0;
         
         try {
             CookieHandler ch = new CookieHandler();
@@ -147,6 +149,14 @@ public class UiServiceMainUI extends UI{
         catch (Exception exception) {
             ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
+    }
+    
+    private String getUserID(){
+        CookieHandler ch2 = new CookieHandler();
+        JWTHandler jwth2 = new JWTHandler();
+        Cookie userCookie2 = ch2.getCookieByName("userInfo");
+        String userid = jwth2.readUserId(userCookie2.getValue(), "test");
+        return userid;
     }
     
     private void setUrl(String path)
@@ -577,7 +587,7 @@ public class UiServiceMainUI extends UI{
                                 mainLayer.contentRowLayout.addComponent(
                                         createRecipeView.create());
                             }
-                    });
+                    }, noFinishRecipeId);
                     addWindow(noReadyReceipeForm);
                 }
             }
@@ -778,38 +788,12 @@ public class UiServiceMainUI extends UI{
         clickListener.addButtonClickListener(new ClickListener() {
             @Override
             public String getId() {
-                return "addReceipePartsBtn";
-            }
-
-            @Override
-            public void onEventDo() {
-                //AddStepForm addStepForm = new AddStepForm((node) -> {
-                    
-                //});
-                //addWindow(addStepForm);
-            }
-        });
-        clickListener.addButtonClickListener(new ClickListener() {
-            @Override
-            public String getId() {
                 return "addReceipeResoursesBtn";
             }
 
             @Override
             public void onEventDo() {
                 int i=0;
-            }
-        });
-        
-        clickListener.addButtonClickListener(new ClickListener() {
-            @Override
-            public String getId() {
-                return "networkCreateReceipeBtn";
-            }
-
-            @Override
-            public void onEventDo() {
-                
             }
         });
         
@@ -921,6 +905,6 @@ public class UiServiceMainUI extends UI{
     //При успехе вернет рецепт с нодами
     private String checkNonFinishRecipe(String userId){
         //Добавить запрос на получение незавершенного рецепта
-        return "111111";
+        return "026de89d-c3de-4981-b198-900335dc550a";
     }
 }

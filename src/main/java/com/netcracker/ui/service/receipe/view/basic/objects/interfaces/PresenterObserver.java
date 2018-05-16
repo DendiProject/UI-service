@@ -10,6 +10,7 @@ import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
+import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
 
 /**
  *
@@ -21,4 +22,5 @@ public interface PresenterObserver<T extends Receipe> {
     void updateStore(Object newData) throws InternalServerError, NotFoundBean;
     int getId();//Возвращает id текущего presenter
     void updateView(T newData);
+    void updateCurrentRecipesInResourses(Resource resource);
 }

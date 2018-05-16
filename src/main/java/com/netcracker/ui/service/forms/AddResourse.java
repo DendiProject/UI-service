@@ -3,23 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service;
+package com.netcracker.ui.service.forms;
 
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.forms.listeners.AddResourseListener;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
-import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.FileResource;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import java.io.File;
@@ -28,11 +25,9 @@ import java.util.List;
 
 /**
  *
- * @author Tsits
+ * @author Artem
  */
-
-public class AddIngredient extends Add
-{        
+public class AddResourse  extends Add{        
     Image img = new Image();
     ComboBox autocomplite = new ComboBox();
     Label nameLabel;
@@ -55,10 +50,12 @@ public class AddIngredient extends Add
     String pictureId="";
     String userId;
     boolean isResourseForm;
+    Resource resource;
     
     List<String> autocompliteItems = new ArrayList<>();
     
-    public AddIngredient(boolean isResourseForm, String userId) {           
+    public AddResourse(boolean isResourseForm, String userId, 
+            AddResourseListener listener) {           
         super();
         autocompliteItems.add("Хлебушек");
         autocompliteItems.add("Морковка");
@@ -137,6 +134,19 @@ public class AddIngredient extends Add
                 sizeText = null;
             }
         });
+        
+        add.addClickListener((event) -> {
+            //ДОБАВИТЬ ЗАПРОС НА ПОЛУЧЕНИЕ ДАННЫХ О РЕСУРСЕ ПО ЕГО ИМЕНИ
+            resource = new Resource();
+            if(resource != null){
+                listener.onCreate(resource);
+                this.close();
+            }
+        });
+        
+        cancel.addClickListener((event) -> {
+            this.close();
+        });
     }
     
     private void setLablesText(String nameLabelText, 
@@ -171,14 +181,13 @@ public class AddIngredient extends Add
     
     private void addNewResourse(){
         if(nameText != null & sizeText != null){
-            Resource resource = new Resource();
             BeansFactory<GMFacade> bfOM = BeansFactory.getInstance();
             try{
                 GMFacade gmFacade = bfOM.getBean(GMFacade.class);
                 if(isResourseForm){
-                    resource.setResourceId(gmFacade.getGmResourceFacade().
+                    gmFacade.getGmResourceFacade().
                         addResource(nameText,"resource", sizeText, userId, 
-                        pictureId));
+                        pictureId);
                 }
                 else{
                     resource.setResourceId(gmFacade.getGmResourceFacade().
@@ -193,4 +202,4 @@ public class AddIngredient extends Add
             }
         }
     }
-}       
+}

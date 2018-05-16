@@ -22,13 +22,77 @@ public class ReceipeStore implements StoreSubject{
     private static DataConverter converter;
     private static Object currentData;
     private static ArrayList<PresenterObserver> observers;
+    private ArrayList<Resource> recipesInResourses;
+    private ArrayList<Resource> recipesInIngredients;
+    private ArrayList<Resource> currentRecipesInResourses;
+    private ArrayList<Resource> currentRecipesInIngredients;
     
     public ReceipeStore(DataConverter converter)
     {
         this.converter = converter;
         observers = new ArrayList<>();
     }
+    
+    @Override
+    public void updateCurrentRecipesInResourses(Resource newResource){
+        for(int i=0; i<currentRecipesInResourses.size();i++){
+            if(currentRecipesInResourses.get(i).getName().equals(newResource.
+                    getName())){
+                currentRecipesInResourses.get(i).setResourceNumber(
+                        currentRecipesInResourses.get(i).getResourceNumber()+
+                                newResource.getResourceNumber());
+                return;
+            }
+        }
+        currentRecipesInResourses.add(newResource);
+    }
+    
+    @Override
+    public void updateCurrentRecipesInIngredients(Resource newResource){
+        for(int i=0; i<currentRecipesInIngredients.size();i++){
+            if(currentRecipesInIngredients.get(i).getName().equals(newResource.
+                    getName())){
+                currentRecipesInIngredients.get(i).setResourceNumber(
+                        currentRecipesInIngredients.get(i).getResourceNumber()+
+                                newResource.getResourceNumber());
+                return;
+            }
+        }
+        currentRecipesInIngredients.add(newResource);
+    }
+    
+    public ArrayList<Resource> getCurrentRecipesInResourses() {
+        return currentRecipesInResourses;
+    }
 
+    public void setCurrentRecipesInResourses(ArrayList<Resource> currentRecipesInResourses) {
+        this.currentRecipesInResourses = currentRecipesInResourses;
+    }
+
+    public ArrayList<Resource> getCurrentRecipesInIngredients() {
+        return currentRecipesInIngredients;
+    }
+
+    public void setCurrentRecipesInIngredients(ArrayList<Resource> currentRecipesInIngredients) {
+        this.currentRecipesInIngredients = currentRecipesInIngredients;
+    }
+
+    public ArrayList<Resource> getRecipesInIngredients() {
+        return recipesInIngredients;
+    }
+
+    public void setRecipesInIngredients(ArrayList<Resource> recipesInIngredients) {
+        this.recipesInIngredients = recipesInIngredients;
+    }
+
+    public ArrayList<Resource> getRecipesInResourses() {
+        return recipesInResourses;
+    }
+
+    public void setRecipesInResourses(ArrayList<Resource> recipesInResourses) {
+        this.recipesInResourses = recipesInResourses;
+    }
+    
     @Override
     public void subscribe(PresenterObserver observer) {
         observers.add(observer);

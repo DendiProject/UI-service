@@ -35,6 +35,16 @@ public class ReceipePresenter implements PresenterObserver{
     }
     
     @Override
+    public void updateCurrentRecipesInResourses(Resource resource){
+       if(resource.getIngredientOrResource().equals("resource")){
+           storeSubject.updateCurrentRecipesInResourses(resource);
+       } 
+       else{
+           storeSubject.updateCurrentRecipesInIngredients(resource);
+       }
+    }
+    
+    @Override
     public void load() throws NotFoundBean, InternalServerError{
         updateStore(proxi.load());
     }

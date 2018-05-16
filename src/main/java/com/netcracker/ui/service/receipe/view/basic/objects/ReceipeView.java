@@ -6,14 +6,18 @@
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
+import com.netcracker.ui.service.AddIngredient;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
 import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
+import com.netcracker.ui.service.content.handler.CookieHandler;
+import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
+import com.netcracker.ui.service.forms.AddResourse;
 import com.netcracker.ui.service.forms.AddStepForm;
 import com.netcracker.ui.service.forms.NoReadyReceipeForm;
 import com.netcracker.ui.service.forms.listeners.LoadFormListener;
@@ -27,6 +31,7 @@ import com.vaadin.ui.CustomLayout;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.Cookie;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -112,6 +117,21 @@ public class ReceipeView implements View{
                     graf.getGmFacade().getGmReceipeFacade().setReceipeCompleted(proxy.getReceipeId());
                 }
             });
+                    clickListener.addButtonClickListener(new ClickListener() {
+            @Override
+            public String getId() {
+                return "addReceipePartsBtn";
+            }
+
+            @Override
+            public void onEventDo() {
+                AddResourse addIngredient = new AddResourse(false, 
+                        getUserID(), (resource) -> {
+                            presenter.updateCurrentRecipesInResourses(resource);
+                        });
+                listener.onCreate(addIngredient);
+            }
+        });
         }
         catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);
@@ -132,6 +152,14 @@ public class ReceipeView implements View{
             }
         });*/
         return contentRowLayout;
+    }
+    
+    private String getUserID(){
+        CookieHandler ch2 = new CookieHandler();
+        JWTHandler jwth2 = new JWTHandler();
+        Cookie userCookie2 = ch2.getCookieByName("userInfo");
+        String userid = jwth2.readUserId(userCookie2.getValue(), "test");
+        return userid;
     }
     
 }
