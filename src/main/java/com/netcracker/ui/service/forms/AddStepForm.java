@@ -61,8 +61,8 @@ public class AddStepForm  extends Window {
                                 stepLable != null){
                             GMFacade gmFacade = bf.getBean(GMFacade.class);
                             Node n = new Node("", stepDescription, imageName, stepLable);
-                            Node node = gmFacade.getGmNodeFacade().addNode(n,receipeid, userid);
-                            listener.onCreate(node);
+                            //Node node = gmFacade.getGmNodeFacade().addNode(n,receipeid, userid);
+                            listener.onCreate(n);
                             this.close();
                         }
                     }

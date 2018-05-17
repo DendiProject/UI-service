@@ -10,6 +10,7 @@ import com.netcracker.ui.service.AddIngredient;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
 import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
+import com.netcracker.ui.service.content.handler.ContentManagerController;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
@@ -109,11 +110,12 @@ public class ReceipeView implements View{
                 @Override
                 public void onEventDo() {
                     AddStepForm addStepForm = new AddStepForm((node) -> {
-                        //Формирование JSON объекта  
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("newNodesId", node.getNodeId());
                         jsonObject.put("newNodesLable",node.getLabel());
-                        jsonObject.put("newNodesImage",node.getPictureId());
+                        jsonObject.put("newNodesImage", node.getPictureId().
+                                split("/")[node.getPictureId().split("/").
+                                        length -1]);
                         jsonObject.put("newNodesX","");
                         jsonObject.put("newNodesY","");
                         jsonObject.put("userId","");
