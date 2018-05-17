@@ -6,6 +6,7 @@
 package com.netcracker.ui.service.buttonsClickListener.component;
 
 import com.vaadin.annotations.JavaScript;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
 import elemental.json.JsonArray;
@@ -44,7 +45,7 @@ public class ButtonsClickListener  extends AbstractJavaScriptComponent {
     
     public void addButtonClickListener(ClickListener clickListener)
     {
-        listeners.add(clickListener);
+          listeners.add(clickListener);
     }
     
     public String getValue(){

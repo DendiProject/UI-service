@@ -1,16 +1,20 @@
 spring:
   application:
     name: user-service
+server.ip: 
+ localhost
+server.port: 
+  8008
 idp:
   url: localhost:8181
-server:
-    port: 8008
+ui:
+  url: ${server.ip}:${server.port}    
 security:
-  basic:
-    enabled: false
+    basic:
+        enabled: false  
 service:
-  id: ui
-  secret: uipass
+    id: ui
+    secret: uipass
 zuul:
     routes:
         images:

@@ -5,11 +5,11 @@
     @include valo;
     .userPageView
     {
+        background-color: white;
         width: 100%;
         height: 100%;
-
-
-        display: -webkit-flex; 
+        border: solid 1px black;
+        display: -webkit-flex;
         display: flex;
         justify-content: space-around;
         align-items:center;
@@ -19,10 +19,9 @@
     {
         width: 100%;
         height: 90%;
-        border: solid 2px grey;
-        box-sizing:border-box;
 
-        display: -webkit-flex; 
+        box-sizing:border-box;
+        display: -webkit-flex;
         display: flex;
         justify-content: space-around;
         align-items:center;
@@ -31,10 +30,10 @@
     {
         width: 100%;
         height: 10%;
-        border: solid 2px grey;
-        box-sizing:border-box;
 
-        display: -webkit-flex; 
+        box-sizing:border-box;
+        background-color: white;
+        display: -webkit-flex;
         display: flex;
         justify-content: space-around;
         align-items:center;
@@ -43,121 +42,107 @@
     {
         width: 30%;
         height: 100%;
-        border: solid 2px green;
-        box-sizing:border-box;
 
-        display: -webkit-flex; 
+        box-sizing:border-box;
+        display: -webkit-flex;
         display: flex;
-        justify-content: space-around;
+        justify-content:top;
         align-items:center;
         flex-direction: column;
+          /* overflow: hidden;
+           position: relative;
+           width: 100%;
+           padding-bottom: 100%;*/
+
     }
     .userPageImage
     {
         width: 100%;
-        height: 60%;
-        border: solid 2px yellow;
+
+
         box-sizing:border-box;
 
-
-
-
-
-
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
-        justify-content: center;
+        justify-content: top;
         align-items:center;
+            position: inherit;
+            top: 2;
+
+            /*
+            width: 2%;
+            height: 2%;
+            background-color: red;*/
+    }
+    .userPageImageWrapper
+    {
+        overflow: hidden;
+       position: relative;
+       width: 100%;
+       padding-bottom: 100%; // пропорции блока определяются здесь
     }
     .userPageButtonsBottomImage
     {
         width: 100%;
         height: 40%;
-        border: solid 2px yellow;
+
         box-sizing:border-box;
 
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: flex-start;
         align-items:center;
         flex-direction: column;
     }
-    .userPageSaveBtn
-    {
-        width: 15%;
-        height: 85%;
-        border: solid 2px orange;
-        box-sizing:border-box;
 
-
-
-
-
-
-        display: -webkit-flex; 
-        display: flex;
-        justify-content: center;
-        align-items:center;
-    }
     .userPageCancelBtn
     {
         width: 15%;
         height: 85%;
-        border: solid 2px orange;
+
         box-sizing:border-box;
 
-
-
-
-
-
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: center;
         align-items:center;
+
+
     }
     .userPageLoadFotoBtn
     {
+        margin: 1%;
         width: 100%;
         height: 17%;
-        border: solid 2px orange;
         box-sizing:border-box;
 
-
-
-
-
-
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
-        justify-content: center;
+        justify-content:  center;
         align-items:center;
     }
     .userPageChangePasswordButtonBtn
     {
+
+
         width: 100%;
         height: 17%;
-        border: solid 2px orange;
+
         box-sizing:border-box;
 
-
-
-
-
-
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: center;
-        align-items:center;
+        align-items: center;
     }
     .userPagePanelWithHeaderAndFields
     {
         width: 70%;
         height: 100%;
-        border: solid 2px green;
+        margin-left: 3%;
         box-sizing:border-box;
 
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: space-between;
         align-items:center;
@@ -167,15 +152,10 @@
     {
         width: 100%;
         height: 10%;
-        border: solid 2px blue;
+
         box-sizing:border-box;
 
-
-
-
-
-
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: space-around;
         align-items:center;
@@ -184,10 +164,10 @@
     {
         width: 20%;
         height: 100%;
-        border: solid 2px blue;
+
         box-sizing:border-box;
 
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: space-between;
         align-items:center;
@@ -197,10 +177,10 @@
     {
         width: 80%;
         height: 100%;
-        border: solid 2px blue;
+
         box-sizing:border-box;
 
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: space-between;
         align-items:center;
@@ -210,15 +190,10 @@
     {
         width: 100%;
         height: 6%;
-        border: solid 2px blue;
+
         box-sizing:border-box;
 
-
-
-
-
-
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: flex-start;
         align-items:center;
@@ -227,15 +202,10 @@
     {
         width: 100%;
         height: 6%;
-        border: solid 2px blue;
+
         box-sizing:border-box;
 
-
-
-
-
-
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: flex-start;
         align-items:center;
@@ -244,15 +214,10 @@
     {
         width: 100%;
         height: 6%;
-        border: solid 2px blue;
+
         box-sizing:border-box;
 
-
-
-
-
-
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: flex-start;
         align-items:center;
@@ -261,15 +226,10 @@
     {
         width: 100%;
         height: 6%;
-        border: solid 2px blue;
+
         box-sizing:border-box;
 
-
-
-
-
-
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: flex-start;
         align-items:center;
@@ -278,15 +238,10 @@
     {
         width: 100%;
         height: 6%;
-        border: solid 2px blue;
+
         box-sizing:border-box;
 
-
-
-
-
-
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: flex-start;
         align-items:center;
@@ -295,17 +250,17 @@
     {
         width: 100%;
         height: 55%;
-        border: solid 2px blue;
+
         box-sizing:border-box;
     }
     .userPageColumnsWithLablesAndFields
     {
         width: 100%;
         height: 85%;
-        border: solid 2px blue;
+
         box-sizing:border-box;
 
-        display: -webkit-flex; 
+        display: -webkit-flex;
         display: flex;
         justify-content: space-around;
         align-items:center;
@@ -318,5 +273,32 @@
     {
         width: 70%;
     }
+    .buttons{
+        border-color: #FFAC67;
+        background-color: #FFAC67;
+    border-style: solid;
+    border-width: 0px 0px 3px;
+    box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset;
+    color: #FFFFFF;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-block;
+    font-style: normal;
+    overflow: hidden;
+    text-align: center;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    transition: all 200ms ease-in-out 0s;
+    white-space: nowrap;
+    font-family: "Gotham Rounded A","Gotham Rounded B",Helvetica,Arial,sans-serif;
+    font-weight: 700;
+    padding: 19px 39px 18px;
+    font-size: 18px;
+    }
+    .buttons:hover, .userPageSaveBtn:focus, .userPageSaveBtn:active {
+        background-color: #FF7A00;
+        border-color: #FF7A00;
+    }
+
 }
 @include userPageViewTheme;

@@ -53,7 +53,7 @@ public class ContentManagerController {
   }
 
   public String getImage(String id) {
-    return connectionUrl + "/file/getfile/" + id;//"http://localhost:8082/file/getfile/41e9d7a1-966f-43ce-a860-71745e3d5fc9"
+    return "http://localhost:8008" + "/images/" + id;//"http://localhost:8082/file/getfile/41e9d7a1-966f-43ce-a860-71745e3d5fc9"
   }
 
   public String addImage(String filePath) throws NotFoundBean, FileNotFoundException, IOException {
