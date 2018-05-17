@@ -87,13 +87,13 @@ public class UiServiceMainUI extends UI{
         Cookie userCookie2 = ch2.getCookieByName("userInfo");
         String userid = jwth2.readUserId(userCookie2.getValue(), "test");
         //String userid = "111111111111111";
-        GMFacade gm = new GMFacade("http://localhost:8083/");*/
+        GMFacade gm = new GMFacade("http://localhost:8083/");
         /*Node n = new Node("", "description", "picture");
         n.setLabel("label");
         Node n2 = new Node("", "description2", "picture2");
         n.setLabel("label");
-        n2.setLabel("label2");
-        List<Resource> resources = new ArrayList<>();
+        n2.setLabel("label2");*/
+        /*List<Resource> resources = new ArrayList<>();
         Resource resource1 = new Resource("id", "id", "name222", 2, "литры", "picture", "resource");
         Resource resource2 = new Resource("id2", "id", "name444", 4, "литры", "picture", "ingredient");
         Resource resource3 = new Resource("id2", "id", "name888", 4, "литры", "picture", "resource");
@@ -103,10 +103,11 @@ public class UiServiceMainUI extends UI{
         resource1.setResourceId(gm.getGmResourceFacade().addResource(resource1.getName(),resource1.getIngredientOrResource(),resource1.getMeasuring(), "user",resource1.getPictureId()));
         resource2.setResourceId(gm.getGmResourceFacade().addResource(resource2.getName(),resource2.getIngredientOrResource(),resource2.getMeasuring(), "user",resource2.getPictureId()));
         resource3.setResourceId(gm.getGmResourceFacade().addResource(resource3.getName(),resource3.getIngredientOrResource(),resource3.getMeasuring(), "user",resource3.getPictureId()));
-        List<ShortResource> loaddresource = gm.getGmResourceFacade().getResourcesByLetters("nam", "resource", 5);
-        String catalogId = gm.getGmCatalogFacade().createCatalog("for receipe22222", "description");
-        String receipeid = gm.getGmReceipeFacade().addReceipe("Какое-то длинное длинное длинное длинное длинное длинное длинное длинное длинное Название рецепта", "Какое-то длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное длинное Описание рецепта", catalogId,userid, true).getReceipeId();
-        String receiperes = gm.getGmReceipeFacade().addReceipeResource(receipeid, userid, resource1.getResourceId(), 5);
+        //List<ShortResource> loaddresource = gm.getGmResourceFacade().getResourcesByLetters("nam", "resource", 5);
+        //List<Resource> testgetAllRes = gm.getGmResourceFacade().getResources(false);*/
+        //String catalogId = gm.getGmCatalogFacade().createCatalog("for receipe22222", "description");
+        //String receipeid = gm.getGmReceipeFacade().addReceipe("gjgjgjgjgjgj", "jdggdgdg", catalogId,userid, true).getReceipeId();
+        /*String receiperes = gm.getGmReceipeFacade().addReceipeResource(receipeid, userid, resource1.getResourceId(), 5);
         Node node = gm.getGmNodeFacade().addNode(n,receipeid, userid);
         Node node2 = gm.getGmNodeFacade().addNode(n2,receipeid, userid);
         gm.getGmNodeFacade().addInputResources(node, resources);
@@ -490,7 +491,7 @@ public class UiServiceMainUI extends UI{
                 
                 
                 String noFinishRecipeId = checkNonFinishRecipe(userId);
-                if(noFinishRecipeId == null){
+                if(noFinishRecipeId == null | noFinishRecipeId.equals("")){
                     //Если нет незаконченного рецепта
                     CreateRecipeView createRecipeView = new CreateRecipeView(
                         new CreateReceipeListener() {
@@ -508,7 +509,9 @@ public class UiServiceMainUI extends UI{
 
                             ReceipeView view = new ReceipeView(proxy, store);
                             Receipe emtyReceipe = new Receipe("", 
-                                    new ArrayList<Node>(), new ArrayList<>());
+                                    new ArrayList<Node>(), new ArrayList<Edge>(),
+                                    new ArrayList<Resource>(), 
+                                    new ArrayList<Resource>());
                             view.setNewViewsData(emtyReceipe);
                             mainLayer.contentRowLayout.
                                     removeAllComponents();
@@ -553,7 +556,14 @@ public class UiServiceMainUI extends UI{
                                 }
                             }
                             else{
-                                CreateRecipeView createRecipeView = 
+                                //Иначе удаляем незаконченный граф
+                                try{
+                                    BeansFactory<GMFacade> bf = BeansFactory.getInstance();
+                                    GMFacade gmFacade = bf.getBean(GMFacade.class);
+                                    gmFacade.getGmReceipeFacade().deleteReceipe(
+                                            recipeId, userId);
+                                    
+                                    CreateRecipeView createRecipeView = 
                                     new CreateRecipeView(
                                     new CreateReceipeListener() {
                                     @Override
@@ -572,8 +582,10 @@ public class UiServiceMainUI extends UI{
                                         ReceipeView view = 
                                                 new ReceipeView(proxy, store);
                                         Receipe emtyReceipe = new Receipe("", 
-                                            new ArrayList<Node>(),
-                                                new ArrayList<>());
+                                                new ArrayList<Node>(), 
+                                                new ArrayList<Edge>(),
+                                                new ArrayList<Resource>(), 
+                                                new ArrayList<Resource>());
                                             view.setNewViewsData(emtyReceipe);
                                             mainLayer.contentRowLayout.
                                                     removeAllComponents();
@@ -586,6 +598,10 @@ public class UiServiceMainUI extends UI{
                                 });
                                 mainLayer.contentRowLayout.addComponent(
                                         createRecipeView.create());
+                                }
+                                catch(Exception exception){
+                                    ExceptionHandler.getInstance().runExceptionhandling(exception);
+                                }  
                             }
                     }, noFinishRecipeId);
                     addWindow(noReadyReceipeForm);
@@ -902,9 +918,14 @@ public class UiServiceMainUI extends UI{
     }
     
     //Функция проверки наличия незавершенного рецепта пользователем
-    //При успехе вернет рецепт с нодами
     private String checkNonFinishRecipe(String userId){
-        //Добавить запрос на получение незавершенного рецепта
-        return "026de89d-c3de-4981-b198-900335dc550a";
+        try{
+            BeansFactory<GMFacade> bf = BeansFactory.getInstance();
+            GMFacade gmFacade = bf.getBean(GMFacade.class);
+            return gmFacade.getGmGrafFacade().getNotCompletedGraph(userId);
+        }
+        catch(Exception exception){
+            return "";
+        }
     }
 }

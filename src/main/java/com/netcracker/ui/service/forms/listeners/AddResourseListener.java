@@ -7,11 +7,12 @@ package com.netcracker.ui.service.forms.listeners;
 
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
+import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
 
 /**
  *
  * @author Artem
  */
 public interface AddResourseListener {
-    void onCreate(Resource resource);
+    void onCreate(Resource resource, String receipeId, String userId, View view);
 }

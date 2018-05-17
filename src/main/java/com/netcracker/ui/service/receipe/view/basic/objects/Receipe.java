@@ -8,6 +8,7 @@ package com.netcracker.ui.service.receipe.view.basic.objects;
 import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Node;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Представляет собой конкретный рецепт
@@ -17,18 +18,39 @@ public class Receipe implements Comparable<Receipe>{
     public String receipeName;
     public ArrayList<Node> nodes;
     public ArrayList<Edge> edges;
+    private List<Resource> resources;
+    private List<Resource> indredients;
     
     public  Receipe()
     {
 
     }
     
-    public Receipe(String receipeName, ArrayList<Node> nodes,
-            ArrayList<Edge> edges)
+    public Receipe(String receipeName, ArrayList<Node> nodes, 
+            ArrayList<Edge> edges, List<Resource> resources, 
+            List<Resource> indredients)
     {
         this.receipeName = receipeName;
         this.nodes = nodes;
         this.edges = edges;
+        this.resources = resources;
+        this.indredients = indredients;
+    }
+
+    public List<Resource> getResources() {
+        return resources;
+    }
+
+    public void setResources(List<Resource> resources) {
+        this.resources = resources;
+    }
+
+    public List<Resource> getIndredients() {
+        return indredients;
+    }
+
+    public void setIndredients(List<Resource> indredients) {
+        this.indredients = indredients;
     }
     
     public String getReceipeName() {

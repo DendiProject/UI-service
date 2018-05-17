@@ -67,4 +67,30 @@ public class GMResourceFacade {
             return null;
         }
     }
+    
+    public List<Resource> getResources(boolean getResources){
+        try
+        {
+            ResourceWorker resourceWorker = new ResourceWorker(connectionUrl);
+            return resourceWorker.getResources(getResources);
+        }
+        catch(Exception exception)
+        {
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+            return null;
+        }
+    }
+    
+    public Resource getResourceByName(String name){
+        try
+        {
+            ResourceWorker resourceWorker = new ResourceWorker(connectionUrl);
+            return resourceWorker.getResourceByName(name);
+        }
+        catch(Exception exception)
+        {
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+            return null;
+        }
+    }
 }

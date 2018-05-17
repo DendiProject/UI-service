@@ -12,6 +12,7 @@ import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.DataConve
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -22,10 +23,8 @@ public class ReceipeStore implements StoreSubject{
     private static DataConverter converter;
     private static Object currentData;
     private static ArrayList<PresenterObserver> observers;
-    private ArrayList<Resource> recipesInResourses;
-    private ArrayList<Resource> recipesInIngredients;
-    private ArrayList<Resource> currentRecipesInResourses;
-    private ArrayList<Resource> currentRecipesInIngredients;
+    private List<Resource> currentRecipesInResourses;
+    private List<Resource> currentRecipesInIngredients;
     
     public ReceipeStore(DataConverter converter)
     {
@@ -34,13 +33,23 @@ public class ReceipeStore implements StoreSubject{
     }
     
     @Override
-    public void updateCurrentRecipesInResourses(Resource newResource){
+    public void updateCurrentRecipesInResourses(Resource newResource, 
+            boolean increment){
         for(int i=0; i<currentRecipesInResourses.size();i++){
             if(currentRecipesInResourses.get(i).getName().equals(newResource.
                     getName())){
-                currentRecipesInResourses.get(i).setResourceNumber(
-                        currentRecipesInResourses.get(i).getResourceNumber()+
-                                newResource.getResourceNumber());
+                if(increment){
+                    currentRecipesInResourses.get(i).setResourceNumber(
+                            currentRecipesInResourses.get(i).
+                                    getResourceNumber()+newResource.
+                                            getResourceNumber());
+                }
+                else{
+                    currentRecipesInResourses.get(i).setResourceNumber(
+                            currentRecipesInResourses.get(i).
+                                    getResourceNumber()-newResource.
+                                            getResourceNumber());
+                }
                 return;
             }
         }
@@ -48,49 +57,43 @@ public class ReceipeStore implements StoreSubject{
     }
     
     @Override
-    public void updateCurrentRecipesInIngredients(Resource newResource){
+    public void updateCurrentRecipesInIngredients(Resource newResource, 
+            boolean increment){
         for(int i=0; i<currentRecipesInIngredients.size();i++){
             if(currentRecipesInIngredients.get(i).getName().equals(newResource.
                     getName())){
-                currentRecipesInIngredients.get(i).setResourceNumber(
-                        currentRecipesInIngredients.get(i).getResourceNumber()+
-                                newResource.getResourceNumber());
+                if(increment){
+                    currentRecipesInIngredients.get(i).setResourceNumber(
+                            currentRecipesInIngredients.get(i).
+                                    getResourceNumber()+newResource.
+                                            getResourceNumber());
+                }
+                else{
+                    currentRecipesInIngredients.get(i).setResourceNumber(
+                            currentRecipesInIngredients.get(i).
+                                    getResourceNumber()-newResource.
+                                            getResourceNumber());
+                }
                 return;
             }
         }
         currentRecipesInIngredients.add(newResource);
     }
     
-    public ArrayList<Resource> getCurrentRecipesInResourses() {
+    public List<Resource> getCurrentRecipesInResourses() {
         return currentRecipesInResourses;
     }
 
-    public void setCurrentRecipesInResourses(ArrayList<Resource> currentRecipesInResourses) {
+    public void setCurrentRecipesInResourses(List<Resource> currentRecipesInResourses) {
         this.currentRecipesInResourses = currentRecipesInResourses;
     }
 
-    public ArrayList<Resource> getCurrentRecipesInIngredients() {
+    public List<Resource> getCurrentRecipesInIngredients() {
         return currentRecipesInIngredients;
     }
 
-    public void setCurrentRecipesInIngredients(ArrayList<Resource> currentRecipesInIngredients) {
+    public void setCurrentRecipesInIngredients(List<Resource> currentRecipesInIngredients) {
         this.currentRecipesInIngredients = currentRecipesInIngredients;
-    }
-
-    public ArrayList<Resource> getRecipesInIngredients() {
-        return recipesInIngredients;
-    }
-
-    public void setRecipesInIngredients(ArrayList<Resource> recipesInIngredients) {
-        this.recipesInIngredients = recipesInIngredients;
-    }
-
-    public ArrayList<Resource> getRecipesInResourses() {
-        return recipesInResourses;
-    }
-
-    public void setRecipesInResourses(ArrayList<Resource> recipesInResourses) {
-        this.recipesInResourses = recipesInResourses;
     }
     
     @Override
@@ -113,6 +116,9 @@ public class ReceipeStore implements StoreSubject{
     @Override
     public void handleNewData(Object object) throws InternalServerError, NotFoundBean{
         currentData = object;
+        Receipe initReceipe = converter.convert(currentData);
+        currentRecipesInResourses = initReceipe.getResources();
+        currentRecipesInIngredients = initReceipe.getIndredients();
         notifyObservers();
     }
 

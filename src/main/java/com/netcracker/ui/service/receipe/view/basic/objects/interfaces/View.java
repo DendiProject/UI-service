@@ -12,6 +12,7 @@ import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.forms.listeners.LoadFormListener;
 import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
+import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
 
 /**
  *
@@ -22,4 +23,6 @@ public interface View<T extends Receipe> {
     void setNewViewsData(T object);//Presenter устанавливает новую data
     ResponsiveLayout drawReceipe(ResponsiveLayout contentRowLayout, 
             LoadFormListener listener);//отрисовка рецепта
+    public void updateCurrentRecipesInResourses(Resource resource, 
+            boolean increment);
 }

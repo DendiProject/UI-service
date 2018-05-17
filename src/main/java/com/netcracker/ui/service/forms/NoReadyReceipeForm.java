@@ -29,6 +29,7 @@ import com.vaadin.ui.Window;
 public class NoReadyReceipeForm  extends Window {
     private String recipeName = null;
     private String recipeDescription = null;
+    private String recipeId;
     
     public NoReadyReceipeForm(NoReadyReceipeListener listener, String recipeId) 
     {         
@@ -43,7 +44,7 @@ public class NoReadyReceipeForm  extends Window {
         catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
-        
+        this.recipeId = recipeId;
         ResponsiveLayout mainLayout = new ResponsiveLayout();
         CustomLayout mainCustomLayout = new CustomLayout("NoReadyReceipeForm");
         mainLayout.setHeight("100%");
@@ -71,7 +72,7 @@ public class NoReadyReceipeForm  extends Window {
         cancelBtn.setHeight("100%");
         cancelBtn.setWidth("100%");
         cancelBtn.addClickListener(e -> {
-            listener.onCreate(false, "");
+            listener.onCreate(false, recipeId);
             this.close();
         });
         mainCustomLayout.addComponent(cancelBtn,"noReadyReceipeViewCancelBtn");

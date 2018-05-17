@@ -19,6 +19,8 @@ public interface StoreSubject {
     void notifyObservers() throws InternalServerError, NotFoundBean;//уведомление об изменившихся данных
     void subscribe(PresenterObserver observer);
     void unsubscribe(PresenterObserver observer);
-    void updateCurrentRecipesInResourses(Resource newResource);
-    void updateCurrentRecipesInIngredients(Resource newResource);
+    void updateCurrentRecipesInResourses(Resource newResource, 
+            boolean increment);
+    void updateCurrentRecipesInIngredients(Resource newResource, 
+            boolean increment);
 }

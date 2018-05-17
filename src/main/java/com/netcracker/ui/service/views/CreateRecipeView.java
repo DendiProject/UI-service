@@ -265,15 +265,6 @@ public class CreateRecipeView {
                                 .show(Page.getCurrent());
                             }
                         }
-                        else
-                        {
-                            new Notification("This is a error",
-                                    "Пожалуйста, Введите новое название "
-                                            + "каталога или выберите его из "
-                                            + "спика",
-                                    Notification.Type.ERROR_MESSAGE, true)
-                            .show(Page.getCurrent());
-                        }
                     }
                     catch (NotFoundBean exception) {
                         ExceptionHandler.getInstance().runExceptionhandling(exception);
