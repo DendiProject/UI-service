@@ -79,10 +79,10 @@ public class NoReadyReceipeForm  extends Window {
        
         mainCustomLayout.addComponent(new Label("У Вас есть незаконченный рецепт, хотите продолжить?"),"noReadyReceipeViewLable");
         Label recipeNameLabel = new Label(recipeName);
-        recipeNameLabel.setSizeFull();
+        //recipeNameLabel.setSizeFull();
         mainCustomLayout.addComponent(recipeNameLabel,"noReadyReceipeViewReceipeNameIn2Col");
         Label recipeDescriptionLabel = new Label(recipeDescription);
-        recipeDescriptionLabel.setSizeFull();
+        //recipeDescriptionLabel.setSizeFull();
         mainCustomLayout.addComponent(recipeDescriptionLabel,"noReadyReceipeViewReceipeDescriptionIn2Col");
         Label recipeNameLable = new Label("Название рецепта");
         recipeNameLable.setHeight(String.valueOf(recipeNameLabel.getHeight()-5));

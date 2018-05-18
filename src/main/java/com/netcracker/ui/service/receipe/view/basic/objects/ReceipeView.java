@@ -10,6 +10,7 @@ import com.netcracker.ui.service.AddIngredient;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
 import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
+import com.netcracker.ui.service.buttonsClickListener.component.SessionStorageHelper;
 import com.netcracker.ui.service.content.handler.ContentManagerController;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.JWTHandler;
@@ -36,6 +37,8 @@ import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  *
@@ -96,11 +99,11 @@ public class ReceipeView implements View{
                     get(i), false);
         }
         
-        BeansFactory<ButtonsClickListener> bf = BeansFactory.getInstance();
-        ButtonsClickListener clickListener;
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        ButtonsClickListener clickListener = new SessionStorageHelper().getListener(attr);
         
         try{
-            clickListener = bf.getBean(ButtonsClickListener.class);
+  
             clickListener.addButtonClickListener(new ClickListener() {
                 @Override
                 public String getId() {
