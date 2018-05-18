@@ -19,7 +19,7 @@ import java.util.ArrayList;
 @JavaScript({"buttonsClickListenerLibrary.js", "buttonsClickListener-connector.js"})
 public class ButtonsClickListener  extends AbstractJavaScriptComponent {
 
-    ArrayList<ClickListener> listeners = new ArrayList<ClickListener>();
+    public ArrayList<ClickListener> listeners = new ArrayList<ClickListener>();
     
     public interface ValueChangeListener extends Serializable {
 
