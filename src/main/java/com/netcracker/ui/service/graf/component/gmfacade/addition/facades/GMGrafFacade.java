@@ -71,4 +71,17 @@ public class GMGrafFacade {
             return null;
         }
     }
+    
+    public String getNotCompletedGraph(String userId){
+        try
+        {
+            GrafWorker grafWorker = new GrafWorker(connectionUrl);
+            String id = grafWorker.getNotCompletedGraph(userId);
+            return id;
+        }
+        catch(Exception exception)
+        {
+            return "";
+        }
+    }
 }

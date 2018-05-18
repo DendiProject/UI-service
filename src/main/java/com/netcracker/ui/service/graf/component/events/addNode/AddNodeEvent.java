@@ -7,12 +7,14 @@ package com.netcracker.ui.service.graf.component.events.addNode;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.content.handler.ContentManagerController;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.graf.component.Graf;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.eventTypes.EventType;
 import com.netcracker.ui.service.graf.component.events.BasicGrafEventHandler;
 import com.netcracker.ui.service.graf.component.events.clickOnNode.ClickOnNodeState;
+import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
 import elemental.json.JsonArray;
 import java.util.ArrayList;
 import org.json.JSONArray;
@@ -95,12 +97,27 @@ public class AddNodeEvent extends BasicGrafEventHandler{
                         state.newNodesLable);
                 //Вначале нужно сделать запрос на GM для проверки возможности создания ноды
                 try{
+                    BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
+                    ContentManagerController controller = bfCMC.getBean(ContentManagerController.class);
+                    
                     graf.getGmFacade().getGmNodeFacade().addNode(newNode, 
                             graf.receipeId, graf.userId);
-                    graf.addNode(state.newNodesImage, state.newNodesLable, 
-                            state.newNodesId, state.newNodesDescription);
+                    graf.addNode(controller.getImage(newNode.getPictureId()), newNode.getLabel(), 
+                            newNode.getNodeId(), newNode.getDescription());
+                    
+                    
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("newNodesId", newNode.getNodeId());
+                    jsonObject.put("newNodesLable",newNode.getLabel());
+                    jsonObject.put("newNodesImage", controller.
+                            getImage(newNode.getPictureId()));
+                    jsonObject.put("newNodesX","");
+                    jsonObject.put("newNodesY","");
+                    jsonObject.put("userId","");
+                    jsonObject.put("receipeId","");
+                    jsonObject.put("newNodesDescription",newNode.getDescription());
                     JSONArray array = new JSONArray();
-                    array.put(arguments);
+                    array.put(jsonObject);
                     graf.setEvent(EventType.addNode, array.toString());
                     //Оповещаю всех слушателей
                     graf.notifyEventListeners(graf.getAddNodeListeners());

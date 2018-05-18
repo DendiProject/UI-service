@@ -9,6 +9,7 @@ import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
+import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
@@ -35,6 +36,17 @@ public class ReceipePresenter implements PresenterObserver{
     }
     
     @Override
+    public void updateCurrentRecipesInResourses(Resource resource, 
+            boolean increment){
+       if(resource.getIngredientOrResource().equals("resource")){
+           storeSubject.updateCurrentRecipesInResourses(resource, increment);
+       } 
+       else{
+           storeSubject.updateCurrentRecipesInIngredients(resource, increment);
+       }
+    }
+    
+    @Override
     public void load() throws NotFoundBean, InternalServerError{
         updateStore(proxi.load());
     }
@@ -53,5 +65,4 @@ public class ReceipePresenter implements PresenterObserver{
     public void updateView(Receipe newData) {
         view.setNewViewsData(newData);
     }
-    
 }

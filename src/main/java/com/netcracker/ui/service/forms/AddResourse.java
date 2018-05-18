@@ -3,23 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.netcracker.ui.service;
+package com.netcracker.ui.service.forms;
 
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.forms.listeners.AddResourseListener;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
-import com.vaadin.data.validator.StringLengthValidator;
+import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
 import com.vaadin.server.FileResource;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import java.io.File;
@@ -28,11 +26,9 @@ import java.util.List;
 
 /**
  *
- * @author Tsits
+ * @author Artem
  */
-
-public class AddIngredient extends Add
-{        
+public class AddResourse  extends Add{        
     Image img = new Image();
     ComboBox autocomplite = new ComboBox();
     Label nameLabel;
@@ -50,19 +46,34 @@ public class AddIngredient extends Add
     HorizontalLayout h1 = new HorizontalLayout();
     
     String sizeText;
+    double countVaue; 
     String nameText;
     String descriptionText;
     String pictureId="";
     String userId;
     boolean isResourseForm;
+    Resource resource;
+    String selectingResourceName="";
     
-    List<String> autocompliteItems = new ArrayList<>();
+    List<String> autocompliteItems;
     
-    public AddIngredient(boolean isResourseForm, String userId) {           
+    public AddResourse(boolean isResourseForm, String userId, String receipeId, 
+            View view, AddResourseListener listener) {           
         super();
-        autocompliteItems.add("Хлебушек");
-        autocompliteItems.add("Морковка");
-        autocompliteItems.add("Сосиска");
+        //Получение списка всех ресуров/ингредиентов
+        BeansFactory<GMFacade> bfOM = BeansFactory.getInstance();
+        try{
+            GMFacade gmFacade = bfOM.getBean(GMFacade.class);
+            List<Resource> allResources = gmFacade.getGmResourceFacade().
+                    getResources(isResourseForm);
+            autocompliteItems = new ArrayList<>();
+            for(int i=0; i<allResources.size();i++){
+                autocompliteItems.add(allResources.get(i).getName());
+            }
+        }
+        catch(Exception exception){
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+        }
         this.userId = userId;
         this.isResourseForm = isResourseForm;
         autocomplite.setItems(autocompliteItems);
@@ -100,8 +111,45 @@ public class AddIngredient extends Add
             showAddNewResourseFields(true);
         });
         
+        count.addValueChangeListener((event) -> {
+            if(!event.getValue().equals("") & !event.getValue().equals("0")){
+                try{
+                    if(Double.parseDouble(event.getValue()) > 0){
+                        countVaue = Double.parseDouble(event.getValue());
+                    }
+                    else{
+                        countVaue = -1;
+                    }
+                }
+                catch(Exception ex){
+                    countVaue = -1;
+                }
+            }
+            else{
+                countVaue = -1;
+            }
+        });
+        
         autocomplite.addValueChangeListener((event) -> {
             showAddNewResourseFields(false);
+            if(!event.getValue().equals("")){
+                selectingResourceName = event.getValue().toString();
+                try{
+                    GMFacade gmFacade = bfOM.getBean(GMFacade.class);
+                    resource = gmFacade.getGmResourceFacade().getResourceByName(
+                            selectingResourceName);
+                    if(resource != null){
+                        nameLabel.setValue("Выбрано: "+resource.getName());
+                        sizeLabel.setValue("Размерность: "+resource.getMeasuring());
+                    }
+                }
+                catch(Exception exception){
+                    ExceptionHandler.getInstance().runExceptionhandling(exception);
+                } 
+            }
+            else{
+                selectingResourceName = "";
+            }
         });
         
         add1.addClickListener((event) -> {
@@ -137,6 +185,29 @@ public class AddIngredient extends Add
                 sizeText = null;
             }
         });
+        
+        add.addClickListener((event) -> {
+            //Запрос на получение данных о ресурсе по его имени
+            try{
+                if(!selectingResourceName.equals("") & countVaue > 0){
+                    GMFacade gmFacade = bfOM.getBean(GMFacade.class);
+                    resource = gmFacade.getGmResourceFacade().getResourceByName(
+                            selectingResourceName);
+                    if(resource != null){
+                        resource.setResourceNumber(countVaue);
+                        listener.onCreate(resource, receipeId, userId, view);
+                        this.close();
+                    }
+                }
+            }
+            catch(Exception exception){
+                ExceptionHandler.getInstance().runExceptionhandling(exception);
+            } 
+        });
+        
+        cancel.addClickListener((event) -> {
+            this.close();
+        });
     }
     
     private void setLablesText(String nameLabelText, 
@@ -171,19 +242,18 @@ public class AddIngredient extends Add
     
     private void addNewResourse(){
         if(nameText != null & sizeText != null){
-            Resource resource = new Resource();
             BeansFactory<GMFacade> bfOM = BeansFactory.getInstance();
             try{
                 GMFacade gmFacade = bfOM.getBean(GMFacade.class);
                 if(isResourseForm){
-                    resource.setResourceId(gmFacade.getGmResourceFacade().
+                    gmFacade.getGmResourceFacade().
                         addResource(nameText,"resource", sizeText, userId, 
-                        pictureId));
+                        pictureId);
                 }
                 else{
-                    resource.setResourceId(gmFacade.getGmResourceFacade().
+                    gmFacade.getGmResourceFacade().
                         addResource(nameText,"ingredient", sizeText, userId, 
-                            pictureId));
+                            pictureId);
                 }
                 autocompliteItems.add(nameText);
                 autocomplite.setItems(autocompliteItems);
@@ -193,4 +263,4 @@ public class AddIngredient extends Add
             }
         }
     }
-}       
+}

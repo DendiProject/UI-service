@@ -128,4 +128,67 @@ public class ResourceWorker {
         
         return resources;
     }
+    
+    public List<Resource> getResources(boolean getResources) throws NotFoundBean, IOException{
+        BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
+        RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept=application/json", MediaType.APPLICATION_JSON_VALUE);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromHttpUrl(connectionUrl + "resource/getall");
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        HttpEntity<String> response = restTemplate.exchange(
+                builder.build().encode().toUri(),
+                HttpMethod.GET,
+                entity,
+                String.class);
+        
+        JSONArray array = new JSONArray(response.getBody());
+        List<Resource> resources = new ArrayList<>();
+        BeansFactory<ObjectMapper> bfOM2 = BeansFactory.getInstance();
+        ObjectMapper mapper = bfOM2.getBean(ObjectMapper.class);
+        for(int i=0; i<array.length(); i++)
+        {
+            Resource resource = mapper.readValue(array.get(i).toString(),
+                    Resource.class);
+            if(resource.getIngredientOrResource().equals("resource") & getResources){
+                resources.add(resource);
+            }
+            if(resource.getIngredientOrResource().equals("ingredient") & !getResources){
+                resources.add(resource);
+            }
+        }
+        
+        return resources;
+    }
+    
+    public Resource getResourceByName(String name) throws NotFoundBean, IOException{
+        BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
+        RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept=application/json", MediaType.APPLICATION_JSON_VALUE);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromHttpUrl(connectionUrl + "resource/getbyname/"+name);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        HttpEntity<String> response = restTemplate.exchange(
+                builder.build().encode().toUri(),
+                HttpMethod.GET,
+                entity,
+                String.class);
+        
+        JSONObject array = new JSONObject(response.getBody());
+
+        BeansFactory<ObjectMapper> bfOM2 = BeansFactory.getInstance();
+        ObjectMapper mapper = bfOM2.getBean(ObjectMapper.class);
+        Resource resource = mapper.readValue(array.toString(),
+                    Resource.class);
+        
+        return resource;
+    }
 }

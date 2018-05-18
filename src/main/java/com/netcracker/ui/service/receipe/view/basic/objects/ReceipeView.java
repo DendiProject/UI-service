@@ -6,19 +6,25 @@
 package com.netcracker.ui.service.receipe.view.basic.objects;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
+import com.netcracker.ui.service.AddIngredient;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
 import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
+import com.netcracker.ui.service.content.handler.ContentManagerController;
+import com.netcracker.ui.service.content.handler.CookieHandler;
+import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConnectionErrorException;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
+import com.netcracker.ui.service.forms.AddResourse;
 import com.netcracker.ui.service.forms.AddStepForm;
 import com.netcracker.ui.service.forms.NoReadyReceipeForm;
 import com.netcracker.ui.service.forms.listeners.LoadFormListener;
 import com.netcracker.ui.service.graf.component.Graf;
 import com.netcracker.ui.service.graf.component.eventTypes.EventType;
+import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
@@ -27,6 +33,7 @@ import com.vaadin.ui.CustomLayout;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.Cookie;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -38,12 +45,14 @@ public class ReceipeView implements View{
     
     public Graf graf;
     private final PresenterObserver presenter;
-    public Receipe receipe;
+    public Receipe initReceipe;
     private Proxy proxy;
+    private View curentView;
     
     public ReceipeView(Proxy proxy, StoreSubject store)
     {
         this.proxy = proxy;
+        this.curentView = this;
         presenter = new ReceipePresenter(proxy, store, (ReceipeView)this);
     }
     
@@ -55,9 +64,15 @@ public class ReceipeView implements View{
 
     @Override
     public void setNewViewsData(Receipe object) {
-        receipe = (Receipe)object;
+        initReceipe = (Receipe)object;
     }
 
+    @Override
+    public void updateCurrentRecipesInResourses(Resource resource, 
+            boolean increment){
+        presenter.updateCurrentRecipesInResourses(resource, increment);
+    }
+    
     @Override
     public ResponsiveLayout drawReceipe(ResponsiveLayout contentRowLayout, 
             LoadFormListener listener) {
@@ -67,9 +82,19 @@ public class ReceipeView implements View{
         contentRowLayout.addComponent(ShortViewOfReceipeLayout);
         
         graf = new Graf();
-        graf.setInitCollections(receipe.nodes, receipe.edges, proxy.getUserId(),
+        graf.setInitCollections(initReceipe.nodes, initReceipe.edges, proxy.getUserId(),
                 proxy.getReceipeId());
         ShortViewOfReceipeLayout.addComponent(graf,"panelWithGraf");
+        
+        //Синхронизация ресурсов и ингредиентов
+        for(int i=0; i<initReceipe.getIndredients().size(); i++){
+            presenter.updateCurrentRecipesInResourses(initReceipe.getIndredients().
+                    get(i), false);
+        }
+        for(int i=0; i<initReceipe.getResources().size(); i++){
+            presenter.updateCurrentRecipesInResourses(initReceipe.getResources().
+                    get(i), false);
+        }
         
         BeansFactory<ButtonsClickListener> bf = BeansFactory.getInstance();
         ButtonsClickListener clickListener;
@@ -85,11 +110,12 @@ public class ReceipeView implements View{
                 @Override
                 public void onEventDo() {
                     AddStepForm addStepForm = new AddStepForm((node) -> {
-                        //Формирование JSON объекта  
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("newNodesId", node.getNodeId());
                         jsonObject.put("newNodesLable",node.getLabel());
-                        jsonObject.put("newNodesImage",node.getPictureId());
+                        jsonObject.put("newNodesImage", node.getPictureId().
+                                split("/")[node.getPictureId().split("/").
+                                        length -1]);
                         jsonObject.put("newNodesX","");
                         jsonObject.put("newNodesY","");
                         jsonObject.put("userId","");
@@ -109,9 +135,47 @@ public class ReceipeView implements View{
 
                 @Override
                 public void onEventDo() {
-                    graf.getGmFacade().getGmReceipeFacade().setReceipeCompleted(proxy.getReceipeId());
+                    graf.getGmFacade().getGmReceipeFacade().setReceipeCompleted(
+                            proxy.getReceipeId());
                 }
             });
+                    clickListener.addButtonClickListener(new ClickListener() {
+            @Override
+            public String getId() {
+                return "addReceipePartsBtn";
+            }
+
+            @Override
+            public void onEventDo() {
+                AddResourse addIngredient = new AddResourse(false, 
+                        proxy.getUserId(), proxy.getReceipeId(),curentView ,(resource, 
+                                receipeId, userId, view) -> {
+                            presenter.updateCurrentRecipesInResourses(resource, 
+                                    true);
+                            //Обновление входных ресурсов
+                            try{
+                                //Добавили(обновили) входные ресурсы для рецепта
+                                //на gm
+                                BeansFactory<GMFacade> bf = BeansFactory.
+                                        getInstance();
+                                GMFacade gmFacade = bf.getBean(GMFacade.class);
+                                gmFacade.getGmReceipeFacade().
+                                        addReceipeResource(receipeId, userId, 
+                                                resource.getResourceId(), 
+                                                resource.getResourceNumber());
+                                //Обновили стейт доступных ресурсов на вью
+                                view.updateCurrentRecipesInResourses(resource, 
+                                        true);
+                                //ДОБАВИТЬ СЮДА ВЫВОД В СООТВЕСТВУЮЩУЮ ТАБЛИЦУ
+                            }
+                            catch(Exception exception){
+                                ExceptionHandler.getInstance().
+                                        runExceptionhandling(exception);
+                            }
+                        });
+                listener.onCreate(addIngredient);
+            }
+        });
         }
         catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);
@@ -133,5 +197,4 @@ public class ReceipeView implements View{
         });*/
         return contentRowLayout;
     }
-    
 }

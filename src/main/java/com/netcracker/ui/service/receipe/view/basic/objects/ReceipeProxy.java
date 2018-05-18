@@ -88,7 +88,7 @@ public class ReceipeProxy  implements Proxy{
         if(connect())
         {
             GMFacade gm = new GMFacade(connectionUrl);
-            return gm.getGmGrafFacade().getTestGraf(userId, receipeId);
+            return gm.getGmGrafFacade().getGraph(userId, receipeId);
         }
         else
         {

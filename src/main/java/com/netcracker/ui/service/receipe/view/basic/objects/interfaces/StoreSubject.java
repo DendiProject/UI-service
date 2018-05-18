@@ -8,6 +8,7 @@ package com.netcracker.ui.service.receipe.view.basic.objects.interfaces;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
+import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
 
 /**
  *
@@ -18,4 +19,8 @@ public interface StoreSubject {
     void notifyObservers() throws InternalServerError, NotFoundBean;//уведомление об изменившихся данных
     void subscribe(PresenterObserver observer);
     void unsubscribe(PresenterObserver observer);
+    void updateCurrentRecipesInResourses(Resource newResource, 
+            boolean increment);
+    void updateCurrentRecipesInIngredients(Resource newResource, 
+            boolean increment);
 }
