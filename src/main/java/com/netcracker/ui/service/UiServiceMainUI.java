@@ -358,6 +358,7 @@ public class UiServiceMainUI extends UI {
         newViews.add(new View("UserPage") {
            @Override
             public void draw(LinkedMultiValueMap<String, String> parameters) {
+                mainLayer.contentRowLayout.removeAllComponents();
                 CustomLayout ShortViewOfReceipeLayout = new CustomLayout("UserPageLayout");
                 ShortViewOfReceipeLayout.setHeight("100%");
                 mainLayer.contentRowLayout.setHeight("100%");
@@ -641,6 +642,7 @@ public class UiServiceMainUI extends UI {
         int i = 0;
       }
     });
+    
 
     //Артем, назначь действия на событие onClick для следующих кнопок:
     clickListener.addButtonClickListener(new ClickListener() {
@@ -652,6 +654,7 @@ public class UiServiceMainUI extends UI {
       @Override
       public void onEventDo() {
         try {
+          System.out.println("Buuton");
           BeansFactory<Properties> bfP = BeansFactory.getInstance();
           Properties p = bfP.getBean(Properties.class);
           BeansFactory<SecurityTokenHandler> bfSTH = BeansFactory.getInstance();

@@ -9,6 +9,7 @@ import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
 import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
+import com.netcracker.ui.service.buttonsClickListener.component.SessionStorageHelper;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
@@ -37,6 +38,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  *
@@ -203,10 +206,10 @@ public class CreateRecipeView {
         
         mainCustomLayout.setHeight("100%");
         
-        BeansFactory<ButtonsClickListener> bf = BeansFactory.getInstance();
-        ButtonsClickListener clickListener;
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        ButtonsClickListener clickListener = new SessionStorageHelper().getListener(attr);
         try{
-            clickListener = bf.getBean(ButtonsClickListener.class);
+          
             //Кнопка перехода к построению рецепта
             clickListener.addButtonClickListener(new ClickListener() {
                 @Override
