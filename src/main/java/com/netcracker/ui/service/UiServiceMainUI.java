@@ -363,11 +363,10 @@ public class UiServiceMainUI extends UI {
                 ShortViewOfReceipeLayout.setHeight("100%");
                 mainLayer.contentRowLayout.setHeight("100%");
                 mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
-                ShortViewOfReceipeLayout.addComponent(new Label("Name"), "userPageNameFieldAndLable");
-                ShortViewOfReceipeLayout.addComponent(new Label("SecondName"), "userPageSecondNameFieldAndLable");
-                ShortViewOfReceipeLayout.addComponent(new Label("Nickname"), "userPageNicknameFieldAndLable");
-                ShortViewOfReceipeLayout.addComponent(new Label("Mail"), "userPageMailFieldAndLable");
-                ShortViewOfReceipeLayout.addComponent(new Label("BirthDate"), "userPageBirthDateFieldAndLable");
+                ShortViewOfReceipeLayout.addComponent(fName, "userPageNameFieldAndLable");
+        ShortViewOfReceipeLayout.addComponent(sName, "userPageSecondNameFieldAndLable");
+        ShortViewOfReceipeLayout.addComponent(email, "userPageMailFieldAndLable");
+                //ShortViewOfReceipeLayout.addComponent(new Label("BirthDate"), "userPageBirthDateFieldAndLable");
                 TextArea area = new TextArea();
                 area.setValue("testt esttestte sttesttesttesttest testtesttest"
                         + "testtestt esttesttesttesttesttesttesttesttest"
