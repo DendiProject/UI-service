@@ -8,6 +8,7 @@ package com.netcracker.ui.service.graf.component.gmfacade.addition.facades;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.graf.component.gmfacade.workers.CatalogWorker;
 import com.netcracker.ui.service.receipe.view.basic.objects.Catalog;
+import java.util.List;
 import org.json.JSONObject;
 
 /**
@@ -38,6 +39,17 @@ public class GMCatalogFacade {
         try{
             CatalogWorker catalogWorker = new CatalogWorker(connectionUrl);
             return catalogWorker.getCatalog(catalogeName);
+        }
+        catch(Exception exception){
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+            return null;
+        }
+    }
+    
+    public List<Catalog> getAllCatalogs(){
+        try{
+            CatalogWorker catalogWorker = new CatalogWorker(connectionUrl);
+            return catalogWorker.getAllCatalogs();
         }
         catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);

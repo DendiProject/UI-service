@@ -227,7 +227,7 @@ public class Graf extends AbstractJavaScriptComponent {
         {
             JSONObject node = new JSONObject();
             node.put("id", nodesCollection.get(i).getNodeId());
-            node.put("label", "");
+            node.put("label", nodesCollection.get(i).getLabel());
             node.put("shape", "circularImage");
             node.put("image", nodesCollection.get(i).getPictureId());
             nodes.put(i, node);

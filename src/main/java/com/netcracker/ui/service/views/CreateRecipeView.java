@@ -17,6 +17,7 @@ import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.forms.AuthorizationForm;
 import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
+import com.netcracker.ui.service.receipe.view.basic.objects.Catalog;
 import com.netcracker.ui.service.receipe.view.basic.objects.Tag;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
@@ -58,6 +59,7 @@ public class CreateRecipeView {
     private List<Tag> tegs = null;
     CreateReceipeListener listener;
     private boolean noListenCatalog = false;
+    private List<String> catalogsName = new ArrayList<>();
     
     public CreateRecipeView(CreateReceipeListener listener){
         this.listener = listener;
@@ -99,11 +101,22 @@ public class CreateRecipeView {
         ComboBox catalogCB = new ComboBox();
         
         
-        //ДОБАВИТЬ СЮДА ЗАГРУЗКУ КАТАЛОГОВ
+        BeansFactory<GMFacade> bf = BeansFactory.getInstance();
+        try{
+            GMFacade gmFacade = bf.getBean(GMFacade.class);
+            List<Catalog> catalogs = gmFacade.getGmCatalogFacade().getAllCatalogs();
+            
+            for(int i=0; i<catalogs.size(); i++){
+                catalogsName.add(catalogs.get(i).getName());
+            }  
+        }
+        catch(Exception exception){
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+        }
         
         
         
-        catalogCB.setItems("Тест1", "Тест2", "Тест3", "Тест4");
+        catalogCB.setItems(catalogsName);
         TextField receipesCatalog = new TextField();
         CheckBox useNewCatalog = new CheckBox("Создать новый");
         mainCustomLayout.addComponent(catalogCB,"createReceipeInputCatalog");
@@ -143,7 +156,7 @@ public class CreateRecipeView {
         receipesName.setHeight("100%");
         receipesName.addValueChangeListener((event) -> {
             if(!event.getValue().equals("")){
-                recipeName = event.toString();
+                recipeName = event.getValue();
             }
             else
             {
@@ -220,9 +233,9 @@ public class CreateRecipeView {
                 @Override
                 public void onEventDo() {
                     //Создание каталога, или, если он существует, то получение его id
-                    BeansFactory<GMFacade> bf = BeansFactory.getInstance();
+                    BeansFactory<GMFacade> bf2 = BeansFactory.getInstance();
                     try {
-                        GMFacade gmFacade = bf.getBean(GMFacade.class);
+                        GMFacade gmFacade = bf2.getBean(GMFacade.class);
                         if(catalogName != null){
                             if(createNewCatalog == false | 
                                     descriptionCatalog != null){
