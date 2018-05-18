@@ -52,6 +52,7 @@ public class ReceipeView implements View{
     private Proxy proxy;
     private View curentView;
     
+    
     public ReceipeView(Proxy proxy, StoreSubject store)
     {
         this.proxy = proxy;
@@ -100,10 +101,16 @@ public class ReceipeView implements View{
         }
         
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        ButtonsClickListener clickListener = new SessionStorageHelper().getListener(attr);
-        
+        ButtonsClickListener clickListener = new SessionStorageHelper().getListener(attr);    
+        if (clickListener.listeners.size() >6){
+          int size = clickListener.listeners.size();
+          for(int i=6;i<size;i++){
+             clickListener.listeners.remove(6);
+          } 
+        }
+       
         try{
-  
+           
             clickListener.addButtonClickListener(new ClickListener() {
                 @Override
                 public String getId() {
@@ -142,7 +149,7 @@ public class ReceipeView implements View{
                             proxy.getReceipeId());
                 }
             });
-                    clickListener.addButtonClickListener(new ClickListener() {
+            clickListener.addButtonClickListener(new ClickListener() {
             @Override
             public String getId() {
                 return "addReceipePartsBtn";
@@ -179,10 +186,14 @@ public class ReceipeView implements View{
                 listener.onCreate(addIngredient);
             }
         });
+          
         }
         catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
+        
+        
+        
         //Пример добавления слушателя на клик по ЛЮБОЙ ноде
         /*graf.addHandlerForClickingOnNode(new ClickOnNodeEventListener() {
             @Override

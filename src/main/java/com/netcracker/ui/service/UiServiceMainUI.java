@@ -707,8 +707,7 @@ public class UiServiceMainUI extends UI {
 
       @Override
       public void onEventDo() {
-        int i = 0;//Код писать сюда
-
+        
       }
     });
     clickListener.addButtonClickListener(new ClickListener() {
