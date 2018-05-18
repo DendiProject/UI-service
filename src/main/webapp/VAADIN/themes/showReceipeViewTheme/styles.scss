@@ -1,0 +1,160 @@
+@import "../valo/valo.scss";
+
+@mixin showReceipeViewTheme 
+{
+    @include valo;
+    .receipeControls2
+    {
+        width: 0%;
+        height: 0%;
+    }
+    .ReceipeViewer
+	{
+		width: 100%;
+		height: 100%;
+		
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+	.ReceipeViewerPanelWithGraf
+	{
+		width: 70%;
+		height: 100%;
+		border: solid 4px grey;
+		box-sizing:border-box;
+	}
+	.ReceipeViewerPanelWithDescriptionOfNode
+	{
+		width: 30%;
+		height: 100%;
+		border: solid 4px grey;
+		box-sizing:border-box;
+	}
+	
+	
+	
+	
+	
+	.ReceipeViewerReceipeControls{
+		width: 100%;
+		height: 14%;
+		border: solid 4px green;
+		box-sizing:border-box;
+	}
+	.ReceipeViewerReceipeControlsLabel{
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 30%;
+		border: solid 1px blue;
+		box-sizing:border-box;
+		text-align: center
+	}
+	.ReceipeViewerNetworkControls{
+		top: 20%;
+		left: 0px;
+		width: 100%;
+		height: 70%;
+		border: solid 1px blue;
+		box-sizing:border-box;
+		
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		flex-wrap: wrap;
+		align-content: space-between;
+	}
+	#ReceipeViewerParalReceipeBtn{
+		width:100%;
+		height:100%;
+		border:solid 3px orange;
+		box-sizing:border-box;
+		text-align: center;
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+		flex-direction: column;
+	}
+	.ReceipeViewerNodeInformation
+	{
+		width: 100%;
+		height: 86%;
+		border: solid 4px green;
+		box-sizing:border-box;
+	}
+	.ReceipeViewerNodeInformationLabel
+	{
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 5%;
+		border: solid 1px blue;
+		box-sizing:border-box;
+		text-align: center
+	}
+	.ReceipeViewerInformationFields
+	{
+		top: 20%;
+		left: 0px;
+		width: 100%;
+		height: 70%;
+		border: solid 1px blue;
+		box-sizing:border-box;
+		
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+		flex-direction: column;
+	}
+	.ReceipeViewerReceipeImage
+	{
+		width: 100%;
+		height: 60%;
+		border: solid 4px yellow;
+		box-sizing:border-box;
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: center;
+		align-items:center;
+	}
+	.ReceipeViewerReceipeDescriptionFields
+	{
+		width: 100%;
+		height: 26%;
+		border: solid 4px green;
+		box-sizing:border-box;
+	}
+	.ReceipeViewerReceipeDescriptionFieldsLabel
+	{
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 15%;
+		border: solid 1px blue;
+		box-sizing:border-box;
+		text-align: center
+	}
+	.ReceipeViewerReceipeDescription
+	{
+		width: 100%;
+		height: 85%;
+		border: solid 1px blue;
+		box-sizing:border-box;
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: center;
+		align-items:center;
+	}
+}
+@include showReceipeViewTheme;

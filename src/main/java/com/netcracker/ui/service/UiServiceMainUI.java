@@ -57,6 +57,7 @@ import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeStore;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeView;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
+import com.netcracker.ui.service.receipe.view.basic.objects.ShowReceipeView;
 import com.netcracker.ui.service.views.CreateRecipeView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.ExternalResource;
@@ -418,6 +419,37 @@ public class UiServiceMainUI extends UI {
 
       }
     });
+    
+    newViews.add(new View("RecipeViewer") {
+      @Override
+      public void draw(LinkedMultiValueMap<String, String> parameters) {
+        try{ 
+            ReceipeProxy proxy = new ReceipeProxy();
+            proxy.setConfig(
+                    "http://localhost:8083/", 
+                    parameters.getFirst("userId"), parameters.
+                            getFirst("receipeId"));
+
+            ReceipeDataConverter converter = 
+                    new ReceipeDataConverter();
+            ReceipeStore store = new ReceipeStore(converter);
+
+            ShowReceipeView view = new ShowReceipeView(proxy, store);
+            view.reload();
+            mainLayer.contentRowLayout.
+                    removeAllComponents();
+            mainLayer.contentRowLayout = view.
+                    drawReceipe(
+                    mainLayer.contentRowLayout, (form) 
+                            -> {addWindow(form);
+            });
+        }
+        catch(Exception exception){
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+        }
+      }
+    });
+            
     try {
       Navigator navigator = new Navigator(newViews, "Main", getPage());
       ExceptionHandler ex = ExceptionHandler.getInstance();
@@ -475,24 +507,22 @@ public class UiServiceMainUI extends UI {
     }
     //Создаем подпункты меню
     ArrayList<MenusButton> mainSubMenus = new ArrayList<>();
-    mainSubMenus.add(new MenusButton("Подпункт1", "idsubMain1", new HandlerForClickingTheButton() {
+    mainSubMenus.add(new MenusButton("Создать рецепт", "idsubMain1", new HandlerForClickingTheButton() {
       @Override
       public void onEventClickDo() {
         try {
-          throw new UiServiceException("Проверка работы с неизвестным "
-                  + "типом исключений");
+            setUrl("RecipeConfigurator");
         } catch (Exception exception) {
           ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
       }
     }));
 
-    mainSubMenus.add(new MenusButton("Подпункт2", "idsubMain2", new HandlerForClickingTheButton() {
+    mainSubMenus.add(new MenusButton("Просмотреть рецепт", "idsubMain2", new HandlerForClickingTheButton() {
       @Override
       public void onEventClickDo() {
         try {
-          throw new UiServiceException("Проверка работы с неизвестным "
-                  + "типом исключений");
+            setUrl("RecipeViewer?receipeId=1&userId=1");
         } catch (Exception exception) {
           ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
@@ -505,7 +535,7 @@ public class UiServiceMainUI extends UI {
         setUrl("Main");
       }
 
-    }, mainSubMenus);
+    });
 
     //Создаем одноуровневую кнопки меню
     MenusButton recepsBtn = new MenusButton("Рецепты", "idRecept", new HandlerForClickingTheButton() {
@@ -513,7 +543,7 @@ public class UiServiceMainUI extends UI {
       public void onEventClickDo() {
         setUrl("RecipeConfigurator");
       }
-    });
+    }, mainSubMenus);
 
     MenusSearchBar search = new MenusSearchBar("idSearch", new HandlerForClickingTheButton() {
       @Override

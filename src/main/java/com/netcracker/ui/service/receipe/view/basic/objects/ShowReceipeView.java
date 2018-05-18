@@ -1,0 +1,190 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.netcracker.ui.service.receipe.view.basic.objects;
+
+import com.jarektoro.responsivelayout.ResponsiveLayout;
+import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
+import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
+import com.netcracker.ui.service.buttonsClickListener.component.SessionStorageHelper;
+import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
+import com.netcracker.ui.service.exception.navigator.InternalServerError;
+import com.netcracker.ui.service.forms.AddResourse;
+import com.netcracker.ui.service.forms.AddStepForm;
+import com.netcracker.ui.service.forms.listeners.LoadFormListener;
+import com.netcracker.ui.service.graf.component.Graf;
+import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
+import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
+import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
+import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
+import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
+import com.vaadin.ui.CustomLayout;
+import org.json.JSONObject;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+/**
+ *
+ * @author Artem
+ */
+public class ShowReceipeView implements View{
+    
+    public Graf graf;
+    private final PresenterObserver presenter;
+    public Receipe initReceipe;
+    private Proxy proxy;
+    private View curentView;
+    
+    public ShowReceipeView(Proxy proxy, StoreSubject store)
+    {
+        this.proxy = proxy;
+        this.curentView = this;
+        presenter = new ReceipePresenter(proxy, store, (ShowReceipeView)this);
+    }
+    
+    @Override
+    public void reload() throws NotFoundBean,InternalServerError{
+        //Вызов функции load PresenterObserver
+        presenter.load();
+    }
+
+    @Override
+    public void setNewViewsData(Receipe object) {
+        initReceipe = (Receipe)object;
+    }
+
+    @Override
+    public void updateCurrentRecipesInResourses(Resource resource, 
+            boolean increment){
+        presenter.updateCurrentRecipesInResourses(resource, increment);
+    }
+    
+    @Override
+    public ResponsiveLayout drawReceipe(ResponsiveLayout contentRowLayout, 
+            LoadFormListener listener) {
+        CustomLayout ShortViewOfReceipeLayout = new CustomLayout("ShowReceipeView");
+        ShortViewOfReceipeLayout.setHeight("100%");
+        contentRowLayout.setHeight("100%");
+        contentRowLayout.addComponent(ShortViewOfReceipeLayout);
+        
+        graf = new Graf();
+        graf.setInitCollections(initReceipe.nodes, initReceipe.edges, proxy.getUserId(),
+                proxy.getReceipeId());
+        ShortViewOfReceipeLayout.addComponent(graf,"panelWithGraf");
+        /*
+        //Синхронизация ресурсов и ингредиентов
+        for(int i=0; i<initReceipe.getIndredients().size(); i++){
+            presenter.updateCurrentRecipesInResourses(initReceipe.getIndredients().
+                    get(i), false);
+        }
+        for(int i=0; i<initReceipe.getResources().size(); i++){
+            presenter.updateCurrentRecipesInResourses(initReceipe.getResources().
+                    get(i), false);
+        }
+        */
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        ButtonsClickListener clickListener = new SessionStorageHelper().getListener(attr);
+        
+        /*try{
+  
+            clickListener.addButtonClickListener(new ClickListener() {
+                @Override
+                public String getId() {
+                    return "networkAddNodeBtn";
+                }
+
+                @Override
+                public void onEventDo() {
+                    AddStepForm addStepForm = new AddStepForm((node) -> {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("newNodesId", node.getNodeId());
+                        jsonObject.put("newNodesLable",node.getLabel());
+                        jsonObject.put("newNodesImage", node.getPictureId().
+                                split("/")[node.getPictureId().split("/").
+                                        length -1]);
+                        jsonObject.put("newNodesX","");
+                        jsonObject.put("newNodesY","");
+                        jsonObject.put("userId","");
+                        jsonObject.put("receipeId","");
+                        jsonObject.put("newNodesDescription",node.getDescription());
+                        graf.getAddNodeEvent().handleEvent(jsonObject);
+                    }, proxy.getReceipeId(), proxy.getUserId());
+                    listener.onCreate(addStepForm);
+                    //addWindow(addStepForm);
+                }
+            });
+            clickListener.addButtonClickListener(new ClickListener() {
+                @Override
+                public String getId() {
+                    return "networkCreateReceipeBtn";
+                }
+
+                @Override
+                public void onEventDo() {
+                    graf.getGmFacade().getGmReceipeFacade().setReceipeCompleted(
+                            proxy.getReceipeId());
+                }
+            });
+                    clickListener.addButtonClickListener(new ClickListener() {
+            @Override
+            public String getId() {
+                return "addReceipePartsBtn";
+            }
+
+            @Override
+            public void onEventDo() {
+                AddResourse addIngredient = new AddResourse(false, 
+                        proxy.getUserId(), proxy.getReceipeId(),curentView ,(resource, 
+                                receipeId, userId, view) -> {
+                            presenter.updateCurrentRecipesInResourses(resource, 
+                                    true);
+                            //Обновление входных ресурсов
+                            try{
+                                //Добавили(обновили) входные ресурсы для рецепта
+                                //на gm
+                                BeansFactory<GMFacade> bf = BeansFactory.
+                                        getInstance();
+                                GMFacade gmFacade = bf.getBean(GMFacade.class);
+                                gmFacade.getGmReceipeFacade().
+                                        addReceipeResource(receipeId, userId, 
+                                                resource.getResourceId(), 
+                                                resource.getResourceNumber());
+                                //Обновили стейт доступных ресурсов на вью
+                                view.updateCurrentRecipesInResourses(resource, 
+                                        true);
+                                //ДОБАВИТЬ СЮДА ВЫВОД В СООТВЕСТВУЮЩУЮ ТАБЛИЦУ
+                            }
+                            catch(Exception exception){
+                                ExceptionHandler.getInstance().
+                                        runExceptionhandling(exception);
+                            }
+                        });
+                listener.onCreate(addIngredient);
+            }
+        });
+        }
+        catch(Exception exception){
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+        }*/
+        //Пример добавления слушателя на клик по ЛЮБОЙ ноде
+        /*graf.addHandlerForClickingOnNode(new ClickOnNodeEventListener() {
+            @Override
+            public void onEventDo() {
+                Notification.show("Все получилось!!!!!!");
+            }
+        });*/
+        //Пример добавления слушателя на клик по КОНКРЕТНОЙ ноде
+        /*
+        graf.setHandlerForClickingTheNode(1, new HandlerForClickingTheNode(){
+            @Override
+            public void onEventClickDo() {
+                Notification.show("Value: " + "первый");
+            }
+        });*/
+        return contentRowLayout;
+    }
+}
