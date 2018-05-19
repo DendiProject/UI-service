@@ -7,6 +7,8 @@ package com.netcracker.ui.service.forms;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.content.handler.CookieHandler;
+import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.forms.listeners.AddStepListener;
 import com.netcracker.ui.service.graf.component.Node;
@@ -24,6 +26,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import java.io.File;
 import java.util.List;
+import javax.servlet.http.Cookie;
 
 /**
  *
@@ -33,9 +36,14 @@ public class AddStepForm  extends Window {
     private String stepLable = null;
     private String stepDescription = null;
     
-    public AddStepForm(AddStepListener listener, String receipeid, String userid) 
+    public AddStepForm(AddStepListener listener, String receipeid) 
     {         
-       
+        //Получение id пользователя
+        CookieHandler ch2 = new CookieHandler();
+        JWTHandler jwth2 = new JWTHandler();
+        Cookie userCookie2 = ch2.getCookieByName("userInfo");
+        String userid = jwth2.readUserId(userCookie2.getValue(), 
+                "test");
         
         ResponsiveLayout mainLayout = new ResponsiveLayout();
         CustomLayout mainCustomLayout = new CustomLayout("AddStepView");

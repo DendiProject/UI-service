@@ -429,10 +429,16 @@ public class UiServiceMainUI extends UI {
       @Override
       public void draw(LinkedMultiValueMap<String, String> parameters) {
         try{ 
+            //Получение id пользователя
+            CookieHandler ch2 = new CookieHandler();
+            JWTHandler jwth2 = new JWTHandler();
+            Cookie userCookie2 = ch2.getCookieByName("userInfo");
+            String userId = jwth2.readUserId(userCookie2.getValue(), 
+                    "test");
             ReceipeProxy proxy = new ReceipeProxy();
             proxy.setConfig(
                     "http://localhost:8083/", 
-                    parameters.getFirst("userId"), parameters.
+                    userId, parameters.
                             getFirst("receipeId"), false, false);
 
             ReceipeDataConverter converter = 
@@ -463,9 +469,9 @@ public class UiServiceMainUI extends UI {
                         ReceipeProxy proxy = new ReceipeProxy();
                         proxy.setConfig(
                                 "http://localhost:8083/", 
-                                parameters.getFirst("userId"), parameters.
+                                userId, parameters.
                                         getFirst("receipeId"), true, false);
-                        if(!parameters.getFirst("userId").equals("1")){
+                        if(!userId.equals("1")){
                             ReceipeDataConverter converter = 
                                     new ReceipeDataConverter();
                             ReceipeStore store = new ReceipeStore(converter);
@@ -571,13 +577,7 @@ public class UiServiceMainUI extends UI {
       @Override
       public void onEventClickDo() {
         try {
-            //Получение id пользователя
-            CookieHandler ch2 = new CookieHandler();
-            JWTHandler jwth2 = new JWTHandler();
-            Cookie userCookie2 = ch2.getCookieByName("userInfo");
-            String userId = jwth2.readUserId(userCookie2.getValue(), 
-                    "test");
-            setUrl("RecipeViewer?receipeId=1&userId="+userId);
+            setUrl("RecipeViewer?receipeId=1");
         } catch (Exception exception) {
           ExceptionHandler.getInstance().runExceptionhandling(exception);
         }

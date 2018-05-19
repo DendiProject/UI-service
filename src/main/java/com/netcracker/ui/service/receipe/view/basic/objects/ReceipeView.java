@@ -132,7 +132,7 @@ public class ReceipeView implements View{
                         jsonObject.put("receipeId","");
                         jsonObject.put("newNodesDescription",node.getDescription());
                         graf.getAddNodeEvent().handleEvent(jsonObject);
-                    }, proxy.getReceipeId(), proxy.getUserId());
+                    }, proxy.getReceipeId());
                     listener.onCreate(addStepForm);
                     //addWindow(addStepForm);
                 }
