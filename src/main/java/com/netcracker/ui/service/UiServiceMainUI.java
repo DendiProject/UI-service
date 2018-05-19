@@ -370,11 +370,10 @@ public class UiServiceMainUI extends UI {
                 ShortViewOfReceipeLayout.setHeight("100%");
                 mainLayer.contentRowLayout.setHeight("100%");
                 mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
-                ShortViewOfReceipeLayout.addComponent(new Label("Name"), "userPageNameFieldAndLable");
-                ShortViewOfReceipeLayout.addComponent(new Label("SecondName"), "userPageSecondNameFieldAndLable");
-                ShortViewOfReceipeLayout.addComponent(new Label("Nickname"), "userPageNicknameFieldAndLable");
-                ShortViewOfReceipeLayout.addComponent(new Label("Mail"), "userPageMailFieldAndLable");
-                ShortViewOfReceipeLayout.addComponent(new Label("BirthDate"), "userPageBirthDateFieldAndLable");
+                ShortViewOfReceipeLayout.addComponent(fName, "userPageNameFieldAndLable");
+        ShortViewOfReceipeLayout.addComponent(sName, "userPageSecondNameFieldAndLable");
+        ShortViewOfReceipeLayout.addComponent(email, "userPageMailFieldAndLable");
+                //ShortViewOfReceipeLayout.addComponent(new Label("BirthDate"), "userPageBirthDateFieldAndLable");
                 TextArea area = new TextArea();
                 area.setValue("testt esttestte sttesttesttesttest testtesttest"
                         + "testtestt esttesttesttesttesttesttesttesttest"
@@ -572,7 +571,13 @@ public class UiServiceMainUI extends UI {
       @Override
       public void onEventClickDo() {
         try {
-            setUrl("RecipeViewer?receipeId=1&userId=1");
+            //Получение id пользователя
+            CookieHandler ch2 = new CookieHandler();
+            JWTHandler jwth2 = new JWTHandler();
+            Cookie userCookie2 = ch2.getCookieByName("userInfo");
+            String userId = jwth2.readUserId(userCookie2.getValue(), 
+                    "test");
+            setUrl("RecipeViewer?receipeId=1&userId="+userId);
         } catch (Exception exception) {
           ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
@@ -787,8 +792,7 @@ public class UiServiceMainUI extends UI {
 
       @Override
       public void onEventDo() {
-        int i = 0;//Код писать сюда
-
+        
       }
     });
     return mainLayer.contentRowLayout;

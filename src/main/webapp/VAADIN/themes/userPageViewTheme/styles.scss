@@ -94,21 +94,7 @@
         align-items:center;
         flex-direction: column;
     }
-
-    .userPageCancelBtn
-    {
-        width: 15%;
-        height: 85%;
-
-        box-sizing:border-box;
-
-        display: -webkit-flex;
-        display: flex;
-        justify-content: center;
-        align-items:center;
-
-
-    }
+    
     .userPageLoadFotoBtn
     {
         margin: 1%;
@@ -293,12 +279,13 @@
     font-family: "Gotham Rounded A","Gotham Rounded B",Helvetica,Arial,sans-serif;
     font-weight: 700;
     padding: 19px 39px 18px;
-    font-size: 18px;
+    font-size: 17px;
     }
-    .buttons:hover, .userPageSaveBtn:focus, .userPageSaveBtn:active {
+    .buttons:hover, .buttons:focus, .buttons:active {
         background-color: #FF7A00;
         border-color: #FF7A00;
     }
+
 
 }
 @include userPageViewTheme;
