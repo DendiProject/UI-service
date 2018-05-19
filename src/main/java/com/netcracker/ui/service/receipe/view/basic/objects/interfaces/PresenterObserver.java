@@ -9,6 +9,8 @@ import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -21,4 +23,5 @@ public interface PresenterObserver<T extends Receipe> {
     int getId();//Возвращает id текущего presenter
     void updateView(T newData);
     void updateCurrentRecipesInResourses(Resource resource, boolean increment);
+    List<Resource> getCurrentResources(boolean getIngredients);
 }

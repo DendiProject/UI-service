@@ -704,31 +704,6 @@ public class UiServiceMainUI extends UI {
     ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
     ButtonsClickListener clickListener = new SessionStorageHelper().getListener(attr);
 
-    clickListener.addButtonClickListener(new ClickListener() {
-      @Override
-      public String getId() {
-        return "addReceipePartsBtn";
-      }
-
-      @Override
-      public void onEventDo() {
-        AuthorizationForm modalWindow = new AuthorizationForm(UI.getCurrent());
-        addWindow(modalWindow);
-      }
-    });
-    clickListener.addButtonClickListener(new ClickListener() {
-      @Override
-      public String getId() {
-        return "addReceipeResoursesBtn";
-      }
-
-      @Override
-      public void onEventDo() {
-        int i = 0;
-      }
-    });
-    
-
     //Артем, назначь действия на событие onClick для следующих кнопок:
     clickListener.addButtonClickListener(new ClickListener() {
       @Override

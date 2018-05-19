@@ -14,6 +14,8 @@ import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -64,5 +66,16 @@ public class ReceipePresenter implements PresenterObserver{
     @Override
     public void updateView(Receipe newData) {
         view.setNewViewsData(newData);
+    }
+
+    @Override
+    public List<Resource> getCurrentResources(boolean getIngredients) {
+        if(getIngredients){
+            return storeSubject.getCurrentRecipesInIngredients();
+        }
+        else
+        {
+            return storeSubject.getCurrentRecipesInResourses();
+        }
     }
 }
