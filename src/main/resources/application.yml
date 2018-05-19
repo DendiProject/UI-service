@@ -2,7 +2,7 @@ spring:
   application:
     name: user-service
 server.ip: 
- localhost
+ 92.53.91.47
 server.port: 
   8008
 idp:

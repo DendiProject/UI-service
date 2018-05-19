@@ -7,7 +7,9 @@ package com.netcracker.ui.service.forms;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.components.Properties;
 import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.forms.listeners.AddStepListener;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
@@ -24,6 +26,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,14 +41,16 @@ public class AddStepForm  extends Window {
     {         
        
         
+      try {
         ResponsiveLayout mainLayout = new ResponsiveLayout();
         CustomLayout mainCustomLayout = new CustomLayout("AddStepView");
         mainLayout.setHeight("100%");
         mainCustomLayout.setHeight("100%");
         mainLayout.addComponent(mainCustomLayout);
+        BeansFactory<Properties> bfP = BeansFactory.getInstance();
+        Properties p = bfP.getBean(Properties.class);
         
-        
-        String imageName = "http://localhost:8008/images/s3";
+        String imageName = "http://"+p.getUiURL()+"/images/s3";
         Image image = new Image();
         image.setSource(new ExternalResource(imageName));
         image.setHeight("100%");
@@ -55,20 +61,20 @@ public class AddStepForm  extends Window {
         addImageBtn.setHeight("100%");
         addImageBtn.setWidth("100%");
         addImageBtn.addClickListener(e -> {
-             BeansFactory<GMFacade> bf = BeansFactory.getInstance();
-                    try {
-                        if(stepDescription != null && imageName != null &&
-                                stepLable != null){
-                            GMFacade gmFacade = bf.getBean(GMFacade.class);
-                            Node n = new Node("", stepDescription, imageName, stepLable);
-                            //Node node = gmFacade.getGmNodeFacade().addNode(n,receipeid, userid);
-                            listener.onCreate(n);
-                            this.close();
-                        }
-                    }
-                    catch(Exception exception){
-                        ExceptionHandler.getInstance().runExceptionhandling(exception);
-                    }
+          BeansFactory<GMFacade> bf = BeansFactory.getInstance();
+          try {
+            if(stepDescription != null && imageName != null &&
+                    stepLable != null){
+              GMFacade gmFacade = bf.getBean(GMFacade.class);
+              Node n = new Node("", stepDescription, imageName, stepLable);
+              //Node node = gmFacade.getGmNodeFacade().addNode(n,receipeid, userid);
+              listener.onCreate(n);
+              this.close();
+            }
+          }
+          catch(Exception exception){
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+          }
         });
         mainCustomLayout.addComponent(addImageBtn,"addStepCancelBtn");
         
@@ -76,7 +82,7 @@ public class AddStepForm  extends Window {
         cancelBtn.setHeight("100%");
         cancelBtn.setWidth("100%");
         cancelBtn.addClickListener(e -> {
-            this.close();
+          this.close();
         });
         mainCustomLayout.addComponent(cancelBtn,"addStepDoneBtn");
         
@@ -97,13 +103,13 @@ public class AddStepForm  extends Window {
         /*TextField stepsName = new TextField();
         stepsName.setWidth("100%");
         stepsName.addValueChangeListener((event) -> {
-            if(!event.getValue().equals("")){
-                //recipeName = event.toString();
-            }
-            else
-            {
-                //recipeName = null;
-            }
+        if(!event.getValue().equals("")){
+        //recipeName = event.toString();
+        }
+        else
+        {
+        //recipeName = null;
+        }
         });
         stepsName.setPlaceholder("Название рецепта");
         mainCustomLayout.addComponent(stepsName,"addStepName");*/
@@ -111,13 +117,13 @@ public class AddStepForm  extends Window {
         TextField stepsLable = new TextField();
         stepsLable.setWidth("100%");
         stepsLable.addValueChangeListener((event) -> {
-            if(!event.getValue().equals("")){
-                stepLable = event.getValue();
-            }
-            else
-            {
-                stepLable = null;
-            }
+          if(!event.getValue().equals("")){
+            stepLable = event.getValue();
+          }
+          else
+          {
+            stepLable = null;
+          }
         });
         stepsLable.setPlaceholder("Подпись шага");
         mainCustomLayout.addComponent(stepsLable,"addStepNameLable");
@@ -127,13 +133,13 @@ public class AddStepForm  extends Window {
         area.setWidth("100%");
         area.setWordWrap(true);
         area.addValueChangeListener((event) -> {
-            if(!event.getValue().equals("")){
-                stepDescription = event.getValue();
-            }
-            else
-            {
-                stepDescription = null;
-            }
+          if(!event.getValue().equals("")){
+            stepDescription = event.getValue();
+          }
+          else
+          {
+            stepDescription = null;
+          }
         });
         mainCustomLayout.addComponent(area,"addStepItem3Content");
         
@@ -142,5 +148,8 @@ public class AddStepForm  extends Window {
         setPosition(20, 150);
         setResizable(false);
         setModal(true);
+      } catch (NotFoundBean ex) {
+        Logger.getLogger(AddStepForm.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
 }
