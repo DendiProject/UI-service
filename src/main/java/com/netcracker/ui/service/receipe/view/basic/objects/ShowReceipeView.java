@@ -17,12 +17,16 @@ import com.netcracker.ui.service.forms.AddResourse;
 import com.netcracker.ui.service.forms.AddStepForm;
 import com.netcracker.ui.service.forms.listeners.LoadFormListener;
 import com.netcracker.ui.service.graf.component.Graf;
+import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.PresenterObserver;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.CustomLayout;
+import com.vaadin.ui.Image;
+import com.vaadin.ui.Label;
 import org.json.JSONObject;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -38,6 +42,10 @@ public class ShowReceipeView implements View{
     public Receipe initReceipe;
     private Proxy proxy;
     private View curentView;
+    private Image image;
+    private Label nodeDescription;
+    ResponsiveLayout contentRowLayout;
+    LoadFormListener listener;
     
     public ShowReceipeView(Proxy proxy, StoreSubject store)
     {
@@ -66,10 +74,24 @@ public class ShowReceipeView implements View{
     @Override
     public ResponsiveLayout drawReceipe(ResponsiveLayout contentRowLayout, 
             LoadFormListener listener) {
+        this.contentRowLayout = contentRowLayout;
+        this.listener = listener;
         CustomLayout ShortViewOfReceipeLayout = new CustomLayout("ShowReceipeView");
         ShortViewOfReceipeLayout.setHeight("100%");
         contentRowLayout.setHeight("100%");
         contentRowLayout.addComponent(ShortViewOfReceipeLayout);
+        image = new Image();
+        String imageName = "http://localhost:8008/images/s3";
+        image.setSource(new ExternalResource(imageName));
+        image.setHeight("100%");
+        image.setWidth("100%");
+        ShortViewOfReceipeLayout.addComponent(image, "ReceipeViewerReceipeImage");
+        
+        nodeDescription = new Label("Пожалуйста, нажмите на любой шаг и здесь "
+                + "вы увидите его описание!");
+        nodeDescription.setHeight("100%");
+        nodeDescription.setWidth("100%");
+        ShortViewOfReceipeLayout.addComponent(nodeDescription, "ReceipeViewerReceipeDescription");
         
         graf = new Graf();
         graf.setInitCollections(initReceipe.nodes, initReceipe.edges, proxy.getUserId(),
@@ -89,94 +111,11 @@ public class ShowReceipeView implements View{
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         ButtonsClickListener clickListener = new SessionStorageHelper().getListener(attr);
         
-        /*try{
-  
-            clickListener.addButtonClickListener(new ClickListener() {
-                @Override
-                public String getId() {
-                    return "networkAddNodeBtn";
-                }
-
-                @Override
-                public void onEventDo() {
-                    AddStepForm addStepForm = new AddStepForm((node) -> {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("newNodesId", node.getNodeId());
-                        jsonObject.put("newNodesLable",node.getLabel());
-                        jsonObject.put("newNodesImage", node.getPictureId().
-                                split("/")[node.getPictureId().split("/").
-                                        length -1]);
-                        jsonObject.put("newNodesX","");
-                        jsonObject.put("newNodesY","");
-                        jsonObject.put("userId","");
-                        jsonObject.put("receipeId","");
-                        jsonObject.put("newNodesDescription",node.getDescription());
-                        graf.getAddNodeEvent().handleEvent(jsonObject);
-                    }, proxy.getReceipeId(), proxy.getUserId());
-                    listener.onCreate(addStepForm);
-                    //addWindow(addStepForm);
-                }
-            });
-            clickListener.addButtonClickListener(new ClickListener() {
-                @Override
-                public String getId() {
-                    return "networkCreateReceipeBtn";
-                }
-
-                @Override
-                public void onEventDo() {
-                    graf.getGmFacade().getGmReceipeFacade().setReceipeCompleted(
-                            proxy.getReceipeId());
-                }
-            });
-                    clickListener.addButtonClickListener(new ClickListener() {
-            @Override
-            public String getId() {
-                return "addReceipePartsBtn";
-            }
-
-            @Override
-            public void onEventDo() {
-                AddResourse addIngredient = new AddResourse(false, 
-                        proxy.getUserId(), proxy.getReceipeId(),curentView ,(resource, 
-                                receipeId, userId, view) -> {
-                            presenter.updateCurrentRecipesInResourses(resource, 
-                                    true);
-                            //Обновление входных ресурсов
-                            try{
-                                //Добавили(обновили) входные ресурсы для рецепта
-                                //на gm
-                                BeansFactory<GMFacade> bf = BeansFactory.
-                                        getInstance();
-                                GMFacade gmFacade = bf.getBean(GMFacade.class);
-                                gmFacade.getGmReceipeFacade().
-                                        addReceipeResource(receipeId, userId, 
-                                                resource.getResourceId(), 
-                                                resource.getResourceNumber());
-                                //Обновили стейт доступных ресурсов на вью
-                                view.updateCurrentRecipesInResourses(resource, 
-                                        true);
-                                //ДОБАВИТЬ СЮДА ВЫВОД В СООТВЕСТВУЮЩУЮ ТАБЛИЦУ
-                            }
-                            catch(Exception exception){
-                                ExceptionHandler.getInstance().
-                                        runExceptionhandling(exception);
-                            }
-                        });
-                listener.onCreate(addIngredient);
-            }
+        //Добавление слушателя на клик по ЛЮБОЙ ноде
+        graf.addHandlerForClickingOnNode((Node node) -> {
+            nodeDescription.setValue(node.getDescription());
+            image.setSource(new ExternalResource(node.getPictureId()));
         });
-        }
-        catch(Exception exception){
-            ExceptionHandler.getInstance().runExceptionhandling(exception);
-        }*/
-        //Пример добавления слушателя на клик по ЛЮБОЙ ноде
-        /*graf.addHandlerForClickingOnNode(new ClickOnNodeEventListener() {
-            @Override
-            public void onEventDo() {
-                Notification.show("Все получилось!!!!!!");
-            }
-        });*/
         //Пример добавления слушателя на клик по КОНКРЕТНОЙ ноде
         /*
         graf.setHandlerForClickingTheNode(1, new HandlerForClickingTheNode(){

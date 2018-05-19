@@ -18,4 +18,7 @@ public interface Proxy {
     Object load();//Выполнение запроса на бэкенд
     String getUserId();
     String getReceipeId();
+    void setConfig(String connectionUrl, String userId, String receipeId, 
+            boolean loadParallelGraf, boolean checkAutentification);
+    String getConnectionUrl();
 }

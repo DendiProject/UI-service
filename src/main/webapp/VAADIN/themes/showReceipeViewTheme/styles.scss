@@ -3,158 +3,241 @@
 @mixin showReceipeViewTheme 
 {
     @include valo;
+    
+    .ReceipeViewer
+    {
+        width: 100%;
+        height: 100%;
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+    }
+    .ReceipeViewerPanelWithGraf
+    {
+        width: 70%;
+        height: 100%;
+        border: solid 4px grey;
+        box-sizing:border-box;
+    }
+    .ReceipeViewerPanelWithDescriptionOfNode
+    {
+        width: 30%;
+        height: 100%;
+        border: solid 4px grey;
+        box-sizing:border-box;
+    }
+
+
+
+
+
+    .ReceipeViewerReceipeControls{
+        width: 100%;
+        height: 14%;
+        border: solid 4px green;
+        box-sizing:border-box;
+    }
+    .ReceipeViewerReceipeControlsLabel{
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 30%;
+        border: solid 1px blue;
+        box-sizing:border-box;
+        text-align: center
+    }
+    .ReceipeViewerNetworkControls{
+        top: 20%;
+        left: 0px;
+        width: 100%;
+        height: 70%;
+        border: solid 1px blue;
+        box-sizing:border-box;
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        align-content: space-between;
+    }
+    #ReceipeViewerParalReceipeBtn{
+        width:100%;
+        height:100%;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+        flex-direction: column;
+    }
+    .ReceipeViewerNodeInformation
+    {
+        width: 100%;
+        height: 86%;
+        border: solid 4px green;
+        box-sizing:border-box;
+    }
+    .ReceipeViewerNodeInformationLabel
+    {
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 5%;
+        border: solid 1px blue;
+        box-sizing:border-box;
+        text-align: center
+    }
+    .ReceipeViewerInformationFields
+    {
+        top: 20%;
+        left: 0px;
+        width: 100%;
+        height: 70%;
+        border: solid 1px blue;
+        box-sizing:border-box;
+
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
+        flex-direction: column;
+    }
+    .ReceipeViewerReceipeImage
+    {
+        width: 100%;
+        height: 30%;
+        border: solid 4px yellow;
+        box-sizing:border-box;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        align-items:center;
+    }
+    .ReceipeViewerReceipeDescriptionFields
+    {
+        width: 100%;
+        height: 56%;
+        border: solid 4px green;
+        box-sizing:border-box;
+    }
+    .ReceipeViewerReceipeDescriptionFieldsLabel
+    {
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 7%;
+        border: solid 1px blue;
+        box-sizing:border-box;
+        text-align: center
+    }
+    .ReceipeViewerReceipeDescription
+    {
+        width: 100%;
+        height: 93%;
+        border: solid 1px blue;
+        box-sizing:border-box;
+
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: center;
+        align-items:center;
+    }
     .receipeControls2
     {
         width: 0%;
         height: 0%;
     }
-    .ReceipeViewer
-	{
-		width: 100%;
-		height: 100%;
-		
-
-		display: -webkit-flex; 
-		display: flex;
-		justify-content: space-around;
-		align-items:center;
-	}
-	.ReceipeViewerPanelWithGraf
-	{
-		width: 70%;
-		height: 100%;
-		border: solid 4px grey;
-		box-sizing:border-box;
-	}
-	.ReceipeViewerPanelWithDescriptionOfNode
-	{
-		width: 30%;
-		height: 100%;
-		border: solid 4px grey;
-		box-sizing:border-box;
-	}
-	
-	
-	
-	
-	
-	.ReceipeViewerReceipeControls{
-		width: 100%;
-		height: 14%;
-		border: solid 4px green;
-		box-sizing:border-box;
-	}
-	.ReceipeViewerReceipeControlsLabel{
-		top: 0px;
-		left: 0px;
-		width: 100%;
-		height: 30%;
-		border: solid 1px blue;
-		box-sizing:border-box;
-		text-align: center
-	}
-	.ReceipeViewerNetworkControls{
-		top: 20%;
-		left: 0px;
-		width: 100%;
-		height: 70%;
-		border: solid 1px blue;
-		box-sizing:border-box;
-		
-		
-		display: -webkit-flex; 
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		flex-wrap: wrap;
-		align-content: space-between;
-	}
-	#ReceipeViewerParalReceipeBtn{
-		width:100%;
-		height:100%;
-		border:solid 3px orange;
-		box-sizing:border-box;
-		text-align: center;
-		
-		display: -webkit-flex; 
-		display: flex;
-		justify-content: space-around;
-		align-items:center;
-		flex-direction: column;
-	}
-	.ReceipeViewerNodeInformation
-	{
-		width: 100%;
-		height: 86%;
-		border: solid 4px green;
-		box-sizing:border-box;
-	}
-	.ReceipeViewerNodeInformationLabel
-	{
-		top: 0px;
-		left: 0px;
-		width: 100%;
-		height: 5%;
-		border: solid 1px blue;
-		box-sizing:border-box;
-		text-align: center
-	}
-	.ReceipeViewerInformationFields
-	{
-		top: 20%;
-		left: 0px;
-		width: 100%;
-		height: 70%;
-		border: solid 1px blue;
-		box-sizing:border-box;
-		
-		
-		display: -webkit-flex; 
-		display: flex;
-		justify-content: space-around;
-		align-items:center;
-		flex-direction: column;
-	}
-	.ReceipeViewerReceipeImage
-	{
-		width: 100%;
-		height: 60%;
-		border: solid 4px yellow;
-		box-sizing:border-box;
-		
-		display: -webkit-flex; 
-		display: flex;
-		justify-content: center;
-		align-items:center;
-	}
-	.ReceipeViewerReceipeDescriptionFields
-	{
-		width: 100%;
-		height: 26%;
-		border: solid 4px green;
-		box-sizing:border-box;
-	}
-	.ReceipeViewerReceipeDescriptionFieldsLabel
-	{
-		top: 0px;
-		left: 0px;
-		width: 100%;
-		height: 15%;
-		border: solid 1px blue;
-		box-sizing:border-box;
-		text-align: center
-	}
-	.ReceipeViewerReceipeDescription
-	{
-		width: 100%;
-		height: 85%;
-		border: solid 1px blue;
-		box-sizing:border-box;
-		
-		display: -webkit-flex; 
-		display: flex;
-		justify-content: center;
-		align-items:center;
-	}
+    .networkControls2
+    {
+        width: 0%;
+        height: 0%;
+    }
+    #networkAddNodeBtn{
+        width:48%;
+        height:27%;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
+    #networkDeleteElement{
+        width:48%;
+        height:27%;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
+    #networkAddEdge{
+        width:48%;
+        height:27%;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
+    #networkEditEdge{
+        width:48%;
+        height:27%;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
+    #networkCreateReceipeBtn{
+        width:100%;
+        height:27%;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
+    
+    
+    .networkAddNodeBtn{
+        width:48%;
+        height:27%;
+        border:solid 3px blue;
+        box-sizing:border-box;
+        text-align: center;
+        display: none;
+    }
+    .networkDeleteElement{
+        width:48%;
+        height:27%;
+        border:solid 3px blue;
+        box-sizing:border-box;
+        text-align: center;
+        display: none;
+    }
+    .networkAddEdge{
+        width:48%;
+        height:27%;
+        border:solid 3px blue;
+        box-sizing:border-box;
+        text-align: center;
+        display: none;
+    }
+    .networkEditEdge{
+        width:48%;
+        height:27%;
+        border:solid 3px blue;
+        box-sizing:border-box;
+        text-align: center;
+        display: none;
+    }
+    .networkCreateReceipeBtn{
+        width:100%;
+        height:27%;
+        border:solid 3px blue;
+        box-sizing:border-box;
+        text-align: center;
+        display: none;
+    }
 }
 @include showReceipeViewTheme;
