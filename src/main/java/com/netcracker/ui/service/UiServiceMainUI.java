@@ -57,7 +57,6 @@ import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeStore;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeView;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
-import com.netcracker.ui.service.receipe.view.basic.objects.ShowReceipeProxi;
 import com.netcracker.ui.service.receipe.view.basic.objects.ShowReceipeView;
 import com.netcracker.ui.service.views.CreateRecipeView;
 import com.vaadin.annotations.Theme;
@@ -218,9 +217,7 @@ public class UiServiceMainUI extends UI {
 
     newViews.add(new View("RecipeConfigurator") {
             @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {               
-                mainLayer.contentRowLayout.removeAllComponents();
-                mainLayer.contentRowLayout.setHeight("100%");
+            public void draw(LinkedMultiValueMap<String, String> parameters) {                
                 //Получение id пользователя
                 CookieHandler ch2 = new CookieHandler();
                 JWTHandler jwth2 = new JWTHandler();
@@ -229,6 +226,8 @@ public class UiServiceMainUI extends UI {
                         "test");
                 
                 if(!userId.equals("1")){
+                    mainLayer.contentRowLayout.removeAllComponents();
+                    mainLayer.contentRowLayout.setHeight("100%");
                     String noFinishRecipeId = checkNonFinishRecipe(userId);
                     if(noFinishRecipeId == null | noFinishRecipeId.equals("")){
                         //Если нет незаконченного рецепта
@@ -250,7 +249,7 @@ public class UiServiceMainUI extends UI {
                                 Receipe emtyReceipe = new Receipe("", 
                                         new ArrayList<Node>(), new ArrayList<Edge>(),
                                         new ArrayList<Resource>(), 
-                                        new ArrayList<Resource>());
+                                        new ArrayList<Resource>(), false);
                                 view.setNewViewsData(emtyReceipe);
                                 mainLayer.contentRowLayout.
                                         removeAllComponents();
@@ -325,7 +324,7 @@ public class UiServiceMainUI extends UI {
                                                     new ArrayList<Node>(), 
                                                     new ArrayList<Edge>(),
                                                     new ArrayList<Resource>(), 
-                                                    new ArrayList<Resource>());
+                                                    new ArrayList<Resource>(), false);
                                                 view.setNewViewsData(emtyReceipe);
                                                 mainLayer.contentRowLayout.
                                                         removeAllComponents();
@@ -349,7 +348,8 @@ public class UiServiceMainUI extends UI {
                 }
                 else
                 {
-                    //ДОБАВЬ СЮДА ПЕРЕХОД НА ФОРМУ РЕГИСТРАЦИИ/АВТОРИЗАЦИИ
+                    AuthorizationForm modalWindow = new AuthorizationForm(UI.getCurrent());
+                    addWindow(modalWindow);
                 }
             }
         });
@@ -460,29 +460,32 @@ public class UiServiceMainUI extends UI {
 
                 @Override
                 public void onEventDo() {
-                    //setUrl("RecipeViewerP?receipeId="+parameters.
-                    //        getFirst("userId")+"&userId="+parameters.
-                    //        getFirst("receipeId"));
                     try{
-                        ShowReceipeProxi proxy = new ShowReceipeProxi();
+                        ReceipeProxy proxy = new ReceipeProxy();
                         proxy.setConfig(
                                 "http://localhost:8083/", 
                                 parameters.getFirst("userId"), parameters.
                                         getFirst("receipeId"), true, false);
+                        if(!parameters.getFirst("userId").equals("1")){
+                            ReceipeDataConverter converter = 
+                                    new ReceipeDataConverter();
+                            ReceipeStore store = new ReceipeStore(converter);
 
-                        ReceipeDataConverter converter = 
-                                new ReceipeDataConverter();
-                        ReceipeStore store = new ReceipeStore(converter);
-
-                        ShowReceipeView view = new ShowReceipeView(proxy, store);
-                        view.reload();
-                        mainLayer.contentRowLayout.
-                                removeAllComponents();
-                        mainLayer.contentRowLayout = view.
-                                drawReceipe(
-                                mainLayer.contentRowLayout, (form) 
-                                        -> {addWindow(form);
-                        });
+                            ShowReceipeView view = new ShowReceipeView(proxy, store);
+                            view.reload();
+                            mainLayer.contentRowLayout.
+                                    removeAllComponents();
+                            mainLayer.contentRowLayout = view.
+                                    drawReceipe(
+                                    mainLayer.contentRowLayout, (form) 
+                                            -> {addWindow(form);
+                            });
+                        }
+                        else{
+                            AuthorizationForm modalWindow = new 
+                                    AuthorizationForm(UI.getCurrent());
+                            addWindow(modalWindow);
+                        }
                     }
                     catch(Exception exception){
                         ExceptionHandler.getInstance().

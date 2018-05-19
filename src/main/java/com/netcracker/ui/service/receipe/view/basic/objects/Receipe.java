@@ -20,6 +20,7 @@ public class Receipe implements Comparable<Receipe>{
     public ArrayList<Edge> edges;
     private List<Resource> resources;
     private List<Resource> indredients;
+    private boolean isParallel;
     
     public  Receipe()
     {
@@ -28,13 +29,22 @@ public class Receipe implements Comparable<Receipe>{
     
     public Receipe(String receipeName, ArrayList<Node> nodes, 
             ArrayList<Edge> edges, List<Resource> resources, 
-            List<Resource> indredients)
+            List<Resource> indredients, boolean isParallel)
     {
         this.receipeName = receipeName;
         this.nodes = nodes;
         this.edges = edges;
         this.resources = resources;
         this.indredients = indredients;
+        this.isParallel = isParallel;
+    }
+
+    public boolean isIsParallel() {
+        return isParallel;
+    }
+
+    public void setIsParallel(boolean isParallel) {
+        this.isParallel = isParallel;
     }
 
     public List<Resource> getResources() {

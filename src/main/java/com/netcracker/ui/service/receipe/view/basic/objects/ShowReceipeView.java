@@ -24,9 +24,11 @@ import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.Page;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import org.json.JSONObject;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -92,6 +94,12 @@ public class ShowReceipeView implements View{
         nodeDescription.setHeight("100%");
         nodeDescription.setWidth("100%");
         ShortViewOfReceipeLayout.addComponent(nodeDescription, "ReceipeViewerReceipeDescription");
+        
+        if(initReceipe != null && initReceipe.isIsParallel() && proxy.isLoadParallelGraf()){
+            new Notification("", "Этот рецепт уже параллельный",
+                                    Notification.Type.HUMANIZED_MESSAGE,true)
+                                    .show(Page.getCurrent());
+        }
         
         graf = new Graf();
         graf.setInitCollections(initReceipe.nodes, initReceipe.edges, proxy.getUserId(),

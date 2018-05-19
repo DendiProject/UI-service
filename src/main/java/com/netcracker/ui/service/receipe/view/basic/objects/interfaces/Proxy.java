@@ -21,4 +21,5 @@ public interface Proxy {
     void setConfig(String connectionUrl, String userId, String receipeId, 
             boolean loadParallelGraf, boolean checkAutentification);
     String getConnectionUrl();
+    boolean isLoadParallelGraf();
 }

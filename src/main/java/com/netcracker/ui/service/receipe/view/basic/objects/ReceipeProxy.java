@@ -35,6 +35,11 @@ public class ReceipeProxy  implements Proxy{
         return receipeId;
     }
     
+    @Override
+    public boolean isLoadParallelGraf() {
+        return loadParallelGraf;
+    }
+    
     public void setConfig(String connectionUrl, String userId, String receipeId, 
             boolean checkAutentification)
     {
