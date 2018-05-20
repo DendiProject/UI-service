@@ -19,25 +19,23 @@
     {
         width: 70%;
         height: 100%;
-        border: solid 4px grey;
+        border: solid 1px #A39A94;
         box-sizing:border-box;
     }
     .ReceipeViewerPanelWithDescriptionOfNode
     {
         width: 30%;
         height: 100%;
-        border: solid 4px grey;
+        border: solid #A39A94;
+        border-width: 1px 1px 1px 2px;
         box-sizing:border-box;
     }
-
-
-
-
 
     .ReceipeViewerReceipeControls{
         width: 100%;
         height: 14%;
-        border: solid 4px green;
+        border: solid 1px #A39A94;
+        //border-width: 2px 0 0 0;
         box-sizing:border-box;
     }
     .ReceipeViewerReceipeControlsLabel{
@@ -45,7 +43,7 @@
         left: 0px;
         width: 100%;
         height: 30%;
-        border: solid 1px blue;
+        //border: solid 1px blue;
         box-sizing:border-box;
         text-align: center
     }
@@ -54,7 +52,7 @@
         left: 0px;
         width: 100%;
         height: 70%;
-        border: solid 1px blue;
+        //border: solid 1px blue;
         box-sizing:border-box;
 
 
@@ -67,8 +65,9 @@
     }
     #ReceipeViewerParalReceipeBtn{
         width:100%;
-        height:100%;
-        border:solid 3px orange;
+        height:50%;
+        border: solid  #A39A94;
+        border-width: 2px 0 0 0;
         box-sizing:border-box;
         text-align: center;
 
@@ -82,7 +81,8 @@
     {
         width: 100%;
         height: 86%;
-        border: solid 4px green;
+        border: solid  #A39A94;
+        border-width: 0 0 2px 0;
         box-sizing:border-box;
     }
     .ReceipeViewerNodeInformationLabel
@@ -91,7 +91,8 @@
         left: 0px;
         width: 100%;
         height: 5%;
-        border: solid 1px blue;
+        border: solid 1px #A39A94;
+        border-width: 0 0 1px 0;
         box-sizing:border-box;
         text-align: center
     }
@@ -101,7 +102,7 @@
         left: 0px;
         width: 100%;
         height: 70%;
-        border: solid 1px blue;
+        border: solid 1px #A39A94;
         box-sizing:border-box;
 
 
@@ -115,7 +116,8 @@
     {
         width: 100%;
         height: 30%;
-        border: solid 4px yellow;
+       border: solid #A39A94;
+       border-width: 0 0 1px 0;
         box-sizing:border-box;
 
         display: -webkit-flex; 
@@ -127,7 +129,7 @@
     {
         width: 100%;
         height: 56%;
-        border: solid 4px green;
+        border: solid 1px #A39A94;
         box-sizing:border-box;
     }
     .ReceipeViewerReceipeDescriptionFieldsLabel
@@ -136,7 +138,7 @@
         left: 0px;
         width: 100%;
         height: 7%;
-        border: solid 1px blue;
+        border: solid 1px #A39A94;
         box-sizing:border-box;
         text-align: center
     }
@@ -144,7 +146,7 @@
     {
         width: 100%;
         height: 93%;
-        border: solid 1px blue;
+        border: solid 1px #A39A94;
         box-sizing:border-box;
 
         display: -webkit-flex; 
@@ -165,35 +167,36 @@
     #networkAddNodeBtn{
         width:48%;
         height:27%;
-        border:solid 3px orange;
+        border: solid 1px #A39A94;
         box-sizing:border-box;
         text-align: center;
     }
     #networkDeleteElement{
         width:48%;
         height:27%;
-        border:solid 3px orange;
+        border: solid 1px #A39A94;
         box-sizing:border-box;
         text-align: center;
     }
     #networkAddEdge{
         width:48%;
         height:27%;
-        border:solid 3px orange;
+        border: solid 1px #A39A94;
         box-sizing:border-box;
         text-align: center;
     }
     #networkEditEdge{
         width:48%;
         height:27%;
-        border:solid 3px orange;
+        border: solid 1px #A39A94;
         box-sizing:border-box;
         text-align: center;
     }
     #networkCreateReceipeBtn{
         width:100%;
         height:27%;
-        border:solid 3px orange;
+        border: solid  #A39A94;
+        border-width: 2px 0 0 0;
         box-sizing:border-box;
         text-align: center;
     }
@@ -202,7 +205,7 @@
     .networkAddNodeBtn{
         width:48%;
         height:27%;
-        border:solid 3px blue;
+        border:solid #A39A94;
         box-sizing:border-box;
         text-align: center;
         display: none;
@@ -210,7 +213,7 @@
     .networkDeleteElement{
         width:48%;
         height:27%;
-        border:solid 3px blue;
+        border:solid #A39A94;
         box-sizing:border-box;
         text-align: center;
         display: none;
@@ -218,7 +221,7 @@
     .networkAddEdge{
         width:48%;
         height:27%;
-        border:solid 3px blue;
+        border:solid #A39A94;
         box-sizing:border-box;
         text-align: center;
         display: none;
@@ -226,7 +229,7 @@
     .networkEditEdge{
         width:48%;
         height:27%;
-        border:solid 3px blue;
+        border:solid #A39A94;
         box-sizing:border-box;
         text-align: center;
         display: none;
@@ -234,7 +237,7 @@
     .networkCreateReceipeBtn{
         width:100%;
         height:27%;
-        border:solid 3px blue;
+        border:solid #A39A94;
         box-sizing:border-box;
         text-align: center;
         display: none;
