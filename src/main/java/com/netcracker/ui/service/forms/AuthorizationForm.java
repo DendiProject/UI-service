@@ -96,7 +96,6 @@ public class AuthorizationForm extends BasicForm {
             AuthorizationForm.this.close();
             ui.getPage().setUriFragment("Main");
             Page.getCurrent().reload();
-           
             break;
           case 409:
             Notification q = new Notification("Вы ввели неверную почту или пароль");

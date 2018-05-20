@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
  * @author ArtemShevelyukhin
  */
 @Component
-@Profile("dev")
 public class Properties {
   
   private String uiURL;
@@ -47,6 +46,7 @@ public class Properties {
   }
 
   public String getUiURL() {
+
     return uiURL;
   }
 

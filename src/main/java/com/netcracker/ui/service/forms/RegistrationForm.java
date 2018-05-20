@@ -33,6 +33,7 @@ import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
@@ -84,6 +85,8 @@ public class RegistrationForm extends BasicForm {
           UserDto userInfo = new UserDto();
           userInfo.setEmail(email.getValue());
           userInfo.setPassword(password.getValue());
+          int picture_id = ThreadLocalRandom.current().nextInt(1, 4 + 1);
+          userInfo.setPicture_id(String.valueOf(picture_id));
           System.out.println("secureToken = " + secureToken);
           PostUserData postRequest = new PostUserData(
                   "http://localhost:8181/idpsecure/register", userInfo, secureToken);

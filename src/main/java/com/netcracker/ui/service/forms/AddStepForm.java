@@ -148,8 +148,8 @@ public class AddStepForm  extends Window {
         setPosition(20, 150);
         setResizable(false);
         setModal(true);
-      } catch (NotFoundBean ex) {
-        Logger.getLogger(AddStepForm.class.getName()).log(Level.SEVERE, null, ex);
+      } catch (Exception ex) {
+        ExceptionHandler.getInstance().runExceptionhandling(ex);
       }
     }
 }

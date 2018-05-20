@@ -6,6 +6,7 @@
 package com.netcracker.ui.service.content.handler;
 
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.components.Properties;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
@@ -53,7 +54,14 @@ public class ContentManagerController {
   }
 
   public String getImage(String id) {
-    return "http://localhost:8008" + "/images/" + id;//"http://localhost:8082/file/getfile/41e9d7a1-966f-43ce-a860-71745e3d5fc9"
+     BeansFactory<Properties> bfP = BeansFactory.getInstance();
+      Properties p = null;
+    try {
+      p = bfP.getBean(Properties.class);
+    } catch (Exception ex) {
+      ExceptionHandler.getInstance().runExceptionhandling(ex);
+    }
+    return "http://"+p.getUiURL()+ "/images/" + id;//"http://localhost:8082/file/getfile/41e9d7a1-966f-43ce-a860-71745e3d5fc9"
   }
 
   public String addImage(String filePath) throws NotFoundBean, FileNotFoundException, IOException {

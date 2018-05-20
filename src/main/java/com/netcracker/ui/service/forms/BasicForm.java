@@ -7,6 +7,7 @@ package com.netcracker.ui.service.forms;
 
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.content.handler.ContentManagerController;
+import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
@@ -54,8 +55,8 @@ public class BasicForm extends Window
         windowContent.setMargin(false);
         setResizable(false);
         setModal(true);   
-      } catch (NotFoundBean ex) {
-        Logger.getLogger(BasicForm.class.getName()).log(Level.SEVERE, null, ex);
+      } catch (Exception ex) {
+        ExceptionHandler.getInstance().runExceptionhandling(ex);
       }
     }
 }
