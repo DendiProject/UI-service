@@ -93,7 +93,7 @@ mylibrary.MyGraf = function (element) {
             var nodesId = params["nodes"];
             xClick = params.pointer.canvas.x;//координаты клика по рабочему полю
             yClick = params.pointer.canvas.y;//координаты клика по рабочему полю
-            if(nodesId > 0)
+            if(nodesId.length > 0)
             {
                 //Синхронизация состояния
                 returnUnswer ={

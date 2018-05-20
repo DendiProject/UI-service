@@ -9,6 +9,7 @@ import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.navigator.InternalServerError;
 import com.netcracker.ui.service.exception.receipe.view.ConvertDataException;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
+import java.util.List;
 
 /**
  *
@@ -23,4 +24,6 @@ public interface StoreSubject {
             boolean increment);
     void updateCurrentRecipesInIngredients(Resource newResource, 
             boolean increment);
+    List<Resource> getCurrentRecipesInResourses();
+    List<Resource> getCurrentRecipesInIngredients();
 }

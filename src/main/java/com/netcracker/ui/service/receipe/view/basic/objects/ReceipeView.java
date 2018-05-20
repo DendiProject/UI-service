@@ -119,7 +119,13 @@ public class ReceipeView implements View{
 
                 @Override
                 public void onEventDo() {
-                    AddStepForm addStepForm = new AddStepForm((node) -> {
+                    AddStepForm addStepForm = new AddStepForm((node, ingredients) -> {
+                        //Декремент оставшихся ингредиентов
+                        for(int i=0; i<ingredients.size();i++){
+                           presenter.updateCurrentRecipesInResourses(
+                                   ingredients.get(i), false); 
+                        }
+                        
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("newNodesId", node.getNodeId());
                         jsonObject.put("newNodesLable",node.getLabel());
@@ -132,7 +138,8 @@ public class ReceipeView implements View{
                         jsonObject.put("receipeId","");
                         jsonObject.put("newNodesDescription",node.getDescription());
                         graf.getAddNodeEvent().handleEvent(jsonObject);
-                    }, proxy.getReceipeId(), proxy.getUserId());
+                    }, proxy.getReceipeId(), presenter.getCurrentResources(true), 
+                    presenter.getCurrentResources(false));
                     listener.onCreate(addStepForm);
                     //addWindow(addStepForm);
                 }
@@ -150,43 +157,86 @@ public class ReceipeView implements View{
                 }
             });
             clickListener.addButtonClickListener(new ClickListener() {
-            @Override
-            public String getId() {
-                return "addReceipePartsBtn";
-            }
+                @Override
+                public String getId() {
+                    return "addReceipePartsBtn";
+                }
 
-            @Override
-            public void onEventDo() {
-                AddResourse addIngredient = new AddResourse(false, 
-                        proxy.getUserId(), proxy.getReceipeId(),curentView ,(resource, 
-                                receipeId, userId, view) -> {
-                            presenter.updateCurrentRecipesInResourses(resource, 
-                                    true);
-                            //Обновление входных ресурсов
-                            try{
-                                //Добавили(обновили) входные ресурсы для рецепта
-                                //на gm
-                                BeansFactory<GMFacade> bf = BeansFactory.
-                                        getInstance();
-                                GMFacade gmFacade = bf.getBean(GMFacade.class);
-                                gmFacade.getGmReceipeFacade().
-                                        addReceipeResource(receipeId, userId, 
-                                                resource.getResourceId(), 
-                                                resource.getResourceNumber());
-                                //Обновили стейт доступных ресурсов на вью
-                                view.updateCurrentRecipesInResourses(resource, 
-                                        true);
-                                //ДОБАВИТЬ СЮДА ВЫВОД В СООТВЕСТВУЮЩУЮ ТАБЛИЦУ
-                            }
-                            catch(Exception exception){
-                                ExceptionHandler.getInstance().
-                                        runExceptionhandling(exception);
-                            }
-                        });
-                listener.onCreate(addIngredient);
-            }
-        });
-          
+                @Override
+                public void onEventDo() {
+                    AddResourse addIngredient = new AddResourse(false, 
+                            proxy.getUserId(), proxy.getReceipeId(),curentView ,
+                            (resource, receipeId, userId, view) -> {
+                                //presenter.updateCurrentRecipesInResourses(
+                                        //resource,  true);
+                                //Обновление входных ресурсов
+                                try{
+                                    //Добавили(обновили) входные ресурсы для 
+                                    //рецепта на gm
+                                    BeansFactory<GMFacade> bf = BeansFactory.
+                                            getInstance();
+                                    GMFacade gmFacade = bf.
+                                            getBean(GMFacade.class);
+                                    gmFacade.getGmReceipeFacade().
+                                            addReceipeResource(receipeId, 
+                                                    userId,
+                                                    resource.getResourceId(), 
+                                                    resource.getResourceNumber()
+                                            );
+                                    //Обновили стейт доступных ресурсов на вью
+                                    view.updateCurrentRecipesInResourses(
+                                            resource, true);
+                                    //ДОБАВИТЬ СЮДА ВЫВОД В СООТВЕСТВУЮЩУЮ ТАБЛИЦУ
+                                }
+                                catch(Exception exception){
+                                    ExceptionHandler.getInstance().
+                                            runExceptionhandling(exception);
+                                }
+                            });
+                    listener.onCreate(addIngredient);
+                }
+            });
+            
+            clickListener.addButtonClickListener(new ClickListener() {
+                @Override
+                public String getId() {
+                    return "addReceipeResoursesBtn";
+                }
+
+                @Override
+                public void onEventDo() {
+                    AddResourse addIngredient = new AddResourse(true, 
+                            proxy.getUserId(), proxy.getReceipeId(),curentView ,
+                            (resource, receipeId, userId, view) -> {
+                                //presenter.updateCurrentRecipesInResourses(
+                                        //resource,  true);
+                                //Обновление входных ресурсов
+                                try{
+                                    //Добавили(обновили) входные ресурсы для 
+                                    //рецепта на gm
+                                    BeansFactory<GMFacade> bf = BeansFactory.
+                                            getInstance();
+                                    GMFacade gmFacade = bf.
+                                            getBean(GMFacade.class);
+                                    gmFacade.getGmReceipeFacade().
+                                            addReceipeResource(receipeId, 
+                                                    userId,
+                                                    resource.getResourceId(), 
+                                                    resource.getResourceNumber()
+                                            );
+                                    //Обновили стейт доступных ресурсов на вью
+                                    view.updateCurrentRecipesInResourses(
+                                            resource, true);
+                                    //ДОБАВИТЬ СЮДА ВЫВОД В СООТВЕСТВУЮЩУЮ ТАБЛИЦУ
+                                }
+                                catch(Exception exception){
+                                    ExceptionHandler.getInstance().
+                                            runExceptionhandling(exception);
+                                }
+                            });
+                    listener.onCreate(addIngredient);
+                }
+            });
         }
         catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);

@@ -36,8 +36,8 @@ public class ClickOnNodeEvent extends BasicGrafEventHandler{
             {
                 //Оповещение слушателей клика по конкретной ноде
                 graf.notifyClickOnConcreteNodeEventListeners(state.nodesIdClick);
-                //Оповещаю всех слушателей
-                graf.notifyEventListeners(graf.getClickOnNodeListeners());
+                //Оповещаю слушателей клика по любой ноде
+                graf.notifyClickingOnNodeListeners(state.nodesIdClick);
             }
             else
             {

@@ -80,6 +80,7 @@ public class ReceipeStore implements StoreSubject{
         currentRecipesInIngredients.add(newResource);
     }
     
+    @Override
     public List<Resource> getCurrentRecipesInResourses() {
         return currentRecipesInResourses;
     }
@@ -87,7 +88,8 @@ public class ReceipeStore implements StoreSubject{
     public void setCurrentRecipesInResourses(List<Resource> currentRecipesInResourses) {
         this.currentRecipesInResourses = currentRecipesInResourses;
     }
-
+    
+    @Override
     public List<Resource> getCurrentRecipesInIngredients() {
         return currentRecipesInIngredients;
     }
