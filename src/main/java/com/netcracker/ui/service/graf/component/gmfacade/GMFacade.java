@@ -19,6 +19,7 @@ public class GMFacade {
     private GMResourceFacade gmResourceFacade;
     private GMTagFacade gmTagFacade;
     private GMReceipeFacade gmReceipeFacade;
+    private GMReceipePassageFacade gmReceipePassageFacade;
     
     public GMFacade(String connectionUrl) {
         gmEdgeFacade = new GMEdgeFacade(connectionUrl);
@@ -28,7 +29,12 @@ public class GMFacade {
         gmResourceFacade = new GMResourceFacade(connectionUrl);
         gmTagFacade = new GMTagFacade(connectionUrl);
         gmReceipeFacade = new GMReceipeFacade(connectionUrl);
+        gmReceipePassageFacade = new GMReceipePassageFacade(connectionUrl);
         //http://localhost:8083/
+    }
+
+    public GMReceipePassageFacade getGmReceipePassageFacade() {
+        return gmReceipePassageFacade;
     }
 
     public GMReceipeFacade getGmReceipeFacade() {

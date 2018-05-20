@@ -47,6 +47,8 @@ import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.netcracker.ui.service.navigator.Navigator;
 import com.netcracker.ui.service.navigator.View;
+import com.netcracker.ui.service.passageReceipe.storages.InviteInformation;
+import com.netcracker.ui.service.passageReceipe.storages.UserStep;
 
 
 import com.netcracker.ui.service.receipe.view.basic.objects.Catalog;
@@ -82,6 +84,8 @@ import javax.servlet.http.Cookie;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -98,7 +102,34 @@ public class UiServiceMainUI extends UI {
   @Override
   protected void init(VaadinRequest vaadinRequest) {
     try {
-      /*CookieHandler ch2 = new CookieHandler();
+        BeansFactory<GMFacade> bf = BeansFactory.getInstance();
+        GMFacade gmFacade = bf.getBean(GMFacade.class);
+        int sessionLength = getSession().getAttribute(
+                "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
+                split(",")[1].split("=")[1].length();
+        String sessionId = getSession().getAttribute(
+                "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
+                split(",")[1].split("=")[1].substring(0, sessionLength-1);
+        String receipeId = "1";
+        String initUser = "initUser";
+        List<String> users = new ArrayList<String>();
+        users.add(initUser);
+        users.add("testU1");
+        users.add("testU2");
+        
+        gmFacade.getGmReceipePassageFacade().makeReceipe(sessionId, receipeId, 
+                initUser, users);
+        List<InviteInformation> invaitInitUser = gmFacade.getGmReceipePassageFacade().userStart(initUser);
+        List<InviteInformation> invaittestU1 = gmFacade.getGmReceipePassageFacade().userStart(users.get(0));
+        List<InviteInformation> invaittestU2 = gmFacade.getGmReceipePassageFacade().userStart(users.get(1));
+        UserStep user = gmFacade.getGmReceipePassageFacade().getNextStep(sessionId, initUser);
+        UserStep userNoComplete = gmFacade.getGmReceipePassageFacade().getNotCompletedStep(sessionId, initUser);
+        UserStep userSecondStep = gmFacade.getGmReceipePassageFacade().getNextStep(sessionId, initUser, "10");
+        Map<String, Boolean> passingGraf = gmFacade.getGmReceipePassageFacade().getPassingGraph(sessionId);
+        
+        gmFacade.getGmReceipePassageFacade().completeReceipe(sessionId, receipeId, initUser);
+        int igygyigiygi=0;
+        /*CookieHandler ch2 = new CookieHandler();
         JWTHandler jwth2 = new JWTHandler();
         Cookie userCookie2 = ch2.getCookieByName("userInfo");
         String userid = jwth2.readUserId(userCookie2.getValue(), "test");
