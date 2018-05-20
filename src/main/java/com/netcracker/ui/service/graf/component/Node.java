@@ -94,4 +94,8 @@ public class Node implements Serializable
         this.handlerForClickingTheNode = handler;
     }
     
+    public Node copySelf(){
+        Node copy = new Node(nodeId, description, pictureId, label);
+        return copy;
+    }
 }

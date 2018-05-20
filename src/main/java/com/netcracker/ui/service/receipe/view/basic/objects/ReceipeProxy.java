@@ -24,7 +24,9 @@ public class ReceipeProxy  implements Proxy{
     private String connectionUrl;
     private String userId;
     private String receipeId;
-
+    boolean loadParallelGraf;
+    boolean checkAutentification;
+    
     public String getUserId() {
         return userId;
     }
@@ -33,16 +35,34 @@ public class ReceipeProxy  implements Proxy{
         return receipeId;
     }
     
-    public void setConfig(String connectionUrl, String userId, String receipeId)
+    @Override
+    public boolean isLoadParallelGraf() {
+        return loadParallelGraf;
+    }
+    
+    public void setConfig(String connectionUrl, String userId, String receipeId, 
+            boolean checkAutentification)
+    {
+        setConfig(connectionUrl, userId, receipeId, false, checkAutentification);
+    }
+    
+    @Override
+    public void setConfig(String connectionUrl, String userId, String receipeId, 
+            boolean loadParallelGraf, boolean checkAutentification)
     {
         this.connectionUrl = connectionUrl;
         this.userId = userId;
         this.receipeId = receipeId;
+        this.loadParallelGraf = loadParallelGraf;
+        this.checkAutentification = checkAutentification;
     }
     
     //Проверка прав пользователя
     @Override
     public Boolean connect(){
+        if(!checkAutentification){
+            return true;
+        }
         try
         {
             CookieHandler ch = new CookieHandler();
@@ -88,7 +108,12 @@ public class ReceipeProxy  implements Proxy{
         if(connect())
         {
             GMFacade gm = new GMFacade(connectionUrl);
-            return gm.getGmGrafFacade().getGraph(userId, receipeId);
+            if(loadParallelGraf){
+                return gm.getGmGrafFacade().getParallelGraph(userId, receipeId);
+            }
+            else{
+                return gm.getGmGrafFacade().getGraph(userId, receipeId);
+            }
         }
         else
         {
@@ -102,5 +127,10 @@ public class ReceipeProxy  implements Proxy{
             ExceptionHandler.getInstance().runExceptionhandling(exception);
             return false;
         }
+    }
+
+    @Override
+    public String getConnectionUrl() {
+        return connectionUrl;
     }
 }

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.graf.component.eventTypes.EventType;
+import com.netcracker.ui.service.graf.component.events.ClickOnNode;
 import com.netcracker.ui.service.graf.component.events.EventListener;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.ui.AbstractJavaScriptComponent;
@@ -36,7 +37,7 @@ import org.json.JSONObject;
 public class Graf extends AbstractJavaScriptComponent {
     
     //Массивы слушателей событий
-    private ArrayList<EventListener> clickOnNodeListeners = new ArrayList<EventListener>();
+    private ArrayList<ClickOnNode> clickOnNodeListeners = new ArrayList<ClickOnNode>();
     private ArrayList<EventListener> addNodeListeners = new ArrayList<EventListener>();
     private ArrayList<EventListener> addEdgeListeners = new ArrayList<EventListener>();
     private ArrayList<EventListener> editEdgeListeners = new ArrayList<EventListener>();
@@ -99,7 +100,7 @@ public class Graf extends AbstractJavaScriptComponent {
         getState().eventStateInJSONFormat = eventStateInJSONFormat;
     }
     
-    public ArrayList<EventListener> getClickOnNodeListeners() {
+    public ArrayList<ClickOnNode> getClickOnNodeListeners() {
         return clickOnNodeListeners;
     }
 
@@ -269,8 +270,24 @@ public class Graf extends AbstractJavaScriptComponent {
     }
     
     //Добавление обработчика события клика по любой ноде
-    public void addHandlerForClickingOnNode(EventListener handler) {
+    public void addHandlerForClickingOnNode(ClickOnNode handler) {
         clickOnNodeListeners.add(handler);
+    }
+    
+    public void notifyClickingOnNodeListeners(String nodesId){
+        //Поиск соответствующей ноды
+        for(int i=0; i<getState().nodes.size();i++){
+            if(getState().nodes.get(i).getNodeId().equals(nodesId)){
+                //Копирование ноды, чтобы случайно не изменить ее состояние из 
+                //обработчика
+                Node node = getState().nodes.get(i).copySelf();
+                //Перебор всех слушателей
+                for(int j=0; j<clickOnNodeListeners.size();j++){
+                    clickOnNodeListeners.get(j).onEventDo(node);
+                }
+                break;
+            }
+        }
     }
     
     //Вызов соответствующих функций у слушателей события ClickOnNode

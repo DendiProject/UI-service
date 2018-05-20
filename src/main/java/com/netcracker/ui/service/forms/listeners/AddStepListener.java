@@ -6,11 +6,13 @@
 package com.netcracker.ui.service.forms.listeners;
 
 import com.netcracker.ui.service.graf.component.Node;
+import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
+import java.util.List;
 
 /**
  *
  * @author Artem
  */
 public interface AddStepListener {
-    void onCreate(Node node);
+    void onCreate(Node node, List<Resource> ingredients);
 }

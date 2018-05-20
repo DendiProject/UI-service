@@ -7,6 +7,8 @@ package com.netcracker.ui.service.forms;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.content.handler.CookieHandler;
+import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.forms.listeners.AddStepListener;
 import com.netcracker.ui.service.graf.component.Node;
@@ -24,6 +26,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import java.io.File;
 import java.util.List;
+import javax.servlet.http.Cookie;
+import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
 
 /**
  *
@@ -33,9 +37,15 @@ public class AddStepForm  extends Window {
     private String stepLable = null;
     private String stepDescription = null;
     
-    public AddStepForm(AddStepListener listener, String receipeid, String userid) 
+    public AddStepForm(AddStepListener listener, String receipeid, 
+            List<Resource> ingredients, List<Resource> resources) 
     {         
-       
+        //Получение id пользователя
+        CookieHandler ch2 = new CookieHandler();
+        JWTHandler jwth2 = new JWTHandler();
+        Cookie userCookie2 = ch2.getCookieByName("userInfo");
+        String userid = jwth2.readUserId(userCookie2.getValue(), 
+                "test");
         
         ResponsiveLayout mainLayout = new ResponsiveLayout();
         CustomLayout mainCustomLayout = new CustomLayout("AddStepView");
@@ -61,8 +71,9 @@ public class AddStepForm  extends Window {
                                 stepLable != null){
                             GMFacade gmFacade = bf.getBean(GMFacade.class);
                             Node n = new Node("", stepDescription, imageName, stepLable);
-                            //Node node = gmFacade.getGmNodeFacade().addNode(n,receipeid, userid);
-                            listener.onCreate(n);
+                            //ДОБАВИТЬ СЮДА ЧТЕНИЕ ИСПОЛЬЗОВАННЫХ ИНГРЕДИЕНТОВ И 
+                            //ЗАМЕНИТЬ В СТРОЧКЕ НИЖЕ ingredients
+                            listener.onCreate(n, ingredients);
                             this.close();
                         }
                     }

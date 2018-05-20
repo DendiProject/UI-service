@@ -37,6 +37,7 @@ public class ButtonsClickListener  extends AbstractJavaScriptComponent {
                     if(listeners.get(i).getId().equals(arguments.getString(0)))
                     {
                         listeners.get(i).onEventDo();
+                        break;
                     }
                 }
             }

@@ -85,97 +85,72 @@
                 width: 100%;
                 height: 80%;
 
-                box-sizing: border-box;
-        }
-
-        .addReceipeResoursesBtn {
-                top: 90%;
-                left: 0px;
-                width: 100%;
-                height: 10%;
-                border: solid 1px orange;
-                box-sizing: border-box;
-                text-align: center;
-        }
-
-        .receipeControls {
-                width: 100%;
-                height: 30%;
-                border: solid 2px orange;
-                box-sizing: border-box;
-        }
-
-        .receipeControlsLabel {
-                top: 0px;
-                left: 0px;
-                width: 100%;
-                height: 20%;
-
-                box-sizing: border-box;
-                text-align: center;
-        }
-
-        .networkControls {
-                top: 20%;
-                left: 0px;
-                width: 100%;
-                height: 80%;
-
-                box-sizing: border-box;
-                display: -webkit-flex;
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                flex-wrap: wrap;
-                align-content: space-between;
-        }
-
-        #networkAddNodeBtn {
-                width: 150px;
-                height: 45px;
-                border: solid 3px #C66801;
-                box-sizing: border-box;
-                text-align: center;
-        }
-
-        #networkDeleteElement {
-                width: 150px;
-                height: 45px;
-                border: solid 3px #C66801;
-                box-sizing: border-box;
-                text-align: center;
-        }
-
-        #networkAddEdge {
-                width: 150px;
-                height: 45px;
-                border: solid 3px #C66801;
-                box-sizing: border-box;
-                text-align: center;
-        }
-
-        #networkEditEdge {
-                width: 150px;
-                height: 45px;
-                border: solid 3px #C66801;
-                box-sizing: border-box;
-                text-align: center;
-        }
-
-        #networkCreateReceipeBtn {
-                width: 100%;
-                height: 40px;
-                border: solid 3px orange;
-                box-sizing: border-box;
-                text-align: center;
-        }
-
-        #mynetwork {
-                width: 100%;
-                height: 100%;
-                margin: 0 auto;
-                position: relative;
-        }
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        align-content: space-between;
+    }
+    #networkAddNodeBtn{
+        width:48%;
+        height:27%;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
+    #networkDeleteElement{
+        width:48%;
+        height:27%;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
+    #networkAddEdge{
+        width:48%;
+        height:27%;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
+    #networkEditEdge{
+        width:48%;
+        height:27%;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
+    #networkCreateReceipeBtn{
+        width:100%;
+        height:27%;
+        border:solid 3px orange;
+        box-sizing:border-box;
+        text-align: center;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    #mynetwork 
+    {
+        width: 100%;
+        height: 100%;
+        margin: 0 auto;
+        position:relative;
+    }
     .vis.overlay{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10}
     .vis-active{box-shadow:0 0 10px #86d5f8}
     .vis [class*=span]{min-height:0;width:auto}
