@@ -23,32 +23,34 @@ import org.springframework.stereotype.Component;
  * @author ArtemShevelyukhin
  */
 @Component
-@Profile("dev")
 public class Properties {
   
   private String uiURL;
   private String idpURL;
   private String serverIP; 
-
+  private String cmURL;
+  
   public Properties() {
   }
   
   @Bean
-  public String init( @Value("${ui.url}") String uiURL, 
+  public String init(
+          @Value("${ui.url}") String uiURL, 
           @Value("${idp.url}") String idpURL, 
-          @Value("${server.ip}")String serverIP) throws NotFoundBean {
+          @Value("${server.ip}")String serverIP,
+          @Value("${cm.url}")String cmURL) throws NotFoundBean {
     BeansFactory<Properties> bfP = BeansFactory.getInstance();
     Properties p = bfP.getBean(Properties.class);
     p.setUiURL(uiURL);
     p.setServerIP(serverIP);
     p.setIdpURL(idpURL);
-   
+    p.setCmURL(cmURL);
     return null;
   }
 
   public String getUiURL() {
 
-    return uiURL;
+      return uiURL;
   }
 
   public String getIdpURL() {
@@ -70,15 +72,12 @@ public class Properties {
   public void setServerIP(String serverIP) {
     this.serverIP = serverIP;
   }
-  
-  
 
-  
- 
- 
-  
-  
-  
-  
-  
+  public String getCmURL() {
+    return cmURL;
+  }
+
+  public void setCmURL(String cmURL) {
+    this.cmURL = cmURL;
+  }
 }

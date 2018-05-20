@@ -21,6 +21,7 @@ import com.netcracker.ui.service.security.SecurityTokenHandler;
 
 import com.netcracker.ui.service.content.handler.ContentManagerController;
 import com.netcracker.ui.service.content.handler.CookieHandler;
+import com.netcracker.ui.service.content.handler.ImageReceiver;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.ConcreteException;
 import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
@@ -38,6 +39,7 @@ import com.netcracker.ui.service.forms.AddStepForm;
 import com.netcracker.ui.service.forms.CreateReceipeForm;
 
 import com.netcracker.ui.service.forms.NoReadyReceipeForm;
+import com.netcracker.ui.service.forms.UploadImageForm;
 import com.netcracker.ui.service.forms.UserPageFields;
 import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
 import com.netcracker.ui.service.graf.component.Edge;
@@ -60,6 +62,7 @@ import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
 import com.netcracker.ui.service.utilities.fillUserPageTextFields;
 import com.netcracker.ui.service.receipe.view.basic.objects.ShowReceipeView;
 import com.netcracker.ui.service.views.CreateRecipeView;
+import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
@@ -81,7 +84,11 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.Cookie;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Upload;
+import com.vaadin.ui.VerticalLayout;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.logging.Logger;
 import org.apache.http.HttpStatus;
@@ -397,10 +404,13 @@ public class UiServiceMainUI extends UI {
 
           BeansFactory<Properties> bfP = BeansFactory.getInstance();
           Properties p = bfP.getBean(Properties.class);
+          BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
+          SecurityTokenHandler tokenHandler = bfTK.getBean(SecurityTokenHandler.class);
           String q = info.getPicture_id();
+          
+          String imageURL = "http://"+p.getUiURL()+"/images/"+info.getPicture_id();
           Image topImage = new Image();
-          File picture = new File("http://"+p.getUiURL()+"/images/randomUserPhoto"+info.getPicture_id());
-          topImage.setSource(new FileResource(picture));
+          topImage.setSource(new ExternalResource(imageURL));
           topImage.setHeight("100%");
           topImage.setWidth("100%");
 
@@ -695,7 +705,7 @@ public class UiServiceMainUI extends UI {
           userInfo.setLastname(info.getSecondNameValue());
           userInfo.setEmail(info.getEmailValue());
           userInfo.setInfo(info.getUserInfoValue());
-          
+          userInfo.setPicture_id(info.getPicture_id());
           userInfo.setId(new JWTHandler().readUserId(ch.getCookieByName("userInfo").getValue(), "test"));
           PostUserData post = new PostUserData("http://" + p.getIdpURL() + "/idpsecure/saveUserData", userInfo, tokenStore.getToken());
           int response = post.con.getResponseCode();
@@ -736,7 +746,19 @@ public class UiServiceMainUI extends UI {
 
       @Override
       public void onEventDo() {
+        final Image image = new Image("Uploaded Image");
+        image.setVisible(false);
+        
+        ImageReceiver receiver = new ImageReceiver(); 
 
+        // Create the upload with a caption and set receiver later
+        final Upload upload = new Upload("Upload it here", receiver);
+        upload.setButtonCaption("Start Upload");
+        upload.addSucceededListener(receiver);
+        
+        // Put the components in a panel
+        UploadImageForm imageForm = new UploadImageForm(upload, image);
+        addWindow(imageForm);
       }
     });
     return mainLayer.contentRowLayout;

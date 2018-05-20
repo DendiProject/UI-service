@@ -59,4 +59,8 @@ public class BasicForm extends Window
         ExceptionHandler.getInstance().runExceptionhandling(ex);
       }
     }
+    
+    public void setImageVisible(boolean b){
+      img.setVisible(b);
+    }
 }

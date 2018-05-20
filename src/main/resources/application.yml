@@ -7,6 +7,8 @@ server.port:
   8008
 idp:
   url: localhost:8181
+cm:
+  url: localhost:8082
 ui:
   url: ${server.ip}:${server.port}    
 security:

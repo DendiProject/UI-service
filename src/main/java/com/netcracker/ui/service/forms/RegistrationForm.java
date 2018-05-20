@@ -85,8 +85,8 @@ public class RegistrationForm extends BasicForm {
           UserDto userInfo = new UserDto();
           userInfo.setEmail(email.getValue());
           userInfo.setPassword(password.getValue());
-          int picture_id = ThreadLocalRandom.current().nextInt(1, 4 + 1);
-          userInfo.setPicture_id(String.valueOf(picture_id));
+          
+          userInfo.setPicture_id("defaultUserPicture");
           System.out.println("secureToken = " + secureToken);
           PostUserData postRequest = new PostUserData(
                   "http://localhost:8181/idpsecure/register", userInfo, secureToken);

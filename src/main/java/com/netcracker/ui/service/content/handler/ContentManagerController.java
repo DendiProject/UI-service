@@ -53,6 +53,10 @@ public class ContentManagerController {
     //http://localhost:8082/
   }
 
+  public ContentManagerController() {
+  }
+
+  
   public String getImage(String id) {
      BeansFactory<Properties> bfP = BeansFactory.getInstance();
       Properties p = null;
