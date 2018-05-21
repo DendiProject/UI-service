@@ -23,6 +23,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -81,17 +82,21 @@ public class ContentManagerController {
       String extension = subString[1];
 
       MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-      parameters.add("fileName", fileName);
+      parameters.add("fileName", fileName); 
       parameters.add("type", type);
       parameters.add("size", size);
       parameters.add("extension", extension);
+//      System.out.println("fileName" +  fileName);
+//      System.out.println("type" +  type);
+//      System.out.println("size" +  size);
+//      System.out.println("extension" +  extension);
       //Запрос на получение id для новой картинки
       BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
       RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
       HttpHeaders headers = new HttpHeaders();
       headers.set("Accept=application/json", MediaType.APPLICATION_JSON_VALUE);
       headers.setContentType(MediaType.APPLICATION_JSON);
-
+      headers.set("secureToken", tokenStore.getToken());
       UriComponentsBuilder builder = UriComponentsBuilder
               .fromHttpUrl(connectionUrl + "node/addnodeimg").queryParams(parameters);
 
@@ -110,6 +115,63 @@ public class ContentManagerController {
       //"src\\main\\webapp\\WEB-INF\\images\\slide1.png"
       MultipartEntity mpEntity = new MultipartEntity();
       ContentBody cbFile = new FileBody(file, "multipart/form-data");
+      mpEntity.addPart("file", cbFile);
+      httppost.setEntity(mpEntity);
+      httppost.addHeader("userCookie", cookieHandler.getCookieByName("userInfo").getValue());
+      httppost.addHeader("service", "ui");
+      httppost.addHeader("secureToken", tokenStore.getToken());
+      HttpResponse response2 = httpclient.execute(httppost);
+      httpclient.getConnectionManager().shutdown();
+      System.out.println(id);
+      return id;
+    } catch (Exception exception) {
+      ExceptionHandler.getInstance().runExceptionhandling(exception);
+      return "err";
+    }
+  }
+  
+  public String addImageFromByte(byte[] file, String filename, String fileType, int lenght) throws NotFoundBean, FileNotFoundException, IOException {
+    try {
+      tokenStore = bfTK.getBean(SecurityTokenHandler.class);
+      CookieHandler cookieHandler = new CookieHandler();
+//      File file = new File(filePath);
+//      String[] subString = filePath.split(Pattern.quote("\\"));
+//      subString = subString[subString.length - 1].split("\\.");
+//      String fileName = subString[0];
+//      String type = "image/" + subString[1];
+//      String size = String.valueOf(file.length());
+//      String extension = subString[1];
+
+      MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+      parameters.add("fileName", filename);
+      parameters.add("type", fileType);
+      parameters.add("size", String.valueOf(lenght));
+      parameters.add("extension", "jpg");
+      //Запрос на получение id для новой картинки
+      BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
+      RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
+      HttpHeaders headers = new HttpHeaders();
+      headers.set("Accept=application/json", MediaType.APPLICATION_JSON_VALUE);
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      headers.set("secureToken", tokenStore.getToken());
+      UriComponentsBuilder builder = UriComponentsBuilder
+              .fromHttpUrl(connectionUrl + "node/addnodeimg").queryParams(parameters);
+
+      HttpEntity<?> entity = new HttpEntity<>(headers);
+      HttpEntity<String> response = restTemplate.exchange(
+              builder.build().encode().toUri(),
+              HttpMethod.POST,
+              entity,
+              String.class);
+      System.out.println("**нода успешно добавлена на UI**");
+      JSONObject result = new JSONObject(response.getBody());
+      String id = result.getString("id");
+
+      HttpClient httpclient = new DefaultHttpClient();
+      HttpPost httppost = new HttpPost(connectionUrl + "file/addfile/" + id);
+      //"src\\main\\webapp\\WEB-INF\\images\\slide1.png"
+      MultipartEntity mpEntity = new MultipartEntity();
+      ContentBody cbFile = new ByteArrayBody(file, filename);
       mpEntity.addPart("file", cbFile);
       httppost.setEntity(mpEntity);
       httppost.addHeader("userCookie", cookieHandler.getCookieByName("userInfo").getValue());

@@ -18,7 +18,6 @@ import com.netcracker.ui.service.buttonsClickListener.component.SessionStorageHe
 import com.netcracker.ui.service.components.PostUserData;
 import com.netcracker.ui.service.components.Properties;
 import com.netcracker.ui.service.security.SecurityTokenHandler;
-
 import com.netcracker.ui.service.content.handler.ContentManagerController;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.ImageReceiver;
@@ -90,6 +89,7 @@ import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Logger;
 import org.apache.http.HttpStatus;
 import org.springframework.http.HttpEntity;
@@ -378,6 +378,9 @@ public class UiServiceMainUI extends UI {
       public void draw(LinkedMultiValueMap<String, String> parameters) {
 
         try {
+          BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
+          ContentManagerController controller = bfCMC.getBean(ContentManagerController.class);
+    
           mainLayer.contentRowLayout.removeAllComponents();
           CustomLayout ShortViewOfReceipeLayout = new CustomLayout("UserPageLayout");
           ShortViewOfReceipeLayout.setHeight("100%");
@@ -393,7 +396,16 @@ public class UiServiceMainUI extends UI {
           ShortViewOfReceipeLayout.addComponent(info.getSecondName(), "userPageSecondNameFieldAndLable");
           ShortViewOfReceipeLayout.addComponent(info.getMail(), "userPageMailFieldAndLable");
           ShortViewOfReceipeLayout.addComponent(info.getBirthDate(), "userPageBirthDateFieldAndLable");
-
+          
+          ImageReceiver receiver = new ImageReceiver();
+          Upload upload = new Upload("", receiver);
+          upload.addStyleName("upload-photo-btn");
+          upload.setImmediateMode(true);
+          upload.setButtonCaption("Загрузить фото");
+          upload.addSucceededListener(receiver); 
+          
+          ShortViewOfReceipeLayout.addComponent(upload, "userPageUploadPhotoBtn");
+          
           info.getArea().setHeight("100%");
           info.getArea().setWidth("100%");
           info.getArea().setWordWrap(true);
@@ -690,7 +702,6 @@ public class UiServiceMainUI extends UI {
       @Override
       public void onEventDo() {
         try {
-
           BeansFactory<Properties> bfP = BeansFactory.getInstance();
           Properties p = bfP.getBean(Properties.class);
           BeansFactory<SecurityTokenHandler> bfSTH = BeansFactory.getInstance();
@@ -699,7 +710,6 @@ public class UiServiceMainUI extends UI {
           CookieHandler ch = new CookieHandler();
           ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
           UserPageFields info = new SessionStorageHelper().getUserPageFields(attr);
-      //    UserPageFields info = new UserPageFields();
           
           userInfo.setName(info.getNameValue());
           userInfo.setLastname(info.getSecondNameValue());
@@ -735,7 +745,7 @@ public class UiServiceMainUI extends UI {
 
       @Override
       public void onEventDo() {
-        int i = 0;//Код писать сюда
+        
       }
     });
     clickListener.addButtonClickListener(new ClickListener() {
@@ -746,19 +756,19 @@ public class UiServiceMainUI extends UI {
 
       @Override
       public void onEventDo() {
-        final Image image = new Image("Uploaded Image");
-        image.setVisible(false);
-        
-        ImageReceiver receiver = new ImageReceiver(); 
-
-        // Create the upload with a caption and set receiver later
-        final Upload upload = new Upload("Upload it here", receiver);
-        upload.setButtonCaption("Start Upload");
-        upload.addSucceededListener(receiver);
-        
-        // Put the components in a panel
-        UploadImageForm imageForm = new UploadImageForm(upload, image);
-        addWindow(imageForm);
+//        final Image image = new Image("Uploaded Image");
+//        image.setVisible(false);
+//        MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+//        ImageReceiver receiver = new ImageReceiver(); 
+//
+//        // Create the upload with a caption and set receiver later
+//        final Upload upload = new Upload("Upload it here", receiver);
+//        upload.setButtonCaption("Start Upload");
+//        upload.addSucceededListener(receiver);
+//        
+//        // Put the components in a panel
+//        UploadImageForm imageForm = new UploadImageForm(upload, image);
+//        addWindow(imageForm);
       }
     });
     return mainLayer.contentRowLayout;

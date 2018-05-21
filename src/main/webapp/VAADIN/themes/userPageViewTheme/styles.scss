@@ -92,19 +92,7 @@
         flex-direction: column;
     }
     
-    .userPageLoadFotoBtn
-    {
-        margin: 1%;
-        width: 96%;
-        height: 17%;
-        box-sizing:border-box;
-        border: solid 1px #A39A94;
-        border-radius: 6px;
-        display: -webkit-flex;
-        display: flex;
-        justify-content:  center;
-        align-items:center;
-    }
+    
     .userPageChangePasswordButtonBtn
     {
         width: 96%;
@@ -255,9 +243,9 @@
     {
         width: 70%;
     }
-    .buttons{
-        border-color: #FFAC67;
-        background-color: #FFAC67;
+    .allButtons{
+    border-color: #FFAC67;
+    background-color: #FFAC67;
     border-style: solid;
     border-width: 0px 0px 3px;
     border-radius: 6px;
@@ -278,10 +266,42 @@
     padding: 19px 39px 18px;
     font-size: 17px;
     }
-    .buttons:hover, .buttons:focus, .buttons:active {
+    .allButtons:hover, .allButtons:focus, .allButtons:active {
         background-color: #FF7A00;
         border-color: #FF7A00;
     }
+    
+    .upload-photo-btn .v-button {
+        border-color: #FFAC67;
+        background-color: red;
+        border-style: solid;
+        border-width: 0px 0px 3px;
+        border-radius: 6px;
+        box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset;
+        color: #FFFFFF;
+        border-radius: 6px;
+        cursor: pointer;
+        display: inline-block;
+        font-style: normal;
+        overflow: hidden;
+        text-align: center;
+        text-decoration: none;
+        text-overflow: ellipsis;
+        transition: all 200ms ease-in-out 0s;
+        white-space: nowrap;
+        font-family: "Gotham Rounded A","Gotham Rounded B",Helvetica,Arial,sans-serif;
+        font-weight: 700;
+        padding: 19px 39px 18px;
+        font-size: 17px;
+        height: auto;
+        padding: 0 !important;
+    }
+
+    .upload-photo-btn:hover, .upload-photo-btn:focus, .upload-photo-btn:active {
+        background-color: #FF7A00;
+        border-color: #FF7A00;
+    }
+    
 
 
 }
