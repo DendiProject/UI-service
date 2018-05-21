@@ -44,7 +44,7 @@ public class ConcreteException {
     public void callExceptionHandler(Exception exception){
         if(exceptionType instanceof InformationMessage){
             //Обработка логером
-            logger.info("Information: "+moreAboutException+"Exception message: "+exception.getMessage());
+            logger.info("Information: "+moreAboutException+"Exception message: "+exception.getMessage(), exception);
             //Обработка нотификацией
             if(!exceptionMessage.equals(""))
             {
@@ -56,7 +56,7 @@ public class ConcreteException {
         }
         if(exceptionType instanceof WarningMessage){
             //Обработка логером
-            logger.warn("Information: "+moreAboutException+"Exception message: "+exception.getMessage());
+            logger.warn("Information: "+moreAboutException+"Exception message: "+exception.getMessage(), exception);
             //Обработка нотификацией
             if(!exceptionMessage.equals(""))
             {

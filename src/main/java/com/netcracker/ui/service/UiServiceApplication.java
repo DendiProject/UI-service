@@ -12,6 +12,7 @@ import com.netcracker.ui.service.beans.factory.ObjectMapperBean;
 import com.netcracker.ui.service.beans.factory.PropertiesBean;
 import com.netcracker.ui.service.beans.factory.RestTemplateBean;
 import com.netcracker.ui.service.beans.factory.TokenStoreBean;
+import com.netcracker.ui.service.beans.factory.UserPageFieldsBean;
 import com.netcracker.ui.service.exception.ConcreteException;
 import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
@@ -51,6 +52,8 @@ public class UiServiceApplication {
         bf.addBean(new ContentManadgerControllerBean());
         bf.addBean(new TokenStoreBean());
         bf.addBean(new PropertiesBean());
+        bf.addBean(new UserPageFieldsBean());
+        
         ExceptionHandler ex = ExceptionHandler.getInstance(); 
         ConcreteException connectionErrorException = 
                 new ConcreteException(new ConcreteExceptionHandler() {

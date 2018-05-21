@@ -6,11 +6,14 @@
 package com.netcracker.ui.service.forms;
 
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.content.handler.ContentManagerController;
 import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.forms.listeners.AddResourseListener;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
@@ -23,6 +26,8 @@ import com.vaadin.ui.VerticalLayout;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -60,154 +65,147 @@ public class AddResourse  extends Add{
     public AddResourse(boolean isResourseForm, String userId, String receipeId, 
             View view, AddResourseListener listener) {           
         super();
-        //Получение списка всех ресуров/ингредиентов
-        BeansFactory<GMFacade> bfOM = BeansFactory.getInstance();
         try{
+          //Получение списка всех ресуров/ингредиентов
+          BeansFactory<GMFacade> bfOM = BeansFactory.getInstance();
+          try{
             GMFacade gmFacade = bfOM.getBean(GMFacade.class);
             List<Resource> allResources = gmFacade.getGmResourceFacade().
                     getResources(isResourseForm);
             autocompliteItems = new ArrayList<>();
             for(int i=0; i<allResources.size();i++){
-                autocompliteItems.add(allResources.get(i).getName());
+              autocompliteItems.add(allResources.get(i).getName());
             }
-        }
-        catch(Exception exception){
+          }
+          catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);
-        }
-        this.userId = userId;
-        this.isResourseForm = isResourseForm;
-        autocomplite.setItems(autocompliteItems);
-        size.setItems("Шт", "Литры", "Кг");
-        
-        if(isResourseForm){
+          }
+          this.userId = userId;
+          this.isResourseForm = isResourseForm;
+          autocomplite.setItems(autocompliteItems);
+          size.setItems("Шт", "Литры", "Кг");
+          if(isResourseForm){
             add1 = new Button("Добавить новый ресурс");
-        }
-        else{
+          }
+          else{
             add1 = new Button("Добавить новый ингредиент");
-        }
-        setLablesText("","","");
-        
-        h1.addComponent(autocomplite);
-        h1.addComponent(plus_autocomplite);
-        
-        vl1.addComponent(new Label("Autocomplite"));
-        vl1.addComponent(h1);
-        vl1.addComponent(nameLabel);
-        vl1.addComponent(descriptionLabel);
-        vl1.addComponent(sizeLabel);
-        super.leftLayout.addComponent(vl1);
-
-        
-        img.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/1.png")));      
-        img.setHeight("250px");
-        super.rightLayout.addComponent(img);
-        super.rightLayout.addComponent(count);
-        HorizontalLayout h2 = new HorizontalLayout();
-        h2.addComponent(add);
-        h2.addComponent(cancel);
-        super.rightLayout.addComponent(h2);
-        
-        plus_autocomplite.addClickListener((event) -> {
+          }
+          setLablesText("","","");
+          h1.addComponent(autocomplite);
+          h1.addComponent(plus_autocomplite);
+          vl1.addComponent(new Label("Autocomplite"));
+          vl1.addComponent(h1);
+          vl1.addComponent(nameLabel);
+          vl1.addComponent(descriptionLabel);
+          vl1.addComponent(sizeLabel);
+          super.leftLayout.addComponent(vl1);
+          BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
+          ContentManagerController controller = bfCMC.getBean(ContentManagerController.class);
+          img.setSource(new ExternalResource(controller.getImage("1")));
+          img.setHeight("250px");
+          super.rightLayout.addComponent(img);
+          super.rightLayout.addComponent(count);
+          HorizontalLayout h2 = new HorizontalLayout();
+          h2.addComponent(add);
+          h2.addComponent(cancel);
+          super.rightLayout.addComponent(h2);
+          plus_autocomplite.addClickListener((event) -> {
             showAddNewResourseFields(true);
-        });
-        
-        count.addValueChangeListener((event) -> {
+          });
+          count.addValueChangeListener((event) -> {
             if(!event.getValue().equals("") & !event.getValue().equals("0")){
-                try{
-                    if(Double.parseDouble(event.getValue()) > 0){
-                        countVaue = Double.parseDouble(event.getValue());
-                    }
-                    else{
-                        countVaue = -1;
-                    }
+              try{
+                if(Double.parseDouble(event.getValue()) > 0){
+                  countVaue = Double.parseDouble(event.getValue());
                 }
-                catch(Exception ex){
-                    countVaue = -1;
+                else{
+                  countVaue = -1;
                 }
+              }
+              catch(Exception ex){
+                countVaue = -1;
+              }
             }
             else{
-                countVaue = -1;
+              countVaue = -1;
             }
-        });
-        
-        autocomplite.addValueChangeListener((event) -> {
+          });
+          autocomplite.addValueChangeListener((event) -> {
             showAddNewResourseFields(false);
             if(!event.getValue().equals("")){
-                selectingResourceName = event.getValue().toString();
-                try{
-                    GMFacade gmFacade = bfOM.getBean(GMFacade.class);
-                    resource = gmFacade.getGmResourceFacade().getResourceByName(
-                            selectingResourceName);
-                    if(resource != null){
-                        nameLabel.setValue("Выбрано: "+resource.getName());
-                        sizeLabel.setValue("Размерность: "+resource.getMeasuring());
-                    }
+              selectingResourceName = event.getValue().toString();
+              try{
+                GMFacade gmFacade = bfOM.getBean(GMFacade.class);
+                resource = gmFacade.getGmResourceFacade().getResourceByName(
+                        selectingResourceName);
+                if(resource != null){
+                  nameLabel.setValue("Выбрано: "+resource.getName());
+                  sizeLabel.setValue("Размерность: "+resource.getMeasuring());
                 }
-                catch(Exception exception){
-                    ExceptionHandler.getInstance().runExceptionhandling(exception);
-                } 
+              }
+              catch(Exception exception){
+                ExceptionHandler.getInstance().runExceptionhandling(exception); 
+              }
             }
             else{
-                selectingResourceName = "";
+              selectingResourceName = "";
             }
-        });
-        
-        add1.addClickListener((event) -> {
+          });
+          add1.addClickListener((event) -> {
             addNewResourse();
-        });
-        
-        name.addValueChangeListener((event) -> {
+          });
+          name.addValueChangeListener((event) -> {
             if(!event.getValue().equals("")){
-                nameText = event.getValue();
+              nameText = event.getValue();
             }
             else
             {
-                nameText = null;
+              nameText = null;
             }
-        });
-        
-        description.addValueChangeListener((event) -> {
+          });
+          description.addValueChangeListener((event) -> {
             if(!event.getValue().equals("")){
-                descriptionText = event.getValue();
+              descriptionText = event.getValue();
             }
             else
             {
-                descriptionText = null;
+              descriptionText = null;
             }
-        });
-        
-        size.addValueChangeListener((event) -> {
+          });
+          size.addValueChangeListener((event) -> {
             if(!event.getValue().toString().equals("")){
-                sizeText = event.getValue().toString();
+              sizeText = event.getValue().toString();
             }
             else
             {
-                sizeText = null;
+              sizeText = null;
             }
-        });
-        
-        add.addClickListener((event) -> {
+          });
+          add.addClickListener((event) -> {
             //Запрос на получение данных о ресурсе по его имени
             try{
-                if(!selectingResourceName.equals("") & countVaue > 0){
-                    GMFacade gmFacade = bfOM.getBean(GMFacade.class);
-                    resource = gmFacade.getGmResourceFacade().getResourceByName(
-                            selectingResourceName);
-                    if(resource != null){
-                        resource.setResourceNumber(countVaue);
-                        listener.onCreate(resource, receipeId, userId, view);
-                        this.close();
-                    }
+              if(!selectingResourceName.equals("") & countVaue > 0){
+                GMFacade gmFacade = bfOM.getBean(GMFacade.class);
+                resource = gmFacade.getGmResourceFacade().getResourceByName(
+                        selectingResourceName);
+                if(resource != null){
+                  resource.setResourceNumber(countVaue);
+                  listener.onCreate(resource, receipeId, userId, view);
+                  this.close();
                 }
+              }
             }
             catch(Exception exception){
-                ExceptionHandler.getInstance().runExceptionhandling(exception);
-            } 
-        });
-        
-        cancel.addClickListener((event) -> {
+              ExceptionHandler.getInstance().runExceptionhandling(exception);
+            }
+          });
+          cancel.addClickListener((event) -> {
             this.close();
-        });
+          });
+        }
+        catch(NotFoundBean ex){
+            Logger.getLogger(AddResourse.class.getName()).log(Level.SEVERE, null,ex);
+        }
     }
     
     private void setLablesText(String nameLabelText, 

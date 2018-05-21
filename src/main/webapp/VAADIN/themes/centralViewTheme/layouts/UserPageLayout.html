@@ -2,12 +2,14 @@
     <div class="userPagePanelWithInformation">
         <div class="userPagePanelWithImageAndButtons">
             <div class="userPageImage" data-location="userPageImage">
+                <div class="userPageImageWrapper" data-location="userPageImageWrapper">
+                </div>
             </div>
             <div class="userPageButtonsBottomImage">
-                <div class="userPageLoadFotoBtn" id="userPageLoadFotoBtn">
-                    Загрузить фото
+                <div class="userPageLoadFotoBtn" id="userPageLoadFotoBtn"  data-location="userPageUploadPhotoBtn">
+                   
                 </div>
-                <div class="userPageChangePasswordButtonBtn" id="userPageChangePasswordButtonBtn">
+                <div class="allButtons userPageChangePasswordButtonBtn" id="userPageChangePasswordButtonBtn">
                     Изменить пароль
                 </div>
             </div>
@@ -25,9 +27,6 @@
                     <div class="userPageSecondNameFieldAndLable">
                         <div>Фамилия</div>
                     </div>
-                    <div class="userPageNicknameFieldAndLable">
-                        <div>Псевдоним</div>
-                    </div>
                     <div class="userPageMailFieldAndLable">
                         <div>Почта</div>
                     </div>
@@ -42,23 +41,21 @@
                     <div class="userPageSecondNameFieldAndLable">
                         <div data-location="userPageSecondNameFieldAndLable"></div>
                     </div>
-                    <div class="userPageNicknameFieldAndLable">
-                        <div data-location="userPageNicknameFieldAndLable"></div>
-                    </div>
                     <div class="userPageMailFieldAndLable">
                         <div data-location="userPageMailFieldAndLable"></div>
                     </div>
-                    <div class="userPageAboutOneselfFieldAndLable" data-location="userPageAboutOneselfFieldAndLable">
+                    <div class="userPageAboutOneselfFieldAndLable" >
+                         <div data-location="userPageAboutOneselfFieldAndLable"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="userPagePanelWithButtons">
-        <div class="userPageSaveBtn" id="userPageSaveBtn">
+        <div class="allButtons userPageSaveBtn" id="userPageSaveBtn">
             Сохранить
         </div>
-        <div class="userPageCancelBtn" id="userPageCancelBtn">
+        <div class="allButtons userPageCancelBtn" id="userPageCancelBtn">
             Отмена
         </div>
     </div>
