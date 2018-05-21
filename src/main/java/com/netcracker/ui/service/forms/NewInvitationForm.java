@@ -10,6 +10,8 @@ import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.forms.listeners.NoReadyReceipeListener;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
+import com.netcracker.ui.service.graf.component.ipsFacade.stores.UserInfo;
+import com.netcracker.ui.service.passageReceipe.storages.InviteInformation;
 import com.netcracker.ui.service.receipe.view.basic.objects.intermediate.storages.ReceipeInformation;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Button;
@@ -24,7 +26,8 @@ import com.vaadin.ui.Window;
  */
 public class NewInvitationForm  extends Window {
     
-    public NewInvitationForm() 
+    public NewInvitationForm(InviteInformation inviteInformation, 
+            UserInfo userInfo) 
     {         
         /*try{
             BeansFactory<GMFacade> bfOM = BeansFactory.getInstance();
@@ -44,7 +47,12 @@ public class NewInvitationForm  extends Window {
         mainCustomLayout.setHeight("100%");
         mainLayout.addComponent(mainCustomLayout);
 
+        Button go = new Button("Принять");
+        go.setWidth("100%");
+        go.setHeight("100%");
+        mainCustomLayout.addComponent(go, "NewInvitationGoBtn");
         
+        mainCustomLayout.addComponent(new Label("У Вас есть новые приглашения!"), "NewInvitationLabel");
         
         setContent(mainLayout);
         setPosition(20, 150);

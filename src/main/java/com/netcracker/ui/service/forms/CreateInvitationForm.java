@@ -17,6 +17,7 @@ import com.netcracker.ui.service.graf.component.ipsFacade.stores.UserInfo;
 import com.netcracker.ui.service.passageReceipe.storages.InviteInformation;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -54,13 +55,34 @@ public class CreateInvitationForm  extends Window {
         catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
-        //ДОБАВИТЬ СЮДА ЗАПОЛНЕНИЕ ТАБЛИЦЫ
+        
+        List<String> displayNames = new ArrayList<String>();
+        for(int i=0; i<allInfoOfAllUsers.size();i++){
+            if(allInfoOfAllUsers.get(i).getDisplayname() != null){
+                displayNames.add(allInfoOfAllUsers.get(i).getDisplayname());
+                continue;
+            }
+            if(allInfoOfAllUsers.get(i).getName() != null & allInfoOfAllUsers.get(i).getLastname() != null){
+                displayNames.add(allInfoOfAllUsers.get(i).getLastname()+" "+allInfoOfAllUsers.get(i).getName());
+                continue;
+            }
+            displayNames.add(allInfoOfAllUsers.get(i).getId());
+        }
+        ComboBox displayNamesCB = new ComboBox();
+        displayNamesCB.setHeight("100%");
+        displayNamesCB.setWidth("100%");
+        displayNamesCB.setItems(displayNames);
+        
         ResponsiveLayout mainLayout = new ResponsiveLayout();
         CustomLayout mainCustomLayout = new CustomLayout("CreateInvitationView");
         mainLayout.setHeight("100%");
         mainCustomLayout.setHeight("100%");
         mainLayout.addComponent(mainCustomLayout);
         
+        
+        mainCustomLayout.addComponent(displayNamesCB, "CreateInvitationCBPlace");
+        mainCustomLayout.addComponent(new Label("Список участников"), "CreateInvitationLable");
+        mainCustomLayout.addComponent(new Label("Создание команды"), "CreateInvitationLabel");
         Button sendNotifies = new Button("Начать");
         sendNotifies.addClickListener((event) -> {
             try{            

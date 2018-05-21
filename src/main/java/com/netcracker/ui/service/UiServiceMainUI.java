@@ -45,6 +45,7 @@ import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.graf.component.ipsFacade.IpsFacade;
+import com.netcracker.ui.service.graf.component.ipsFacade.stores.UserInfo;
 import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
 import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
@@ -765,8 +766,41 @@ public class UiServiceMainUI extends UI {
       @Override
       public void onEventClickDo() {
         try {
-            NewInvitationForm invite = new NewInvitationForm();
-            addWindow(invite);
+            CookieHandler ch2 = new CookieHandler();
+            JWTHandler jwth2 = new JWTHandler();
+            Cookie userCookie2 = ch2.getCookieByName("userInfo");
+            String userid = jwth2.readUserId(userCookie2.getValue(), "test");
+            
+            BeansFactory<IpsFacade> bf = BeansFactory.getInstance();
+            IpsFacade ips = bf.getBean(IpsFacade.class);
+            UserInfo userInfo = ips.getUserByName(userid);
+            
+            BeansFactory<GMFacade> bf2 = BeansFactory.getInstance();
+            GMFacade gmFacade = bf2.getBean(GMFacade.class);
+            List<InviteInformation> inviteInformation = gmFacade.getGmReceipePassageFacade().userStart(userid);
+            //Так как не удалось вставить таблицы, то имеется возможность только 
+            //выводить кого-то одного из массива, соответсвенно, на всякий
+            //случай буду завершать все рецепты, кроме последнего
+            if(inviteInformation != null && inviteInformation.size()>0 ){
+               if(inviteInformation.size()>1){
+                   for(int i=0; i<(inviteInformation.size()-1); i++){
+                       InviteInformation newIn = inviteInformation.get(i);
+                       gmFacade.getGmReceipePassageFacade().completeReceipe(
+                               newIn.getSessionId(), 
+                               newIn.getReceipeInformation().getReceipeId(),
+                               newIn.getInviterId());
+                       inviteInformation.remove(0);
+                   }
+               }
+               NewInvitationForm invite = new NewInvitationForm(inviteInformation.get(0), userInfo);
+               addWindow(invite); 
+            }
+            else{
+                new Notification("",
+                                    "Новых приглашений нет",
+                                    Notification.Type.ERROR_MESSAGE, true)
+                                    .show(Page.getCurrent());
+            }
         } catch (Exception exception) {
           ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
