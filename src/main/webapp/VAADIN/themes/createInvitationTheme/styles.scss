@@ -1,0 +1,167 @@
+@import "../valo/valo.scss";
+
+@mixin createInvitationTheme 
+{
+    @include valo;
+    
+	.CreateInvitationView
+	{
+		width: 100%;
+		height: 100%;
+
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-between;
+		align-items:center;
+		flex-direction: column;
+	}
+	.CreateInvitationLabel
+	{
+		width: 100%;
+		height: 15%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+	.CreateInvitationInformation
+	{
+		width: 100%;
+		height: 75%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: flex-start;
+		align-items:center;
+	}
+	.CreateInvitationButtons
+	{
+		width: 100%;
+		height: 10%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+	.CreateInvitationGoBtn
+	{
+		width: 20%;
+		height: 100%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+	.CreateInvitationColumn1
+	{
+		width: 50%;
+		height: 100%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: flex-start;
+		align-items:center;
+		flex-direction: column;
+	}
+	.CreateInvitationColumn2
+	{
+		width: 50%;
+		height: 100%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: flex-start;
+		align-items:center;
+		flex-direction: column;
+	}
+	.CreateInvitationTableWithLable{
+		width: 90%;
+		height: 70%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: flex-start;
+		align-items:center;
+		flex-direction: column;
+	}
+	.CreateInvitationLable
+	{
+		width: 100%;
+		height: 15%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+	.CreateInvitationTable
+	{
+		width: 100%;
+		height: 85%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+	.CreateInvitationAreaAddName
+	{
+		width: 90%;
+		height: 35%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-between;
+		align-items:center;
+		flex-direction: column;
+	}
+	.CreateInvitationCBPlace
+	{
+		width: 100%;
+		height: 35%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+	.CreateInvitationAddNameBtn
+	{
+		width: 100%;
+		height: 35%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+}
+@include createInvitationTheme;

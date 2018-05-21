@@ -46,7 +46,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 public class ReceipeView implements View{
     
-    public Graf graf;
+    private Graf graf;
     private final PresenterObserver presenter;
     public Receipe initReceipe;
     private Proxy proxy;

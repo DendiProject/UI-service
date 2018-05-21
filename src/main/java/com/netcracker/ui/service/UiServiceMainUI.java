@@ -26,6 +26,7 @@ import com.netcracker.ui.service.exception.ConcreteException;
 import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.UiServiceException;
+import com.netcracker.ui.service.passageReceipe.storages.UserStep;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.importanceTypes.BasicImportanceClass;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
@@ -35,18 +36,22 @@ import com.netcracker.ui.service.exception.navigator.NotFound;
 import com.netcracker.ui.service.forms.ExitForm;
 
 import com.netcracker.ui.service.forms.AddStepForm;
-import com.netcracker.ui.service.forms.CreateReceipeForm;
+import com.netcracker.ui.service.forms.CreateInvitationForm;
+import com.netcracker.ui.service.forms.NewInvitationForm;
 
 import com.netcracker.ui.service.forms.NoReadyReceipeForm;
 import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
 import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
+import com.netcracker.ui.service.graf.component.ipsFacade.IpsFacade;
 import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
 import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
 import com.netcracker.ui.service.navigator.Navigator;
 import com.netcracker.ui.service.navigator.View;
+import com.netcracker.ui.service.passageReceipe.storages.InviteInformation;
+import com.netcracker.ui.service.passageReceipe.storages.UserStep;
 
 
 import com.netcracker.ui.service.receipe.view.basic.objects.Catalog;
@@ -82,6 +87,8 @@ import javax.servlet.http.Cookie;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -98,7 +105,47 @@ public class UiServiceMainUI extends UI {
   @Override
   protected void init(VaadinRequest vaadinRequest) {
     try {
-      /*CookieHandler ch2 = new CookieHandler();
+        /*BeansFactory<IpsFacade> bf = BeansFactory.getInstance();
+        IpsFacade ips = bf.getBean(IpsFacade.class);
+        ips.getUserByName("e345ffd7-641a-440e-a36b-131a6abe66ce");
+        ips.getAllUsers();*/
+        
+        
+        /*BeansFactory<GMFacade> bf = BeansFactory.getInstance();
+        GMFacade gmFacade = bf.getBean(GMFacade.class);
+        int sessionLength = getSession().getAttribute(
+                "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
+                split(",")[1].split("=")[1].length();
+        String sessionId = getSession().getAttribute(
+                "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
+                split(",")[1].split("=")[1].substring(0, sessionLength-1);
+        String receipeId = "1";
+        String initUser = "initUser";
+        List<String> users = new ArrayList<String>();
+        users.add(initUser);
+        users.add("testU1");
+        users.add("testU2");
+        
+        gmFacade.getGmReceipePassageFacade().makeReceipe(sessionId, receipeId, 
+                initUser, users);
+        List<InviteInformation> invaitInitUser = gmFacade.getGmReceipePassageFacade().userStart(initUser);
+        List<InviteInformation> invaittestU1 = gmFacade.getGmReceipePassageFacade().userStart(users.get(0));
+        List<InviteInformation> invaittestU2 = gmFacade.getGmReceipePassageFacade().userStart(users.get(1));
+        UserStep user = gmFacade.getGmReceipePassageFacade().getNextStep(sessionId, initUser);
+        UserStep userNoComplete = gmFacade.getGmReceipePassageFacade().getNotCompletedStep(sessionId, initUser);
+        UserStep userSecondStep = gmFacade.getGmReceipePassageFacade().getNextStep(sessionId, initUser, "10");
+        Map<String, Boolean> passingGraf = gmFacade.getGmReceipePassageFacade().getPassingGraph(sessionId);
+        
+        gmFacade.getGmReceipePassageFacade().completeReceipe(sessionId, receipeId, initUser);
+        int igygyigiygi=0;*/
+        
+        
+        
+        
+        
+        
+        
+        /*CookieHandler ch2 = new CookieHandler();
         JWTHandler jwth2 = new JWTHandler();
         Cookie userCookie2 = ch2.getCookieByName("userInfo");
         String userid = jwth2.readUserId(userCookie2.getValue(), "test");
@@ -154,6 +201,12 @@ public class UiServiceMainUI extends UI {
     }
   }
   
+  
+  
+  
+  
+  
+  
    private String getUserID(){
         CookieHandler ch2 = new CookieHandler();
         JWTHandler jwth2 = new JWTHandler();
@@ -169,7 +222,7 @@ public class UiServiceMainUI extends UI {
   private String getUrl() {
     return getPage().getUriFragment();
   }
-
+  
   private ResponsiveLayout createMainLayout() throws MenuComponentException,
           NotFoundBean {
     BasicLayoutCreator mainLayer;
@@ -400,7 +453,142 @@ public class UiServiceMainUI extends UI {
         mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Рецепты, удовлетворяющие условию поиска:"));
       }
     });
+    
+    newViews.add(new View("PassageReceipe") {
+      @Override
+      public void draw(LinkedMultiValueMap<String, String> parameters) { 
+        UserStep currentStep;
+        try{
+            BeansFactory<GMFacade> bf = BeansFactory.getInstance();
+            GMFacade gmFacade = bf.getBean(GMFacade.class);
+            
+            CookieHandler ch2 = new CookieHandler();
+            JWTHandler jwth2 = new JWTHandler();
+            Cookie userCookie2 = ch2.getCookieByName("userInfo");
+            String userid = jwth2.readUserId(userCookie2.getValue(), "test");
+            String sessionId = parameters.getFirst("sessionId");
+            //Перед инициализацией проверяем, нужно иницировать новое прохождение, 
+            //или продолжить незаконченное
+            if(parameters.getFirst("itsNewPassage").equals("true")){
+                currentStep = gmFacade.getGmReceipePassageFacade().getNextStep(
+                        sessionId, userid);
+            }
+            else{
+                currentStep = gmFacade.getGmReceipePassageFacade().
+                        getNotCompletedStep(sessionId, userid);
+            }
+            if(currentStep == null){
+                //ДОБАВИТЬ ВЫЗОВ ИСКЛЮЧЕНИЯ-ОШИБКА ПОЛУЧЕНИЯ ШАГА
+            }
+            if(currentStep.isIs404()){
+                new Notification("","Вы успешно завершили выполнение рецепта, "
+                        + "приятного аппетита",
+                        Notification.Type.ERROR_MESSAGE, true)
+                        .show(Page.getCurrent());
+            }
+            if(currentStep != null & !currentStep.isIs404()){
+                mainLayer.contentRowLayout.removeAllComponents();
+                CustomLayout ShortViewOfReceipeLayout = 
+                        new CustomLayout("PassageReceipeView");
+                ShortViewOfReceipeLayout.setHeight("100%");
+                mainLayer.contentRowLayout.setHeight("100%");
+                mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
+                
+                Label description = new Label(currentStep.getDescription());
+                description.setWidth("100%");
+                ShortViewOfReceipeLayout.addComponent(description, 
+                        "PassagesDescription");
+                BeansFactory<ContentManagerController> bfCMC = 
+                        BeansFactory.getInstance();
+                ContentManagerController controller = 
+                        bfCMC.getBean(ContentManagerController.class);
+                Image image = new Image();
+                String imageName = controller.getImage(currentStep.getPictureId());
+                image.setSource(new ExternalResource(imageName));
+                image.setHeight("100%");
+                image.setWidth("100%");
+                ShortViewOfReceipeLayout.addComponent(image, "PassagesImage");
+                
+                ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+                ButtonsClickListener clickListener = new SessionStorageHelper().
+                        getListener(attr);
+                clickListener.addButtonClickListener(new ClickListener() {
+                    @Override
+                    public String getId() {
+                        return "PassagesNextBtn";
+                    }
 
+                    @Override
+                    public void onEventDo() {
+                        try{
+                           if(currentStep.isIsLastNode()){
+                               new Notification("","Вы успешно завершили "
+                                       + "выполнение рецепта, приятного "
+                                       + "аппетита", Notification.Type.
+                                               ERROR_MESSAGE, true)
+                                .show(Page.getCurrent());
+                           }
+                           else{
+                               UserStep newStep = gmFacade.
+                                       getGmReceipePassageFacade().
+                                       getNextStep(sessionId, userid, 
+                                               currentStep.getNodeId());
+                                Label description = new Label(newStep.getDescription());
+                                description.setWidth("100%");
+                                description.setResponsive(true);
+                                ShortViewOfReceipeLayout.addComponent(description, 
+                                        "PassagesDescription");
+                                BeansFactory<ContentManagerController> bfCMC = 
+                                        BeansFactory.getInstance();
+                                ContentManagerController controller = 
+                                        bfCMC.getBean(
+                                                ContentManagerController.class);
+                                Image image = new Image();
+                                String imageName = controller.getImage(
+                                        newStep.getPictureId());
+                                image.setSource(new ExternalResource(imageName));
+                                image.setHeight("100%");
+                                image.setWidth("100%");
+                                ShortViewOfReceipeLayout.addComponent(image, 
+                                        "PassagesImage");
+                                if(!newStep.getNodeId().equals("defaultNodeId")){
+                                    currentStep.setNodeId(newStep.getNodeId());
+                                }
+                                currentStep.setIsLastNode(newStep.isIsLastNode());
+                           }
+                        }
+                        catch(Exception exception){
+                            ExceptionHandler.getInstance().
+                                    runExceptionhandling(exception);
+                        }
+                    }
+                });
+                
+                clickListener.addButtonClickListener(new ClickListener() {
+                    @Override
+                    public String getId() {
+                        return "PassagesGrafBtn";
+                    }
+
+                    @Override
+                    public void onEventDo() {
+                        try{
+                           
+                        }
+                        catch(Exception exception){
+                            ExceptionHandler.getInstance().
+                                    runExceptionhandling(exception);
+                        }
+                    }
+                });
+            }
+        }
+        catch(Exception exception){
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+        }
+      }
+    });
+    
     newViews.add(new View("UserPage") {
       @Override
       public void draw(LinkedMultiValueMap<String, String> parameters) {
@@ -561,8 +749,8 @@ public class UiServiceMainUI extends UI {
       ExceptionHandler.getInstance().runExceptionhandling(ex);
     }
     //Создаем подпункты меню
-    ArrayList<MenusButton> mainSubMenus = new ArrayList<>();
-    mainSubMenus.add(new MenusButton("Создать рецепт", "idsubMain1", new HandlerForClickingTheButton() {
+    ArrayList<MenusButton> recSubMenus = new ArrayList<>();
+    recSubMenus.add(new MenusButton("Создать рецепт", "idsubRec1", new HandlerForClickingTheButton() {
       @Override
       public void onEventClickDo() {
         try {
@@ -572,17 +760,19 @@ public class UiServiceMainUI extends UI {
         }
       }
     }));
-
-    mainSubMenus.add(new MenusButton("Просмотреть рецепт", "idsubMain2", new HandlerForClickingTheButton() {
+    
+    recSubMenus.add(new MenusButton("Проверить уведомления", "idsubRec2", new HandlerForClickingTheButton() {
       @Override
       public void onEventClickDo() {
         try {
-            setUrl("RecipeViewer?receipeId=1");
+            NewInvitationForm invite = new NewInvitationForm();
+            addWindow(invite);
         } catch (Exception exception) {
           ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
       }
     }));
+    
     //создаем кнопку меню, включающую подпункты
     MenusButton mainBtn = new MenusButton("Главная", "idMain", new HandlerForClickingTheButton() {
       @Override
@@ -596,9 +786,9 @@ public class UiServiceMainUI extends UI {
     MenusButton recepsBtn = new MenusButton("Рецепты", "idRecept", new HandlerForClickingTheButton() {
       @Override
       public void onEventClickDo() {
-        setUrl("RecipeConfigurator");
+            
       }
-    }, mainSubMenus);
+    }, recSubMenus);
 
     MenusSearchBar search = new MenusSearchBar("idSearch", new HandlerForClickingTheButton() {
       @Override
@@ -812,13 +1002,37 @@ public class UiServiceMainUI extends UI {
       topRecipeLayout.addComponent(recipesName, "recipes_name");
       Label recipesAuthor = new Label("Автор");
       topRecipeLayout.addComponent(recipesAuthor, "recipes_author");
-      Button recepiesPartsButton = new Button("Ингридиенты");
+      Button recepiesPartsButton = new Button("Приготовить");
+      recepiesPartsButton.addClickListener((event) -> {
+          CookieHandler ch2 = new CookieHandler();
+          JWTHandler jwth2 = new JWTHandler();
+          Cookie userCookie2 = ch2.getCookieByName("userInfo");
+          if(jwth2.readUserId(userCookie2.getValue(), "test").equals("1")){
+              AuthorizationForm modalWindow = new AuthorizationForm(UI.getCurrent());
+              addWindow(modalWindow);
+          }
+          else{
+            CreateInvitationForm create = new CreateInvitationForm(() -> {
+                  int sessionLength = getSession().getAttribute(
+                      "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
+                      split(",")[1].split("=")[1].length();
+                  String sessionId = getSession().getAttribute(
+                      "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
+                      split(",")[1].split("=")[1].substring(0, sessionLength-1);
+                  setUrl("PassageReceipe?itsNewPassage=true&sessionId="+sessionId);
+            },"2");
+            addWindow(create);
+          }
+      });
       topRecipeLayout.addComponent(recepiesPartsButton, "parts_recipe_button");
       Label numberOfServingsLable = new Label(String.valueOf(i));//просто для примера
       topRecipeLayout.addComponent(numberOfServingsLable, "number_of_servings_lable");
       Label workingTimesLable = new Label(String.valueOf(i));//просто для примера
       topRecipeLayout.addComponent(workingTimesLable, "working_times_lable");
-      Button addRecipeToFavoritesButton = new Button("Добавить в избранное");
+      Button addRecipeToFavoritesButton = new Button("Просмотреть");
+      addRecipeToFavoritesButton.addClickListener((event) -> {
+          setUrl("RecipeViewer?receipeId=2");
+      });
       topRecipeLayout.addComponent(addRecipeToFavoritesButton, "add_recipe_to_favorites_button");
     }
 
@@ -837,5 +1051,3 @@ public class UiServiceMainUI extends UI {
 
     }
 }
-
-
