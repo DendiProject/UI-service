@@ -9,6 +9,6 @@ package com.netcracker.ui.service.passageReceipe;
  *
  * @author Artem
  */
-public class NewClass {
+public class PassageReceipeView {
     
 }

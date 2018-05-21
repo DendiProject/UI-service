@@ -26,6 +26,7 @@ import com.netcracker.ui.service.exception.ConcreteException;
 import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.UiServiceException;
+import com.netcracker.ui.service.passageReceipe.storages.UserStep;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.exception.importanceTypes.BasicImportanceClass;
 import com.netcracker.ui.service.exception.menu.component.exception.MenuComponentException;
@@ -36,7 +37,6 @@ import com.netcracker.ui.service.forms.ExitForm;
 
 import com.netcracker.ui.service.forms.AddStepForm;
 import com.netcracker.ui.service.forms.CreateInvitationForm;
-import com.netcracker.ui.service.forms.CreateReceipeForm;
 import com.netcracker.ui.service.forms.NewInvitationForm;
 
 import com.netcracker.ui.service.forms.NoReadyReceipeForm;
@@ -105,10 +105,10 @@ public class UiServiceMainUI extends UI {
   @Override
   protected void init(VaadinRequest vaadinRequest) {
     try {
-        BeansFactory<IpsFacade> bf = BeansFactory.getInstance();
+        /*BeansFactory<IpsFacade> bf = BeansFactory.getInstance();
         IpsFacade ips = bf.getBean(IpsFacade.class);
         ips.getUserByName("e345ffd7-641a-440e-a36b-131a6abe66ce");
-        ips.getAllUsers();
+        ips.getAllUsers();*/
         
         
         /*BeansFactory<GMFacade> bf = BeansFactory.getInstance();
@@ -456,25 +456,61 @@ public class UiServiceMainUI extends UI {
     
     newViews.add(new View("PassageReceipe") {
       @Override
-      public void draw(LinkedMultiValueMap<String, String> parameters) {
-        mainLayer.contentRowLayout.removeAllComponents();
-        CustomLayout ShortViewOfReceipeLayout = new CustomLayout("PassageReceipeView");
-        ShortViewOfReceipeLayout.setHeight("100%");
-        mainLayer.contentRowLayout.setHeight("100%");
-        mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
-
-        /*ShortViewOfReceipeLayout.addComponent(fName, "userPageNameFieldAndLable");
-        ShortViewOfReceipeLayout.addComponent(sName, "userPageSecondNameFieldAndLable");
-        ShortViewOfReceipeLayout.addComponent(email, "userPageMailFieldAndLable");
-        ShortViewOfReceipeLayout.addComponent(new Label("BirthDate"), "userPageBirthDateFieldAndLable");
-
-        TextArea area = new TextArea();
-        area.setValue("");
-        area.setHeight("100%");
-        area.setWidth("100%");
-        area.setWordWrap(true);
-        ShortViewOfReceipeLayout.addComponent(area, "userPageAboutOneselfFieldAndLable");*/
-
+      public void draw(LinkedMultiValueMap<String, String> parameters) { 
+        UserStep currentStep;
+        try{
+            BeansFactory<GMFacade> bf = BeansFactory.getInstance();
+            GMFacade gmFacade = bf.getBean(GMFacade.class);
+            int sessionLength = getSession().getAttribute(
+                    "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
+                    split(",")[1].split("=")[1].length();
+            String sessionId = getSession().getAttribute(
+                    "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
+                    split(",")[1].split("=")[1].substring(0, sessionLength-1);
+            CookieHandler ch2 = new CookieHandler();
+            JWTHandler jwth2 = new JWTHandler();
+            Cookie userCookie2 = ch2.getCookieByName("userInfo");
+            String userid = jwth2.readUserId(userCookie2.getValue(), "test");
+            
+            //Перед инициализацией проверяем, нужно иницировать новое прохождение, 
+            //или продолжить незаконченное
+            if(parameters.getFirst("itsNewPassage").equals("true")){
+                currentStep = gmFacade.getGmReceipePassageFacade().getNextStep(
+                        sessionId, userid);
+            }
+            else{
+                currentStep = gmFacade.getGmReceipePassageFacade().
+                        getNotCompletedStep(sessionId, userid);
+            }
+            if(currentStep != null){
+                mainLayer.contentRowLayout.removeAllComponents();
+                CustomLayout ShortViewOfReceipeLayout = 
+                        new CustomLayout("PassageReceipeView");
+                ShortViewOfReceipeLayout.setHeight("100%");
+                mainLayer.contentRowLayout.setHeight("100%");
+                mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
+                
+                ShortViewOfReceipeLayout.addComponent(
+                        new Label(currentStep.getDescription()), 
+                        "PassagesDescription");
+                BeansFactory<ContentManagerController> bfCMC = 
+                        BeansFactory.getInstance();
+                ContentManagerController controller = 
+                        bfCMC.getBean(ContentManagerController.class);
+                Image image = new Image();
+                String imageName = controller.getImage(currentStep.getPictureId());
+                image.setSource(new ExternalResource(imageName));
+                image.setHeight("100%");
+                image.setWidth("100%");
+                ShortViewOfReceipeLayout.addComponent(image, "PassagesImage");
+            }
+            else{
+                //ДОБАВИТЬ ВЫЗОВ ИСКЛЮЧЕНИЯ-ОШИБКА ПОЛУЧЕНИЯ ШАГА
+            } 
+        }
+        catch(Exception exception){
+            ExceptionHandler.getInstance().runExceptionhandling(exception);
+        }
       }
     });
     
@@ -893,7 +929,9 @@ public class UiServiceMainUI extends UI {
       topRecipeLayout.addComponent(recipesAuthor, "recipes_author");
       Button recepiesPartsButton = new Button("Приготовить");
       recepiesPartsButton.addClickListener((event) -> {
-          CreateInvitationForm create = new CreateInvitationForm();
+          CreateInvitationForm create = new CreateInvitationForm(() -> {
+              setUrl("PassageReceipe?itsNewPassage=true");
+          },"1");
           addWindow(create);
       });
       topRecipeLayout.addComponent(recepiesPartsButton, "parts_recipe_button");
