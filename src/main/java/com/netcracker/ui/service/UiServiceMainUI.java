@@ -548,7 +548,9 @@ public class UiServiceMainUI extends UI {
                                 image.setWidth("100%");
                                 ShortViewOfReceipeLayout.addComponent(image, 
                                         "PassagesImage");
-                                currentStep.setNodeId(newStep.getNodeId());
+                                if(!newStep.getNodeId().equals("defaultNodeId")){
+                                    currentStep.setNodeId(newStep.getNodeId());
+                                }
                                 currentStep.setIsLastNode(newStep.isIsLastNode());
                            }
                         }
@@ -999,16 +1001,25 @@ public class UiServiceMainUI extends UI {
       topRecipeLayout.addComponent(recipesAuthor, "recipes_author");
       Button recepiesPartsButton = new Button("Приготовить");
       recepiesPartsButton.addClickListener((event) -> {
-          CreateInvitationForm create = new CreateInvitationForm(() -> {
-                int sessionLength = getSession().getAttribute(
-                    "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
-                    split(",")[1].split("=")[1].length();
-                String sessionId = getSession().getAttribute(
-                    "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
-                    split(",")[1].split("=")[1].substring(0, sessionLength-1);
-                setUrl("PassageReceipe?itsNewPassage=true&sessionId="+sessionId);
-          },"1");
-          addWindow(create);
+          CookieHandler ch2 = new CookieHandler();
+          JWTHandler jwth2 = new JWTHandler();
+          Cookie userCookie2 = ch2.getCookieByName("userInfo");
+          if(jwth2.readUserId(userCookie2.getValue(), "test").equals("1")){
+              AuthorizationForm modalWindow = new AuthorizationForm(UI.getCurrent());
+              addWindow(modalWindow);
+          }
+          else{
+            CreateInvitationForm create = new CreateInvitationForm(() -> {
+                  int sessionLength = getSession().getAttribute(
+                      "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
+                      split(",")[1].split("=")[1].length();
+                  String sessionId = getSession().getAttribute(
+                      "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
+                      split(",")[1].split("=")[1].substring(0, sessionLength-1);
+                  setUrl("PassageReceipe?itsNewPassage=true&sessionId="+sessionId);
+            },"2");
+            addWindow(create);
+          }
       });
       topRecipeLayout.addComponent(recepiesPartsButton, "parts_recipe_button");
       Label numberOfServingsLable = new Label(String.valueOf(i));//просто для примера
@@ -1017,7 +1028,7 @@ public class UiServiceMainUI extends UI {
       topRecipeLayout.addComponent(workingTimesLable, "working_times_lable");
       Button addRecipeToFavoritesButton = new Button("Просмотреть");
       addRecipeToFavoritesButton.addClickListener((event) -> {
-          setUrl("RecipeViewer?receipeId=1");
+          setUrl("RecipeViewer?receipeId=2");
       });
       topRecipeLayout.addComponent(addRecipeToFavoritesButton, "add_recipe_to_favorites_button");
     }
