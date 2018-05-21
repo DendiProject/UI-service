@@ -41,6 +41,7 @@ import com.netcracker.ui.service.forms.NewInvitationForm;
 
 import com.netcracker.ui.service.forms.NoReadyReceipeForm;
 import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
+import com.netcracker.ui.service.forms.listeners.NewInvitationFormListener;
 import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
@@ -528,6 +529,13 @@ public class UiServiceMainUI extends UI {
                                        + "аппетита", Notification.Type.
                                                ERROR_MESSAGE, true)
                                 .show(Page.getCurrent());
+                               try{
+                                   gmFacade.getGmReceipePassageFacade().
+                                           completeReceipe(sessionId,parameters.getFirst("receipeId") , userid);
+                               }
+                               catch(Exception ex){
+                                   
+                               }
                            }
                            else{
                                UserStep newStep = gmFacade.
@@ -781,7 +789,8 @@ public class UiServiceMainUI extends UI {
             //Так как не удалось вставить таблицы, то имеется возможность только 
             //выводить кого-то одного из массива, соответсвенно, на всякий
             //случай буду завершать все рецепты, кроме последнего
-            if(inviteInformation != null && inviteInformation.size()>0 ){
+            if((inviteInformation != null && inviteInformation.size()>0) |
+                    inviteInformation.get(0).getInviterId().equals("-1") ){
                if(inviteInformation.size()>1){
                    for(int i=0; i<(inviteInformation.size()-1); i++){
                        InviteInformation newIn = inviteInformation.get(i);
@@ -789,11 +798,22 @@ public class UiServiceMainUI extends UI {
                                newIn.getSessionId(), 
                                newIn.getReceipeInformation().getReceipeId(),
                                newIn.getInviterId());
-                       inviteInformation.remove(0);
                    }
+                   InviteInformation last = inviteInformation.get(inviteInformation.size()-1);
+                   inviteInformation.clear();
+                   inviteInformation.add(last);
                }
-               NewInvitationForm invite = new NewInvitationForm(inviteInformation.get(0), userInfo);
-               addWindow(invite); 
+               if(!inviteInformation.get(0).getInviterId().equals("-1")){
+                NewInvitationForm invite = 
+                        new NewInvitationForm(inviteInformation.get(0), userInfo,
+                        new NewInvitationFormListener() {
+                    @Override
+                    public void onCreate(String sessionId) {
+                       setUrl("PassageReceipe?itsNewPassage=true&sessionId="+sessionId);
+                    }
+                });
+                    addWindow(invite); 
+               }
             }
             else{
                 new Notification("",
@@ -1053,7 +1073,8 @@ public class UiServiceMainUI extends UI {
                   String sessionId = getSession().getAttribute(
                       "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
                       split(",")[1].split("=")[1].substring(0, sessionLength-1);
-                  setUrl("PassageReceipe?itsNewPassage=true&sessionId="+sessionId);
+                  setUrl("PassageReceipe?itsNewPassage=true&sessionId="+
+                          sessionId+"&receipeId="+"2");
             },"2");
             addWindow(create);
           }

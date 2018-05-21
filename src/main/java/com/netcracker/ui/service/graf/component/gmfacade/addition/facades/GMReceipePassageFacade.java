@@ -9,6 +9,7 @@ import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.graf.component.gmfacade.workers.ReceipePassageWorker;
 import com.netcracker.ui.service.passageReceipe.storages.InviteInformation;
 import com.netcracker.ui.service.passageReceipe.storages.UserStep;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +49,13 @@ public class GMReceipePassageFacade {
         }
         catch(Exception exception)
         {
+            if(exception.getMessage().equals("404 Not Found")){
+                List<InviteInformation> done = new ArrayList<InviteInformation>();
+                InviteInformation inviteInformation = new InviteInformation();
+                inviteInformation.setInviterId("-1");
+                done.add(inviteInformation);
+                return done;
+            }
             ExceptionHandler.getInstance().runExceptionhandling(exception);
             return null;
         }
@@ -117,7 +125,7 @@ public class GMReceipePassageFacade {
         }
         catch(Exception exception)
         {
-            ExceptionHandler.getInstance().runExceptionhandling(exception);
+            //ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
     }
     
