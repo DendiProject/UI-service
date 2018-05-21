@@ -131,6 +131,7 @@ public class ReceipePassageWorker {
         else{
             step.setIsLastNode(false);
         }
+        step.setIs404(false);
         
         return step;
     }
@@ -159,6 +160,7 @@ public class ReceipePassageWorker {
         BeansFactory<ObjectMapper> bfOM2 = BeansFactory.getInstance();
         ObjectMapper mapper = bfOM2.getBean(ObjectMapper.class);
         UserStep step = mapper.readValue(response.getBody(), UserStep.class);
+        step.setIs404(false);
         
         return step;
     }

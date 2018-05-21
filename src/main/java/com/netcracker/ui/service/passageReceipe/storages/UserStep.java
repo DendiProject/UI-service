@@ -21,6 +21,15 @@ public class UserStep {
     private String pictureId;
     
     private boolean isLastNode;
+    private boolean is404;
+
+    public boolean isIs404() {
+        return is404;
+    }
+
+    public void setIs404(boolean is404) {
+        this.is404 = is404;
+    }
 
     public boolean isIsLastNode() {
         return isLastNode;

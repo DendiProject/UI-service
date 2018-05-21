@@ -482,7 +482,16 @@ public class UiServiceMainUI extends UI {
                 currentStep = gmFacade.getGmReceipePassageFacade().
                         getNotCompletedStep(sessionId, userid);
             }
-            if(currentStep != null){
+            if(currentStep == null){
+                //ДОБАВИТЬ ВЫЗОВ ИСКЛЮЧЕНИЯ-ОШИБКА ПОЛУЧЕНИЯ ШАГА
+            }
+            if(currentStep.isIs404()){
+                new Notification("","Вы успешно завершили выполнение рецепта, "
+                        + "приятного аппетита",
+                        Notification.Type.ERROR_MESSAGE, true)
+                        .show(Page.getCurrent());
+            }
+            if(currentStep != null & !currentStep.isIs404()){
                 mainLayer.contentRowLayout.removeAllComponents();
                 CustomLayout ShortViewOfReceipeLayout = 
                         new CustomLayout("PassageReceipeView");
@@ -503,10 +512,76 @@ public class UiServiceMainUI extends UI {
                 image.setHeight("100%");
                 image.setWidth("100%");
                 ShortViewOfReceipeLayout.addComponent(image, "PassagesImage");
+                
+                ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+                ButtonsClickListener clickListener = new SessionStorageHelper().
+                        getListener(attr);
+                clickListener.addButtonClickListener(new ClickListener() {
+                    @Override
+                    public String getId() {
+                        return "PassagesNextBtn";
+                    }
+
+                    @Override
+                    public void onEventDo() {
+                        try{
+                           if(currentStep.isIsLastNode()){
+                               new Notification("","Вы успешно завершили "
+                                       + "выполнение рецепта, приятного "
+                                       + "аппетита", Notification.Type.
+                                               ERROR_MESSAGE, true)
+                                .show(Page.getCurrent());
+                           }
+                           else{
+                               UserStep newStep = gmFacade.
+                                       getGmReceipePassageFacade().
+                                       getNextStep(sessionId, userid, 
+                                               currentStep.getNodeId());
+                                ShortViewOfReceipeLayout.addComponent(
+                                        new Label(newStep.getDescription()), 
+                                        "PassagesDescription");
+                                BeansFactory<ContentManagerController> bfCMC = 
+                                        BeansFactory.getInstance();
+                                ContentManagerController controller = 
+                                        bfCMC.getBean(
+                                                ContentManagerController.class);
+                                Image image = new Image();
+                                String imageName = controller.getImage(
+                                        newStep.getPictureId());
+                                image.setSource(new ExternalResource(imageName));
+                                image.setHeight("100%");
+                                image.setWidth("100%");
+                                ShortViewOfReceipeLayout.addComponent(image, 
+                                        "PassagesImage");
+                                currentStep.setNodeId(newStep.getNodeId());
+                                currentStep.setIsLastNode(newStep.isIsLastNode());
+                           }
+                        }
+                        catch(Exception exception){
+                            ExceptionHandler.getInstance().
+                                    runExceptionhandling(exception);
+                        }
+                    }
+                });
+                
+                clickListener.addButtonClickListener(new ClickListener() {
+                    @Override
+                    public String getId() {
+                        return "PassagesGrafBtn";
+                    }
+
+                    @Override
+                    public void onEventDo() {
+                        try{
+                           
+                        }
+                        catch(Exception exception){
+                            ExceptionHandler.getInstance().
+                                    runExceptionhandling(exception);
+                        }
+                    }
+                });
             }
-            else{
-                //ДОБАВИТЬ ВЫЗОВ ИСКЛЮЧЕНИЯ-ОШИБКА ПОЛУЧЕНИЯ ШАГА
-            } 
         }
         catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);

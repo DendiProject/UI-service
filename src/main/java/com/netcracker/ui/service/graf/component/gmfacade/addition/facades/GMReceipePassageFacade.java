@@ -64,6 +64,11 @@ public class GMReceipePassageFacade {
         }
         catch(Exception exception)
         {
+            if(exception.getMessage().equals("404 Not Found")){
+                UserStep done = new UserStep();
+                done.setIs404(true);
+                return done;
+            }
             ExceptionHandler.getInstance().runExceptionhandling(exception);
             return null;
         }
@@ -78,6 +83,11 @@ public class GMReceipePassageFacade {
         }
         catch(Exception exception)
         {
+            if(exception.getMessage().equals("404 Not Found")){
+                UserStep done = new UserStep();
+                done.setIs404(true);
+                return done;
+            }
             ExceptionHandler.getInstance().runExceptionhandling(exception);
             return null;
         }
