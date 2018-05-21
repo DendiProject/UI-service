@@ -119,6 +119,10 @@
         width: 60%;
         height: 100%;
         box-sizing:border-box;
+        display: -webkit-flex; 
+        display: flex;
+        justify-content: space-around;
+        align-items:center;
     }
     .createReceipeInputTags2
     {

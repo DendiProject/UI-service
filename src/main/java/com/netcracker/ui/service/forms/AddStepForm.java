@@ -30,6 +30,7 @@ import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -39,6 +40,9 @@ import java.util.LinkedList;
 public class AddStepForm  extends Window {
     private String stepLable = null;
     private String stepDescription = null;
+    LinkedList<Resource> resourceListTableValue = new LinkedList<>();
+    LinkedList<Resource> eingredientListTableValue = new LinkedList<>();
+    LinkedList<Resource> oingredientListTableValue = new LinkedList<>();
     
     public AddStepForm(AddStepListener listener, String receipeid, 
             List<Resource> ingredients, List<Resource> resources) 
@@ -153,6 +157,12 @@ public class AddStepForm  extends Window {
                             Node n = new Node("", stepDescription, imageName, stepLable);
                             //ДОБАВИТЬ СЮДА ЧТЕНИЕ ИСПОЛЬЗОВАННЫХ ИНГРЕДИЕНТОВ И 
                             //ЗАМЕНИТЬ В СТРОЧКЕ НИЖЕ ingredients
+                            
+                            //ЗНАЧЕНИЯ ИЗ СОЗДАННЫХ ТАБЛИЦ
+//                            resourceListTableValue.add(resourceGrid.);
+//                            eingredientListTableValue.add(eingredientGrid.);
+//                            oingredientListTableValue.add(oingredientGrid.);
+
                             listener.onCreate(n, ingredients);
                             this.close();
                         }
@@ -181,10 +191,39 @@ public class AddStepForm  extends Window {
         
         //Заполнение combobox
         ComboBox resBox = new ComboBox();
-        resBox.setItems(resources);
         ComboBox eIngBox = new ComboBox();
-        eIngBox.setItems(ingredients);
         ComboBox oIngBox = new ComboBox();
+        List<String> resStr = new LinkedList<>();
+        List<String> ingrStr = new LinkedList<>();
+        for(int i=0;i<resources.size();i++) resStr.add(resources.get(i).getName());
+        for(int j=0;j<ingredients.size();j++) ingrStr.add(ingredients.get(j).getName());
+        resBox.setItems(resStr);
+        eIngBox.setItems(ingrStr);
+        
+        resBox.addValueChangeListener((event) -> {
+            if(!event.getValue().toString().equals("")){
+                String k = event.getValue().toString();
+                for(int i=0;i<resources.size();i++){
+                    if(k.equals(resources.get(i).getName())){
+                        resourceList.add(resources.get(i));
+                        resourceGrid.getDataProvider().refreshAll();     
+                    }
+                }
+            }
+        });
+        
+        eIngBox.addValueChangeListener((event) -> {
+            if(!event.getValue().toString().equals("")){
+                String k = event.getValue().toString();
+                for(int i=0;i<ingredients.size();i++){
+                    if(k.equals(ingredients.get(i).getName())){
+                        eingredientList.add(ingredients.get(i));
+                        eingredientGrid.getDataProvider().refreshAll();     
+                    }
+                }
+            }
+        });
+        
         
         mainCustomLayout.addComponent(new Label("Добавление шага"),"addStepCaption");
         mainCustomLayout.addComponent(resBox,"addStepItem1Lable");
