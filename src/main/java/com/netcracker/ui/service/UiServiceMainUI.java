@@ -453,7 +453,31 @@ public class UiServiceMainUI extends UI {
         mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Рецепты, удовлетворяющие условию поиска:"));
       }
     });
+    
+    newViews.add(new View("PassageReceipe") {
+      @Override
+      public void draw(LinkedMultiValueMap<String, String> parameters) {
+        mainLayer.contentRowLayout.removeAllComponents();
+        CustomLayout ShortViewOfReceipeLayout = new CustomLayout("PassageReceipeView");
+        ShortViewOfReceipeLayout.setHeight("100%");
+        mainLayer.contentRowLayout.setHeight("100%");
+        mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
 
+        /*ShortViewOfReceipeLayout.addComponent(fName, "userPageNameFieldAndLable");
+        ShortViewOfReceipeLayout.addComponent(sName, "userPageSecondNameFieldAndLable");
+        ShortViewOfReceipeLayout.addComponent(email, "userPageMailFieldAndLable");
+        ShortViewOfReceipeLayout.addComponent(new Label("BirthDate"), "userPageBirthDateFieldAndLable");
+
+        TextArea area = new TextArea();
+        area.setValue("");
+        area.setHeight("100%");
+        area.setWidth("100%");
+        area.setWordWrap(true);
+        ShortViewOfReceipeLayout.addComponent(area, "userPageAboutOneselfFieldAndLable");*/
+
+      }
+    });
+    
     newViews.add(new View("UserPage") {
       @Override
       public void draw(LinkedMultiValueMap<String, String> parameters) {
