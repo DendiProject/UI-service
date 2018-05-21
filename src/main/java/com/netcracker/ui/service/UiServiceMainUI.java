@@ -461,17 +461,12 @@ public class UiServiceMainUI extends UI {
         try{
             BeansFactory<GMFacade> bf = BeansFactory.getInstance();
             GMFacade gmFacade = bf.getBean(GMFacade.class);
-            int sessionLength = getSession().getAttribute(
-                    "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
-                    split(",")[1].split("=")[1].length();
-            String sessionId = getSession().getAttribute(
-                    "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
-                    split(",")[1].split("=")[1].substring(0, sessionLength-1);
+            
             CookieHandler ch2 = new CookieHandler();
             JWTHandler jwth2 = new JWTHandler();
             Cookie userCookie2 = ch2.getCookieByName("userInfo");
             String userid = jwth2.readUserId(userCookie2.getValue(), "test");
-            
+            String sessionId = parameters.getFirst("sessionId");
             //Перед инициализацией проверяем, нужно иницировать новое прохождение, 
             //или продолжить незаконченное
             if(parameters.getFirst("itsNewPassage").equals("true")){
@@ -1005,7 +1000,13 @@ public class UiServiceMainUI extends UI {
       Button recepiesPartsButton = new Button("Приготовить");
       recepiesPartsButton.addClickListener((event) -> {
           CreateInvitationForm create = new CreateInvitationForm(() -> {
-              setUrl("PassageReceipe?itsNewPassage=true");
+                int sessionLength = getSession().getAttribute(
+                    "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
+                    split(",")[1].split("=")[1].length();
+                String sessionId = getSession().getAttribute(
+                    "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
+                    split(",")[1].split("=")[1].substring(0, sessionLength-1);
+                setUrl("PassageReceipe?itsNewPassage=true&sessionId="+sessionId);
           },"1");
           addWindow(create);
       });
