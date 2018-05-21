@@ -12,7 +12,7 @@
 
 		display: -webkit-flex; 
 		display: flex;
-		justify-content: space-around;
+		justify-content: spgreeace-around;
 		align-items:center;
 		flex-direction: column;
 	}
@@ -20,7 +20,7 @@
 	{
 		width: 100%;
 		height: 90%;
-		border: solid 2px grey;
+		//border: solid px grey;
 		box-sizing:border-box;
 		
 		display: -webkit-flex; 
@@ -32,8 +32,9 @@
 	{
 		width: 100%;
 		height: 10%;
-		border: solid 2px grey;
-		box-sizing:border-box;
+		border: solid #A39A94;
+                box-sizing: border-box;
+                border-width: 1px 0 0 0;
 		
 		display: -webkit-flex; 
 		display: flex;
@@ -44,8 +45,9 @@
 	{
 		width: 40%;
 		height: 100%;
-		border: solid 2px green;
-		box-sizing:border-box;
+		border: solid #A39A94;
+                box-sizing: border-box;
+                border-width: 1px 1px 1px 1px;
 		
 		display: -webkit-flex; 
 		display: flex;
@@ -57,8 +59,9 @@
 	{
 		width: 60%;
 		height: 100%;
-		border: solid 2px green;
-		box-sizing:border-box;
+		border: solid #A39A94;
+                box-sizing: border-box;
+                border-width: 1px 1px 1px 1px;
 		
 		display: -webkit-flex; 
 		display: flex;
@@ -70,14 +73,9 @@
 	{
 		width: 100%;
 		height: 85%;
-		border: solid 2px yellow;
-		box-sizing:border-box;
-		
-		
-		
-		
-		
-		
+		border: solid #A39A94;
+                box-sizing: border-box;
+                border-width: 1px 0 1px 0;
 		display: -webkit-flex; 
 		display: flex;
 		justify-content: center;
@@ -87,14 +85,9 @@
 	{
 		width: 100%;
 		height: 15%;
-		border: solid 2px yellow;
-		box-sizing:border-box;
-		
-		
-		
-		
-		
-		
+		border: solid #A39A94;
+                box-sizing: border-box;
+                border-width: 1px 0 0 0;
 		display: -webkit-flex; 
 		display: flex;
 		justify-content: center;
@@ -104,14 +97,9 @@
 	{
 		width: 100%;
 		height: 30%;
-		border: solid 2px red;
-		box-sizing:border-box;
-		
-		
-		
-		
-		
-		
+		border: solid #A39A94;
+                box-sizing: border-box;
+                border-width: 1px 1px 1px 0;
 		display: -webkit-flex; 
 		display: flex;
 		justify-content: center;
@@ -121,8 +109,9 @@
 	{
 		width: 100%;
 		height: 70%;
-		border: solid 2px red;
-		box-sizing:border-box;
+                //border: solid #A39A94;
+                box-sizing: border-box;
+                //border-width: 0 2px 0 0;
 		
 		display: -webkit-flex; 
 		display: flex;
@@ -133,14 +122,10 @@
 	{
 		width: 50%;
 		height: 100%;
-		border: solid 2px blue;
-		box-sizing:border-box;
-		
-		
-		
-		
-		
-		
+		border: solid #A39A94;
+                box-sizing: border-box;
+                border-width: 1px 1px 0 0;
+
 		display: -webkit-flex; 
 		display: flex;
 		justify-content: center;
@@ -150,14 +135,9 @@
 	{
 		width: 50%;
 		height: 100%;
-		border: solid 2px blue;
-		box-sizing:border-box;
-		
-		
-		
-		
-		
-		
+		border: solid #A39A94;
+                box-sizing: border-box;
+                border-width: 1px 0 0 1px;
 		display: -webkit-flex; 
 		display: flex;
 		justify-content: center;
@@ -166,15 +146,10 @@
 	.PassagesNextBtn
 	{
 		width: 15%;
-		height: 85%;
-		border: solid 2px orange;
-		box-sizing:border-box;
-		
-		
-		
-		
-		
-		
+		height: 60%;
+		border: solid 1px #A39A94;
+                border-radius: 9px;
+		box-sizing:border-box;	
 		display: -webkit-flex; 
 		display: flex;
 		justify-content: center;
@@ -183,15 +158,10 @@
 	.PassagesGrafBtn
 	{
 		width: 15%;
-		height: 85%;
-		border: solid 2px orange;
+		height: 60%;
+		border: solid 1px #A39A94;
+                border-radius: 9px;
 		box-sizing:border-box;
-		
-		
-		
-		
-		
-		
 		display: -webkit-flex; 
 		display: flex;
 		justify-content: center;
