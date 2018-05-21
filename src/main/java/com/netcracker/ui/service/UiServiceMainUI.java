@@ -494,8 +494,9 @@ public class UiServiceMainUI extends UI {
                 mainLayer.contentRowLayout.setHeight("100%");
                 mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
                 
-                ShortViewOfReceipeLayout.addComponent(
-                        new Label(currentStep.getDescription()), 
+                Label description = new Label(currentStep.getDescription());
+                description.setWidth("100%");
+                ShortViewOfReceipeLayout.addComponent(description, 
                         "PassagesDescription");
                 BeansFactory<ContentManagerController> bfCMC = 
                         BeansFactory.getInstance();
@@ -532,8 +533,10 @@ public class UiServiceMainUI extends UI {
                                        getGmReceipePassageFacade().
                                        getNextStep(sessionId, userid, 
                                                currentStep.getNodeId());
-                                ShortViewOfReceipeLayout.addComponent(
-                                        new Label(newStep.getDescription()), 
+                                Label description = new Label(newStep.getDescription());
+                                description.setWidth("100%");
+                                description.setResponsive(true);
+                                ShortViewOfReceipeLayout.addComponent(description, 
                                         "PassagesDescription");
                                 BeansFactory<ContentManagerController> bfCMC = 
                                         BeansFactory.getInstance();
