@@ -614,8 +614,8 @@ public class UiServiceMainUI extends UI {
       ExceptionHandler.getInstance().runExceptionhandling(ex);
     }
     //Создаем подпункты меню
-    ArrayList<MenusButton> mainSubMenus = new ArrayList<>();
-    mainSubMenus.add(new MenusButton("Создать рецепт", "idsubMain1", new HandlerForClickingTheButton() {
+    ArrayList<MenusButton> recSubMenus = new ArrayList<>();
+    recSubMenus.add(new MenusButton("Создать рецепт", "idsubRec1", new HandlerForClickingTheButton() {
       @Override
       public void onEventClickDo() {
         try {
@@ -625,12 +625,13 @@ public class UiServiceMainUI extends UI {
         }
       }
     }));
-
-    mainSubMenus.add(new MenusButton("Просмотреть рецепт", "idsubMain2", new HandlerForClickingTheButton() {
+    
+    recSubMenus.add(new MenusButton("Проверить уведомления", "idsubRec2", new HandlerForClickingTheButton() {
       @Override
       public void onEventClickDo() {
         try {
-            setUrl("RecipeViewer?receipeId=1");
+            NewInvitationForm invite = new NewInvitationForm();
+            addWindow(invite);
         } catch (Exception exception) {
           ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
@@ -652,7 +653,7 @@ public class UiServiceMainUI extends UI {
       public void onEventClickDo() {
             
       }
-    }, mainSubMenus);
+    }, recSubMenus);
 
     MenusSearchBar search = new MenusSearchBar("idSearch", new HandlerForClickingTheButton() {
       @Override
@@ -866,13 +867,20 @@ public class UiServiceMainUI extends UI {
       topRecipeLayout.addComponent(recipesName, "recipes_name");
       Label recipesAuthor = new Label("Автор");
       topRecipeLayout.addComponent(recipesAuthor, "recipes_author");
-      Button recepiesPartsButton = new Button("Ингридиенты");
+      Button recepiesPartsButton = new Button("Приготовить");
+      recepiesPartsButton.addClickListener((event) -> {
+          CreateInvitationForm create = new CreateInvitationForm();
+          addWindow(create);
+      });
       topRecipeLayout.addComponent(recepiesPartsButton, "parts_recipe_button");
       Label numberOfServingsLable = new Label(String.valueOf(i));//просто для примера
       topRecipeLayout.addComponent(numberOfServingsLable, "number_of_servings_lable");
       Label workingTimesLable = new Label(String.valueOf(i));//просто для примера
       topRecipeLayout.addComponent(workingTimesLable, "working_times_lable");
-      Button addRecipeToFavoritesButton = new Button("Добавить в избранное");
+      Button addRecipeToFavoritesButton = new Button("Просмотреть");
+      addRecipeToFavoritesButton.addClickListener((event) -> {
+          setUrl("RecipeViewer?receipeId=1");
+      });
       topRecipeLayout.addComponent(addRecipeToFavoritesButton, "add_recipe_to_favorites_button");
     }
 
