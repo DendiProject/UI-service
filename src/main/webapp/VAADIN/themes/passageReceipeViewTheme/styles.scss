@@ -1,0 +1,201 @@
+@import "../valo/valo.scss";
+
+@mixin passageReceipeViewTheme 
+{
+    @include valo;
+
+	.passageRecipeView
+	{
+		width: 100%;
+		height: 100%;
+		
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+		flex-direction: column;
+	}
+	.panelWithInformation
+	{
+		width: 100%;
+		height: 90%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+	.panelWithButtons
+	{
+		width: 100%;
+		height: 10%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+	.panelWithImageAndLable
+	{
+		width: 40%;
+		height: 100%;
+		border: solid 2px green;
+		box-sizing:border-box;
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+		flex-direction: column;
+	}
+	.panelWithTextAndTables
+	{
+		width: 60%;
+		height: 100%;
+		border: solid 2px green;
+		box-sizing:border-box;
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+		flex-direction: column;
+	}
+	.PassagesImage
+	{
+		width: 100%;
+		height: 85%;
+		border: solid 2px yellow;
+		box-sizing:border-box;
+		
+		
+		
+		
+		
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: center;
+		align-items:center;
+	}
+	.PassagesLable
+	{
+		width: 100%;
+		height: 15%;
+		border: solid 2px yellow;
+		box-sizing:border-box;
+		
+		
+		
+		
+		
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: center;
+		align-items:center;
+	}
+	.PassagesDescription
+	{
+		width: 100%;
+		height: 30%;
+		border: solid 2px red;
+		box-sizing:border-box;
+		
+		
+		
+		
+		
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: center;
+		align-items:center;
+	}
+	.PassagesTables
+	{
+		width: 100%;
+		height: 70%;
+		border: solid 2px red;
+		box-sizing:border-box;
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+	.PassagesIngredientsTable
+	{
+		width: 50%;
+		height: 100%;
+		border: solid 2px blue;
+		box-sizing:border-box;
+		
+		
+		
+		
+		
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: center;
+		align-items:center;
+	}
+	.PassagesResoursesTable
+	{
+		width: 50%;
+		height: 100%;
+		border: solid 2px blue;
+		box-sizing:border-box;
+		
+		
+		
+		
+		
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: center;
+		align-items:center;
+	}
+	.PassagesNextBtn
+	{
+		width: 15%;
+		height: 85%;
+		border: solid 2px orange;
+		box-sizing:border-box;
+		
+		
+		
+		
+		
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: center;
+		align-items:center;
+	}
+	.PassagesGrafBtn
+	{
+		width: 15%;
+		height: 85%;
+		border: solid 2px orange;
+		box-sizing:border-box;
+		
+		
+		
+		
+		
+		
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: center;
+		align-items:center;
+	}
+}
+@include passageReceipeViewTheme;

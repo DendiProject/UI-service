@@ -1,0 +1,69 @@
+@import "../valo/valo.scss";
+
+@mixin newInvitationTheme 
+{
+    @include valo;
+    
+	.NewInvitationView
+	{
+		width: 100%;
+		height: 100%;
+
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-between;
+		align-items:center;
+		flex-direction: column;
+	}
+	.NewInvitationLabel
+	{
+		width: 100%;
+		height: 15%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+	.NewInvitationTable
+	{
+		width: 100%;
+		height: 70%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+		flex-direction: column;
+	}
+	.NewInvitationButtons
+	{
+		width: 100%;
+		height: 10%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+	.NewInvitationGoBtn
+	{
+		width: 20%;
+		height: 100%;
+		border: solid 2px grey;
+		box-sizing:border-box;
+
+		display: -webkit-flex; 
+		display: flex;
+		justify-content: space-around;
+		align-items:center;
+	}
+}
+@include newInvitationTheme;

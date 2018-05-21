@@ -35,13 +35,16 @@ import com.netcracker.ui.service.exception.navigator.NotFound;
 import com.netcracker.ui.service.forms.ExitForm;
 
 import com.netcracker.ui.service.forms.AddStepForm;
+import com.netcracker.ui.service.forms.CreateInvitationForm;
 import com.netcracker.ui.service.forms.CreateReceipeForm;
+import com.netcracker.ui.service.forms.NewInvitationForm;
 
 import com.netcracker.ui.service.forms.NoReadyReceipeForm;
 import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
 import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
+import com.netcracker.ui.service.graf.component.ipsFacade.IpsFacade;
 import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
 import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
@@ -102,7 +105,13 @@ public class UiServiceMainUI extends UI {
   @Override
   protected void init(VaadinRequest vaadinRequest) {
     try {
-        BeansFactory<GMFacade> bf = BeansFactory.getInstance();
+        BeansFactory<IpsFacade> bf = BeansFactory.getInstance();
+        IpsFacade ips = bf.getBean(IpsFacade.class);
+        ips.getUserByName("e345ffd7-641a-440e-a36b-131a6abe66ce");
+        ips.getAllUsers();
+        
+        
+        /*BeansFactory<GMFacade> bf = BeansFactory.getInstance();
         GMFacade gmFacade = bf.getBean(GMFacade.class);
         int sessionLength = getSession().getAttribute(
                 "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
@@ -128,7 +137,14 @@ public class UiServiceMainUI extends UI {
         Map<String, Boolean> passingGraf = gmFacade.getGmReceipePassageFacade().getPassingGraph(sessionId);
         
         gmFacade.getGmReceipePassageFacade().completeReceipe(sessionId, receipeId, initUser);
-        int igygyigiygi=0;
+        int igygyigiygi=0;*/
+        
+        
+        
+        
+        
+        
+        
         /*CookieHandler ch2 = new CookieHandler();
         JWTHandler jwth2 = new JWTHandler();
         Cookie userCookie2 = ch2.getCookieByName("userInfo");
@@ -185,6 +201,12 @@ public class UiServiceMainUI extends UI {
     }
   }
   
+  
+  
+  
+  
+  
+  
    private String getUserID(){
         CookieHandler ch2 = new CookieHandler();
         JWTHandler jwth2 = new JWTHandler();
@@ -200,7 +222,7 @@ public class UiServiceMainUI extends UI {
   private String getUrl() {
     return getPage().getUriFragment();
   }
-
+  
   private ResponsiveLayout createMainLayout() throws MenuComponentException,
           NotFoundBean {
     BasicLayoutCreator mainLayer;
@@ -614,6 +636,7 @@ public class UiServiceMainUI extends UI {
         }
       }
     }));
+    
     //создаем кнопку меню, включающую подпункты
     MenusButton mainBtn = new MenusButton("Главная", "idMain", new HandlerForClickingTheButton() {
       @Override
@@ -627,7 +650,7 @@ public class UiServiceMainUI extends UI {
     MenusButton recepsBtn = new MenusButton("Рецепты", "idRecept", new HandlerForClickingTheButton() {
       @Override
       public void onEventClickDo() {
-        setUrl("RecipeConfigurator");
+            
       }
     }, mainSubMenus);
 
@@ -868,5 +891,3 @@ public class UiServiceMainUI extends UI {
 
     }
 }
-
-

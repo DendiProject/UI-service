@@ -30,6 +30,8 @@ public class ReceipeStore implements StoreSubject{
     {
         this.converter = converter;
         observers = new ArrayList<>();
+        currentRecipesInResourses = new ArrayList<Resource>();
+        currentRecipesInIngredients = new ArrayList<Resource>();
     }
     
     @Override
@@ -119,8 +121,18 @@ public class ReceipeStore implements StoreSubject{
     public void handleNewData(Object object) throws InternalServerError, NotFoundBean{
         currentData = object;
         Receipe initReceipe = converter.convert(currentData);
-        currentRecipesInResourses = initReceipe.getResources();
-        currentRecipesInIngredients = initReceipe.getIndredients();
+        if(initReceipe.getResources() == null){
+            currentRecipesInResourses = new ArrayList<Resource>();
+        }
+        else{
+            currentRecipesInResourses = initReceipe.getResources();
+        }
+        if(currentRecipesInIngredients == null){
+            currentRecipesInIngredients = new ArrayList<Resource>();
+        }
+        else{
+            currentRecipesInIngredients = initReceipe.getIndredients();
+        }
         notifyObservers();
     }
 
