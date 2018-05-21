@@ -65,5 +65,83 @@
 		justify-content: space-around;
 		align-items:center;
 	}
+        .NewInvitationName
+        {
+                width: 100%;
+                height: 15%;
+                border: solid 2px yellow;
+                box-sizing:border-box;
+
+
+                display: -webkit-flex; 
+                display: flex;
+                justify-content: center;
+                align-items:center;
+        }
+        .NewInvitationLastName
+        {
+                width: 100%;
+                height: 15%;
+                border: solid 2px yellow;
+                box-sizing:border-box;
+
+
+                display: -webkit-flex; 
+                display: flex;
+                justify-content: center;
+                align-items:center;
+        }
+        .NewInvitationReceipeName
+        {
+                width: 100%;
+                height: 15%;
+                border: solid 2px yellow;
+                box-sizing:border-box;
+
+
+                display: -webkit-flex; 
+                display: flex;
+                justify-content: center;
+                align-items:center;
+        }
+        .NewInvitationDescription
+        {
+                width: 100%;
+                height: 30%;
+                border: solid 2px yellow;
+                box-sizing:border-box;
+
+
+                display: -webkit-flex; 
+                display: flex;
+                justify-content: center;
+                align-items:center;
+        }
+        .NewInvitationFirstColumn
+        {
+                width: 35%;
+                height: 100%;
+                border: solid 2px grey;
+                box-sizing:border-box;
+
+                display: -webkit-flex; 
+                display: flex;
+                justify-content: space-around;
+                align-items:center;
+                flex-direction: column;
+        }
+        .NewInvitationSecondColumn
+        {
+                width: 65%;
+                height: 100%;
+                border: solid 2px grey;
+                box-sizing:border-box;
+
+                display: -webkit-flex; 
+                display: flex;
+                justify-content: space-around;
+                align-items:center;
+                flex-direction: column;
+        }
 }
 @include newInvitationTheme;
