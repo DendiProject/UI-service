@@ -12,11 +12,18 @@ package com.netcracker.ui.service.receipe.view.basic.objects;
 public class Tag {
     private String name;
 
+    public Tag(String name) {
+        this.name = name;
+    }
+
+    public Tag() {
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    } 
+    }  
 }

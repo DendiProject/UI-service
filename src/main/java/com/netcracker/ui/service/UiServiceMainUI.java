@@ -45,6 +45,7 @@ import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.graf.component.ipsFacade.IpsFacade;
+import com.netcracker.ui.service.graf.component.ipsFacade.stores.UserInfo;
 import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
 import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
@@ -65,6 +66,7 @@ import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
 import com.netcracker.ui.service.receipe.view.basic.objects.ShowReceipeView;
 import com.netcracker.ui.service.views.CreateRecipeView;
 import com.vaadin.annotations.Theme;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Page;
@@ -73,6 +75,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
@@ -87,6 +90,7 @@ import javax.servlet.http.Cookie;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -498,6 +502,52 @@ public class UiServiceMainUI extends UI {
                 description.setWidth("100%");
                 ShortViewOfReceipeLayout.addComponent(description, 
                         "PassagesDescription");
+                
+//                //<editor-fold defaultstate="collapsed" desc="Таблица ресурсов">
+//                Grid<UserStep> resourceGrid = new Grid<>();
+//                LinkedList<UserStep> resourceList = new LinkedList<>();
+//                resourceGrid.setSizeFull();
+//
+//                // Set the data provider (ListDataProvider<UserStep>)
+//                ListDataProvider<UserStep> dataProvider = new ListDataProvider<UserStep>(resourceList);
+//                resourceGrid.setDataProvider(dataProvider);
+//
+//                // Set the selection mode
+//                resourceGrid.setSelectionMode(Grid.SelectionMode.NONE);
+//
+//                resourceGrid.addColumn(UserStep::getResources)
+//                        .setId("ResourceName")
+//                        .setCaption("Название");
+//                resourceGrid.addColumn(UserStep::getResourceNumber)
+//                        .setId("ResourceNumber")
+//                        .setCaption("Количество");
+//                // Fire a data change event to initialize the summary footer
+//                resourceGrid.getDataProvider().refreshAll();
+//                //</editor-fold>
+//        
+//                //<editor-fold defaultstate="collapsed" desc="Таблица входных ингредиентов">
+//                Grid<Resource> eingredientGrid = new Grid<>();
+//                LinkedList<Resource> eingredientList = new LinkedList<>();
+//                eingredientGrid.setSizeFull();
+//
+//                // Set the data provider (ListDataProvider<Resource>)
+//                ListDataProvider<Resource> dataProviderEIng = new ListDataProvider<Resource>(eingredientList);
+//                eingredientGrid.setDataProvider(dataProviderEIng);
+//
+//                // Set the selection mode
+//                eingredientGrid.setSelectionMode(Grid.SelectionMode.NONE);
+//
+//                eingredientGrid.addColumn(Resource::getName)
+//                        .setId("IngredientName")
+//                        .setCaption("Название");
+//
+//                eingredientGrid.addColumn(Resource::getResourceNumber)
+//                        .setId("ResourceNumber")
+//                        .setCaption("Количество");
+//                // Fire a data change event to initialize the summary footer
+//                eingredientGrid.getDataProvider().refreshAll();
+//                //</editor-fold>
+                
                 BeansFactory<ContentManagerController> bfCMC = 
                         BeansFactory.getInstance();
                 ContentManagerController controller = 
@@ -765,8 +815,41 @@ public class UiServiceMainUI extends UI {
       @Override
       public void onEventClickDo() {
         try {
-            NewInvitationForm invite = new NewInvitationForm();
-            addWindow(invite);
+            CookieHandler ch2 = new CookieHandler();
+            JWTHandler jwth2 = new JWTHandler();
+            Cookie userCookie2 = ch2.getCookieByName("userInfo");
+            String userid = jwth2.readUserId(userCookie2.getValue(), "test");
+            
+            BeansFactory<IpsFacade> bf = BeansFactory.getInstance();
+            IpsFacade ips = bf.getBean(IpsFacade.class);
+            UserInfo userInfo = ips.getUserByName(userid);
+            
+            BeansFactory<GMFacade> bf2 = BeansFactory.getInstance();
+            GMFacade gmFacade = bf2.getBean(GMFacade.class);
+            List<InviteInformation> inviteInformation = gmFacade.getGmReceipePassageFacade().userStart(userid);
+            //Так как не удалось вставить таблицы, то имеется возможность только 
+            //выводить кого-то одного из массива, соответсвенно, на всякий
+            //случай буду завершать все рецепты, кроме последнего
+            if(inviteInformation != null && inviteInformation.size()>0 ){
+               if(inviteInformation.size()>1){
+                   for(int i=0; i<(inviteInformation.size()-1); i++){
+                       InviteInformation newIn = inviteInformation.get(i);
+                       gmFacade.getGmReceipePassageFacade().completeReceipe(
+                               newIn.getSessionId(), 
+                               newIn.getReceipeInformation().getReceipeId(),
+                               newIn.getInviterId());
+                       inviteInformation.remove(0);
+                   }
+               }
+               NewInvitationForm invite = new NewInvitationForm(inviteInformation.get(0), userInfo);
+               addWindow(invite); 
+            }
+            else{
+                new Notification("",
+                                    "Новых приглашений нет",
+                                    Notification.Type.ERROR_MESSAGE, true)
+                                    .show(Page.getCurrent());
+            }
         } catch (Exception exception) {
           ExceptionHandler.getInstance().runExceptionhandling(exception);
         }

@@ -28,6 +28,10 @@ import java.io.File;
 import java.util.List;
 import javax.servlet.http.Cookie;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
+import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Grid;
+import java.util.LinkedList;
 
 /**
  *
@@ -36,10 +40,89 @@ import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
 public class AddStepForm  extends Window {
     private String stepLable = null;
     private String stepDescription = null;
+    LinkedList<Resource> resourceListTableValue = new LinkedList<>();
+    LinkedList<Resource> eingredientListTableValue = new LinkedList<>();
+    LinkedList<Resource> oingredientListTableValue = new LinkedList<>();
+    List<Resource> resStr1 = new LinkedList<>();
     
     public AddStepForm(AddStepListener listener, String receipeid, 
             List<Resource> ingredients, List<Resource> resources) 
     {         
+        
+        //<editor-fold defaultstate="collapsed" desc="Таблица ресурсов">
+            Grid<Resource> resourceGrid = new Grid<>();
+            LinkedList<Resource> resourceList = new LinkedList<>();
+            resourceGrid.setSizeFull();
+
+            // Set the data provider (ListDataProvider<Resource>)
+            ListDataProvider<Resource> dataProvider = new ListDataProvider<Resource>(resourceList);
+            resourceGrid.setDataProvider(dataProvider);
+
+            // Set the selection mode
+            resourceGrid.setSelectionMode(Grid.SelectionMode.NONE);
+
+//            HeaderRow topHeader = resourceGrid.prependHeaderRow();
+
+            resourceGrid.addColumn(Resource::getName)
+                    .setId("ResourceName")
+                    .setCaption("Название");
+            resourceGrid.addColumn(Resource::getResourceNumber)
+                    .setId("ResourceNumber")
+                    .setCaption("Количество");
+            // Fire a data change event to initialize the summary footer
+            resourceGrid.getDataProvider().refreshAll();
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Таблица входных ингредиентов">
+        Grid<Resource> eingredientGrid = new Grid<>();
+        LinkedList<Resource> eingredientList = new LinkedList<>();
+        eingredientGrid.setSizeFull();
+        
+        // Set the data provider (ListDataProvider<Resource>)
+        ListDataProvider<Resource> dataProviderEIng = new ListDataProvider<Resource>(eingredientList);
+        eingredientGrid.setDataProvider(dataProviderEIng);
+        
+        // Set the selection mode
+        eingredientGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        
+//        HeaderRow topHeaderIng = eingredientGrid.prependHeaderRow();
+        
+        eingredientGrid.addColumn(Resource::getName)
+                .setId("IngredientName")
+                .setCaption("Название");
+        
+        eingredientGrid.addColumn(Resource::getResourceNumber)
+                .setId("ResourceNumber")
+                .setCaption("Количество");
+        // Fire a data change event to initialize the summary footer
+        eingredientGrid.getDataProvider().refreshAll();
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Таблица получаемых ингредиентов">
+        Grid<Resource> oingredientGrid = new Grid<>();
+        LinkedList<Resource> oingredientList = new LinkedList<>();
+        oingredientGrid.setSizeFull();
+        
+        // Set the data provider (ListDataProvider<Resource>)
+        ListDataProvider<Resource> dataProviderOIng = new ListDataProvider<Resource>(oingredientList);
+        oingredientGrid.setDataProvider(dataProviderOIng);
+        
+        // Set the selection mode
+        oingredientGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        
+//        HeaderRow topHeaderIng = eingredientGrid.prependHeaderRow();
+        
+        oingredientGrid.addColumn(Resource::getName)
+                .setId("IngredientName")
+                .setCaption("Название");
+        
+        oingredientGrid.addColumn(Resource::getResourceNumber)
+                .setId("ResourceNumber")
+                .setCaption("Количество");
+        // Fire a data change event to initialize the summary footer
+        oingredientGrid.getDataProvider().refreshAll();
+        //</editor-fold>
+        
         //Получение id пользователя
         CookieHandler ch2 = new CookieHandler();
         JWTHandler jwth2 = new JWTHandler();
@@ -73,6 +156,12 @@ public class AddStepForm  extends Window {
                             Node n = new Node("", stepDescription, imageName, stepLable);
                             //ДОБАВИТЬ СЮДА ЧТЕНИЕ ИСПОЛЬЗОВАННЫХ ИНГРЕДИЕНТОВ И 
                             //ЗАМЕНИТЬ В СТРОЧКЕ НИЖЕ ingredients
+                            
+                            //ЗНАЧЕНИЯ ИЗ СОЗДАННЫХ ТАБЛИЦ
+                            resourceListTableValue = resourceList;
+                            eingredientListTableValue = eingredientList;
+                            oingredientListTableValue = oingredientList;
+                            
                             listener.onCreate(n, ingredients);
                             this.close();
                         }
@@ -99,11 +188,49 @@ public class AddStepForm  extends Window {
         });
         mainCustomLayout.addComponent(addStepBtn,"addStepButtonAddImage");
         
+        //Заполнение combobox
+        ComboBox resBox = new ComboBox();
+        ComboBox eIngBox = new ComboBox();
+        ComboBox oIngBox = new ComboBox();
+        List<String> resStr = new LinkedList<>();
+        List<String> ingrStr = new LinkedList<>();
+        for(int i=0;i<resources.size();i++) resStr.add(resources.get(i).getName());
+        for(int j=0;j<ingredients.size();j++) ingrStr.add(ingredients.get(j).getName());
+        resBox.setItems(resStr);
+        eIngBox.setItems(ingrStr);
+        
+        resBox.addValueChangeListener((event) -> {
+            if(!event.getValue().toString().equals("")){
+                String k = event.getValue().toString();
+                for(int i=0;i<resources.size();i++){
+                    if(k.equals(resources.get(i).getName())){
+                        resourceList.add(resources.get(i));
+                        resourceGrid.getDataProvider().refreshAll();     
+                    }
+                }
+            }
+        });
+        
+        eIngBox.addValueChangeListener((event) -> {
+            if(!event.getValue().toString().equals("")){
+                String k = event.getValue().toString();
+                for(int i=0;i<ingredients.size();i++){
+                    if(k.equals(ingredients.get(i).getName())){
+                        eingredientList.add(ingredients.get(i));
+                        eingredientGrid.getDataProvider().refreshAll();     
+                    }
+                }
+            }
+        });
+        
         mainCustomLayout.addComponent(new Label("Добавление шага"),"addStepCaption");
-        mainCustomLayout.addComponent(new Label("Ресурсы"),"addStepItem1Lable");
-        mainCustomLayout.addComponent(new Label("Входящие ингредиенты"),"addStepItem2Lable");
+        mainCustomLayout.addComponent(resBox,"addStepItem1Lable");
+        mainCustomLayout.addComponent(eIngBox,"addStepItem2Lable");
         mainCustomLayout.addComponent(new Label("Описание шага"),"addStepItem3Lable");
-        mainCustomLayout.addComponent(new Label("Получаеме ингредиенты"),"addStepItem4Lable");
+        mainCustomLayout.addComponent(oIngBox,"addStepItem4Lable");
+        mainCustomLayout.addComponent(resourceGrid,"addStepItem1Content");
+        mainCustomLayout.addComponent(eingredientGrid,"addStepItem2Content");
+        mainCustomLayout.addComponent(oingredientGrid,"addStepItem4Content");
         
         /*TextField stepsName = new TextField();
         stepsName.setWidth("100%");
