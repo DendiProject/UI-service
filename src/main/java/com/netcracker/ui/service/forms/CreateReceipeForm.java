@@ -11,18 +11,22 @@ import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.receipe.view.basic.objects.Tag;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomLayout;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.components.grid.HeaderRow;
 import java.io.File;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.Cookie;
 
@@ -38,10 +42,40 @@ public class CreateReceipeForm  extends Window {
     private String userId = null;
     private String description = null; 
     private boolean isPublic = true;
-    private List<Tag> tags = null;
+//    private List<Tag> tags = null;
+    private Grid<Tag> tagGrid;
+    private LinkedList<Tag> tagList;
+    
+    void getTag (String s){
+            tagList.add(new Tag(s));
+            tagGrid.getDataProvider().refreshAll();
+        }
     
     public CreateReceipeForm(CreateReceipeListener listener) 
-    {         
+    {    
+        //<editor-fold defaultstate="collapsed" desc="Таблица тегов">
+        tagGrid = new Grid<>();
+        tagList = new LinkedList<>();
+
+        tagGrid.setSizeFull();
+
+            // Set the data provider (ListDataProvider<Tags>)
+//        tagList.add(new Tag("1"));
+        ListDataProvider<Tag> dataProvider = new ListDataProvider<Tag>(tagList);
+        tagGrid.setDataProvider(dataProvider);
+
+        // Set the selection mode
+        tagGrid.setSelectionMode(Grid.SelectionMode.NONE);
+
+        HeaderRow topHeader = tagGrid.prependHeaderRow();
+
+        tagGrid.addColumn(Tag::getName)
+                .setId("TagsName")
+                .setCaption("Name");
+        // Fire a data change event to initialize the summary footer
+        tagGrid.getDataProvider().refreshAll();
+    //</editor-fold>
+        
         ResponsiveLayout mainLayout = new ResponsiveLayout();
         CustomLayout mainCustomLayout = new CustomLayout("CreateReceipeView");
         mainLayout.setHeight("100%");
@@ -113,8 +147,15 @@ public class CreateReceipeForm  extends Window {
         publicOrPrivateBox.setWidth("100%");
         publicOrPrivateBox.setItems(Arrays.asList("Публичный","Приватный"));
         publicOrPrivateBox.setEmptySelectionAllowed(false);
-        mainCustomLayout.addComponent(publicOrPrivateBox,"createReceipeInputPublicOrPrivate");
-        mainCustomLayout.addComponent(new Label("Денис, добавь сюда таблицу!"),"createReceipeInputTags");
+//        mainCustomLayout.addComponent(publicOrPrivateBox,"createReceipeInputPublicOrPrivate");
+        mainCustomLayout.addComponent(tagGrid,"createReceipeInputTags");
+        //кнопка для теста добавления в таблицу информации
+        Button test = new Button("test");
+        test.addClickListener(e ->{
+            getTag("Tag");
+        });
+        mainCustomLayout.addComponent(test);
+        
         //Получение id пользователя
         CookieHandler ch2 = new CookieHandler();
         JWTHandler jwth2 = new JWTHandler();
@@ -135,7 +176,7 @@ public class CreateReceipeForm  extends Window {
                 this.close();
             }
         });
-        mainCustomLayout.addComponent(create,"createReceipeBtn");
+        mainCustomLayout.addComponent(create,"createRecipeDoneBtn");
         setContent(mainLayout);
         setPosition(20, 150);
         setResizable(false);

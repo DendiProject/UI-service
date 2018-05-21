@@ -13,7 +13,6 @@ import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.forms.listeners.AddStepListener;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
-import com.netcracker.ui.service.receipe.view.basic.objects.Tag;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinService;
@@ -28,6 +27,10 @@ import java.io.File;
 import java.util.List;
 import javax.servlet.http.Cookie;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
+import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Grid;
+import java.util.LinkedList;
 
 /**
  *
@@ -39,7 +42,84 @@ public class AddStepForm  extends Window {
     
     public AddStepForm(AddStepListener listener, String receipeid, 
             List<Resource> ingredients, List<Resource> resources) 
-    {         
+    {      
+        //<editor-fold defaultstate="collapsed" desc="Таблица ресурсов">
+            Grid<Resource> resourceGrid = new Grid<>();
+            LinkedList<Resource> resourceList = new LinkedList<>();
+            resourceGrid.setSizeFull();
+
+            // Set the data provider (ListDataProvider<Resource>)
+            //resourceList.add(new Resource("1", null, "alsh0415Resoruce", 1, "шт", null, "ingridient"));
+            ListDataProvider<Resource> dataProvider = new ListDataProvider<Resource>(resourceList);
+            resourceGrid.setDataProvider(dataProvider);
+
+            // Set the selection mode
+            resourceGrid.setSelectionMode(Grid.SelectionMode.NONE);
+
+//            HeaderRow topHeader = resourceGrid.prependHeaderRow();
+
+            resourceGrid.addColumn(Resource::getName)
+                    .setId("ResourceName")
+                    .setCaption("Название");
+            resourceGrid.addColumn(Resource::getResourceNumber)
+                    .setId("ResourceNumber")
+                    .setCaption("Количество");
+            // Fire a data change event to initialize the summary footer
+            resourceGrid.getDataProvider().refreshAll();
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Таблица входных ингредиентов">
+        Grid<Resource> eingredientGrid = new Grid<>();
+        LinkedList<Resource> eingredientList = new LinkedList<>();
+        eingredientGrid.setSizeFull();
+        
+        // Set the data provider (ListDataProvider<Resource>)
+        //resourceList.add(new Resource("1", null, "alsh0415Resoruce", 1, "шт", null, "ingridient"));
+        ListDataProvider<Resource> dataProviderEIng = new ListDataProvider<Resource>(eingredientList);
+        eingredientGrid.setDataProvider(dataProviderEIng);
+        
+        // Set the selection mode
+        eingredientGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        
+//        HeaderRow topHeaderIng = eingredientGrid.prependHeaderRow();
+        
+        eingredientGrid.addColumn(Resource::getName)
+                .setId("IngredientName")
+                .setCaption("Название");
+        
+        eingredientGrid.addColumn(Resource::getResourceNumber)
+                .setId("ResourceNumber")
+                .setCaption("Количество");
+        // Fire a data change event to initialize the summary footer
+        eingredientGrid.getDataProvider().refreshAll();
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Таблица получаемых ингредиентов">
+        Grid<Resource> oingredientGrid = new Grid<>();
+        LinkedList<Resource> oingredientList = new LinkedList<>();
+        oingredientGrid.setSizeFull();
+        
+        // Set the data provider (ListDataProvider<Resource>)
+        //resourceList.add(new Resource("1", null, "alsh0415Resoruce", 1, "шт", null, "ingridient"));
+        ListDataProvider<Resource> dataProviderOIng = new ListDataProvider<Resource>(oingredientList);
+        oingredientGrid.setDataProvider(dataProviderOIng);
+        
+        // Set the selection mode
+        oingredientGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        
+//        HeaderRow topHeaderIng = eingredientGrid.prependHeaderRow();
+        
+        oingredientGrid.addColumn(Resource::getName)
+                .setId("IngredientName")
+                .setCaption("Название");
+        
+        oingredientGrid.addColumn(Resource::getResourceNumber)
+                .setId("ResourceNumber")
+                .setCaption("Количество");
+        // Fire a data change event to initialize the summary footer
+        oingredientGrid.getDataProvider().refreshAll();
+        //</editor-fold>
+        
         //Получение id пользователя
         CookieHandler ch2 = new CookieHandler();
         JWTHandler jwth2 = new JWTHandler();
@@ -99,11 +179,21 @@ public class AddStepForm  extends Window {
         });
         mainCustomLayout.addComponent(addStepBtn,"addStepButtonAddImage");
         
+        //Заполнение combobox
+        ComboBox resBox = new ComboBox();
+        resBox.setItems(resources);
+        ComboBox eIngBox = new ComboBox();
+        eIngBox.setItems(ingredients);
+        ComboBox oIngBox = new ComboBox();
+        
         mainCustomLayout.addComponent(new Label("Добавление шага"),"addStepCaption");
-        mainCustomLayout.addComponent(new Label("Ресурсы"),"addStepItem1Lable");
-        mainCustomLayout.addComponent(new Label("Входящие ингредиенты"),"addStepItem2Lable");
+        mainCustomLayout.addComponent(resBox,"addStepItem1Lable");
+        mainCustomLayout.addComponent(eIngBox,"addStepItem2Lable");
         mainCustomLayout.addComponent(new Label("Описание шага"),"addStepItem3Lable");
-        mainCustomLayout.addComponent(new Label("Получаеме ингредиенты"),"addStepItem4Lable");
+        mainCustomLayout.addComponent(oIngBox,"addStepItem4Lable");
+        mainCustomLayout.addComponent(resourceGrid,"addStepItem1Content");
+        mainCustomLayout.addComponent(eingredientGrid,"addStepItem2Content");
+        mainCustomLayout.addComponent(oingredientGrid,"addStepItem4Content");
         
         /*TextField stepsName = new TextField();
         stepsName.setWidth("100%");
