@@ -198,6 +198,7 @@ public class UiServiceMainUI extends UI {
 
 
       createMainLayout();
+      checkNewIvite();
     } catch (Exception exception) {
       ExceptionHandler.getInstance().runExceptionhandling(exception);
     }
@@ -774,53 +775,7 @@ public class UiServiceMainUI extends UI {
       @Override
       public void onEventClickDo() {
         try {
-            CookieHandler ch2 = new CookieHandler();
-            JWTHandler jwth2 = new JWTHandler();
-            Cookie userCookie2 = ch2.getCookieByName("userInfo");
-            String userid = jwth2.readUserId(userCookie2.getValue(), "test");
-            
-            BeansFactory<IpsFacade> bf = BeansFactory.getInstance();
-            IpsFacade ips = bf.getBean(IpsFacade.class);
-            UserInfo userInfo = ips.getUserByName(userid);
-            
-            BeansFactory<GMFacade> bf2 = BeansFactory.getInstance();
-            GMFacade gmFacade = bf2.getBean(GMFacade.class);
-            List<InviteInformation> inviteInformation = gmFacade.getGmReceipePassageFacade().userStart(userid);
-            //Так как не удалось вставить таблицы, то имеется возможность только 
-            //выводить кого-то одного из массива, соответсвенно, на всякий
-            //случай буду завершать все рецепты, кроме последнего
-            if((inviteInformation != null && inviteInformation.size()>0) |
-                    inviteInformation.get(0).getInviterId().equals("-1") ){
-               if(inviteInformation.size()>1){
-                   for(int i=0; i<(inviteInformation.size()-1); i++){
-                       InviteInformation newIn = inviteInformation.get(i);
-                       gmFacade.getGmReceipePassageFacade().completeReceipe(
-                               newIn.getSessionId(), 
-                               newIn.getReceipeInformation().getReceipeId(),
-                               newIn.getInviterId());
-                   }
-                   InviteInformation last = inviteInformation.get(inviteInformation.size()-1);
-                   inviteInformation.clear();
-                   inviteInformation.add(last);
-               }
-               if(!inviteInformation.get(0).getInviterId().equals("-1")){
-                NewInvitationForm invite = 
-                        new NewInvitationForm(inviteInformation.get(0), userInfo,
-                        new NewInvitationFormListener() {
-                    @Override
-                    public void onCreate(String sessionId) {
-                       setUrl("PassageReceipe?itsNewPassage=true&sessionId="+sessionId);
-                    }
-                });
-                    addWindow(invite); 
-               }
-            }
-            else{
-                new Notification("",
-                                    "Новых приглашений нет",
-                                    Notification.Type.ERROR_MESSAGE, true)
-                                    .show(Page.getCurrent());
-            }
+            checkNewIvite();
         } catch (Exception exception) {
           ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
@@ -1104,5 +1059,55 @@ public class UiServiceMainUI extends UI {
             return "";
         }
 
+    }
+    
+    private void checkNewIvite() throws NotFoundBean{
+        CookieHandler ch2 = new CookieHandler();
+        JWTHandler jwth2 = new JWTHandler();
+        Cookie userCookie2 = ch2.getCookieByName("userInfo");
+        String userid = jwth2.readUserId(userCookie2.getValue(), "test");
+
+        BeansFactory<IpsFacade> bf = BeansFactory.getInstance();
+        IpsFacade ips = bf.getBean(IpsFacade.class);
+        UserInfo userInfo = ips.getUserByName(userid);
+
+        BeansFactory<GMFacade> bf2 = BeansFactory.getInstance();
+        GMFacade gmFacade = bf2.getBean(GMFacade.class);
+        List<InviteInformation> inviteInformation = gmFacade.getGmReceipePassageFacade().userStart(userid);
+        //Так как не удалось вставить таблицы, то имеется возможность только 
+        //выводить кого-то одного из массива, соответсвенно, на всякий
+        //случай буду завершать все рецепты, кроме последнего
+        if((inviteInformation != null && inviteInformation.size()>0) |
+                !inviteInformation.get(0).getInviterId().equals("-1") ){
+           if(inviteInformation.size()>1){
+               for(int i=0; i<(inviteInformation.size()-1); i++){
+                   InviteInformation newIn = inviteInformation.get(i);
+                   gmFacade.getGmReceipePassageFacade().completeReceipe(
+                           newIn.getSessionId(), 
+                           newIn.getReceipeInformation().getReceipeId(),
+                           newIn.getInviterId());
+               }
+               InviteInformation last = inviteInformation.get(inviteInformation.size()-1);
+               inviteInformation.clear();
+               inviteInformation.add(last);
+           }
+           if(!inviteInformation.get(0).getInviterId().equals("-1")){
+            NewInvitationForm invite = 
+                    new NewInvitationForm(inviteInformation.get(0), userInfo,
+                    new NewInvitationFormListener() {
+                @Override
+                public void onCreate(String sessionId) {
+                   setUrl("PassageReceipe?itsNewPassage=true&sessionId="+sessionId);
+                }
+            });
+                addWindow(invite); 
+           }
+        }
+        else{
+            new Notification("",
+                                "Новых приглашений нет",
+                                Notification.Type.ERROR_MESSAGE, true)
+                                .show(Page.getCurrent());
+        }
     }
 }
