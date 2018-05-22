@@ -70,6 +70,7 @@ import com.netcracker.ui.service.receipe.view.basic.objects.ShowReceipeView;
 import com.netcracker.ui.service.views.CreateRecipeView;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.Theme;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Page;
@@ -78,6 +79,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
@@ -102,6 +104,7 @@ import java.util.Map;
 
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 import org.apache.http.HttpStatus;
 import org.springframework.http.HttpEntity;
@@ -471,6 +474,61 @@ public class UiServiceMainUI extends UI {
                 description.setWidth("100%");
                 ShortViewOfReceipeLayout.addComponent(description, 
                         "PassagesDescription");
+                
+                //<editor-fold defaultstate="collapsed" desc="Таблица ресурсов">
+                Grid<Resource> resourceGrid = new Grid<>();
+                LinkedList<Resource> resourceList = new LinkedList<>();
+                resourceGrid.setSizeFull();
+
+                // Set the data provider (ListDataProvider<UserStep>)
+                ListDataProvider<Resource> dataProvider = new ListDataProvider<Resource>(resourceList);
+                resourceGrid.setDataProvider(dataProvider);
+
+                // Set the selection mode
+                resourceGrid.setSelectionMode(Grid.SelectionMode.NONE);
+
+                resourceGrid.addColumn(Resource::getName)
+                        .setId("ResourceName")
+                        .setCaption("Название");
+                resourceGrid.addColumn(Resource::getResourceNumber)
+                        .setId("ResourceNumber")
+                        .setCaption("Количество");
+                // Fire a data change event to initialize the summary footer
+//                resourceGrid.getDataProvider().refreshAll();
+                for(int i=0;i<currentStep.getResources().size();i++)    
+                resourceList.add(currentStep.getResources().get(i));
+                resourceGrid.getDataProvider().refreshAll(); 
+                //</editor-fold>
+        
+                //<editor-fold defaultstate="collapsed" desc="Таблица входных ингредиентов">
+                Grid<Resource> eingredientGrid = new Grid<>();
+                LinkedList<Resource> eingredientList = new LinkedList<>();
+                eingredientGrid.setSizeFull();
+
+                // Set the data provider (ListDataProvider<Resource>)
+                ListDataProvider<Resource> dataProviderEIng = new ListDataProvider<Resource>(eingredientList);
+                eingredientGrid.setDataProvider(dataProviderEIng);
+
+                // Set the selection mode
+                eingredientGrid.setSelectionMode(Grid.SelectionMode.NONE);
+
+                eingredientGrid.addColumn(Resource::getName)
+                        .setId("IngredientName")
+                        .setCaption("Название");
+
+                eingredientGrid.addColumn(Resource::getResourceNumber)
+                        .setId("ResourceNumber")
+                        .setCaption("Количество");
+                // Fire a data change event to initialize the summary footer
+                for(int i=0;i<currentStep.getIndredients().size();i++)    
+                eingredientList.add(currentStep.getIndredients().get(i));
+                eingredientGrid.getDataProvider().refreshAll();
+                //</editor-fold>
+                
+                //ВЫВЕСТИ НАДО ЭТО: eingredientGrid и resourceGrid
+                ShortViewOfReceipeLayout.addComponent(eingredientGrid, "PassagesIngredientsTable");
+                ShortViewOfReceipeLayout.addComponent(resourceGrid, "PassagesResoursesTable");
+                
                 BeansFactory<ContentManagerController> bfCMC = 
                         BeansFactory.getInstance();
                 ContentManagerController controller = 
@@ -531,6 +589,18 @@ public class UiServiceMainUI extends UI {
                                 image.setWidth("100%");
                                 ShortViewOfReceipeLayout.addComponent(image, 
                                         "PassagesImage");
+                                
+                                eingredientList.clear();
+                                resourceList.clear();
+                                
+                                for(int i=0;i<newStep.getIndredients().size();i++)    
+                                eingredientList.add(newStep.getIndredients().get(i));
+                                eingredientGrid.getDataProvider().refreshAll();
+                                
+                                for(int i=0;i<newStep.getResources().size();i++)    
+                                resourceList.add(newStep.getResources().get(i));
+                                resourceGrid.getDataProvider().refreshAll();
+                                
                                 if(!newStep.getNodeId().equals("defaultNodeId")){
                                     currentStep.setNodeId(newStep.getNodeId());
                                 }

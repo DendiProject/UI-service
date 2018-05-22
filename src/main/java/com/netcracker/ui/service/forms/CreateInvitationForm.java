@@ -15,14 +15,17 @@ import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.graf.component.ipsFacade.IpsFacade;
 import com.netcracker.ui.service.graf.component.ipsFacade.stores.UserInfo;
 import com.netcracker.ui.service.passageReceipe.storages.InviteInformation;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomLayout;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Window;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.Cookie;
 
@@ -55,6 +58,27 @@ public class CreateInvitationForm  extends Window {
         catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
+        
+        //<editor-fold defaultstate="collapsed" desc="Таблица">
+            Grid<UserInfo> tableGrid = new Grid<>();
+            LinkedList<UserInfo> tableList = new LinkedList<>();
+            tableGrid.setSizeFull();
+
+            // Set the data provider (ListDataProvider<Resource>)
+            //resourceList.add(new Resource("1", null, "alsh0415Resoruce", 1, "шт", null, "ingridient"));
+            ListDataProvider<UserInfo> dataProvider = new ListDataProvider<UserInfo>(tableList);
+            tableGrid.setDataProvider(dataProvider);
+
+            // Set the selection mode
+            tableGrid.setSelectionMode(Grid.SelectionMode.NONE);
+
+//            HeaderRow topHeader = resourceGrid.prependHeaderRow();
+
+            tableGrid.addColumn(UserInfo::getName)
+                    .setCaption("");
+            // Fire a data change event to initialize the summary footer
+            tableGrid.getDataProvider().refreshAll();
+        //</editor-fold>
         
         List<String> displayNames = new ArrayList<String>();
         for(int i=0; i<allInfoOfAllUsers.size();i++){
@@ -94,8 +118,8 @@ public class CreateInvitationForm  extends Window {
                     toString().split(",")[1].split("=")[1].substring(0, 
                             sessionLength-1);
                 //ДОБАВИТЬ ВМЕСТО ЦИКЛА СЮДА ЧТЕНИЕ ИЗ ТАБЛИЦЫ В МАССИВ USERS
-                for(int i=0;i<allInfoOfAllUsers.size();i++){
-                    users.add(allInfoOfAllUsers.get(i).getId());
+                for(int i=0;i<tableList.size();i++){
+                    users.add(tableList.get(i).getId());
                 }
                 
                 //Создаем рецепт и высылаем приглашения
@@ -128,9 +152,18 @@ public class CreateInvitationForm  extends Window {
         
         Button addUser = new Button("Добавить участника");
         sendNotifies.addClickListener((event) -> {
-            //ДОБАВИТЬ СЮДА ЗАПОЛНЕНИЕ МАССИВА users
+            for(int i=0;i<allInfoOfAllUsers.size();i++)
+            if(displayNamesCB.getValue().equals(allInfoOfAllUsers.get(i).getName())
+            | displayNamesCB.getValue().equals(allInfoOfAllUsers.get(i).getDisplayname()) |
+            displayNamesCB.getValue().equals(allInfoOfAllUsers.get(i).getId()))
+            {
+            tableList.add(allInfoOfAllUsers.get(i));
+            tableGrid.getDataProvider().refreshAll();
+            }
+
         });
         mainCustomLayout.addComponent(addUser, "CreateInvitationAddNameBtn");
+        mainCustomLayout.addComponent(tableGrid, "CreateInvitationTable");
         
         Label addUsersLabel = new Label("Список участников");
         addUsersLabel.setHeight("100%");

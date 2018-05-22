@@ -30,8 +30,11 @@ import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Presenter
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.Proxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.StoreSubject;
 import com.netcracker.ui.service.receipe.view.basic.objects.interfaces.View;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.ui.CustomLayout;
+import com.vaadin.ui.Grid;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
@@ -80,6 +83,59 @@ public class ReceipeView implements View{
     @Override
     public ResponsiveLayout drawReceipe(ResponsiveLayout contentRowLayout, 
             LoadFormListener listener) {
+        
+        //<editor-fold defaultstate="collapsed" desc="Таблица ресурсов">
+            Grid<Resource> resourceGrid = new Grid<>();
+            LinkedList<Resource> resourceList = new LinkedList<>();
+            resourceGrid.setSizeFull();
+
+            // Set the data provider (ListDataProvider<Resource>)
+            //resourceList.add(new Resource("1", null, "alsh0415Resoruce", 1, "шт", null, "ingridient"));
+            ListDataProvider<Resource> dataProvider = new ListDataProvider<Resource>(resourceList);
+            resourceGrid.setDataProvider(dataProvider);
+
+            // Set the selection mode
+            resourceGrid.setSelectionMode(Grid.SelectionMode.NONE);
+
+//            HeaderRow topHeader = resourceGrid.prependHeaderRow();
+
+            resourceGrid.addColumn(Resource::getName)
+                    .setId("ResourceName")
+                    .setCaption("Название");
+            resourceGrid.addColumn(Resource::getResourceNumber)
+                    .setId("ResourceNumber")
+                    .setCaption("Количество");
+            // Fire a data change event to initialize the summary footer
+            resourceGrid.getDataProvider().refreshAll();
+        //</editor-fold>
+        
+        //<editor-fold defaultstate="collapsed" desc="Таблица входных ингредиентов">
+        //Поправить на класс с ингредиентами?
+        Grid<Resource> eingredientGrid = new Grid<>();
+        LinkedList<Resource> eingredientList = new LinkedList<>();
+        eingredientGrid.setSizeFull();
+        
+        // Set the data provider (ListDataProvider<Resource>)
+        //resourceList.add(new Resource("1", null, "alsh0415Resoruce", 1, "шт", null, "ingridient"));
+        ListDataProvider<Resource> dataProviderIng = new ListDataProvider<Resource>(eingredientList);
+        eingredientGrid.setDataProvider(dataProviderIng);
+        
+        // Set the selection mode
+        eingredientGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        
+//        HeaderRow topHeaderIng = eingredientGrid.prependHeaderRow();
+        
+        eingredientGrid.addColumn(Resource::getName)
+                .setId("IngredientName")
+                .setCaption("Название");
+        
+        eingredientGrid.addColumn(Resource::getResourceNumber)
+                .setId("ResourceNumber")
+                .setCaption("Количество");
+        // Fire a data change event to initialize the summary footer
+        eingredientGrid.getDataProvider().refreshAll();
+        //</editor-fold>
+        
         CustomLayout ShortViewOfReceipeLayout = new CustomLayout("ShortViewOfRecipeLayout");
         ShortViewOfReceipeLayout.setHeight("100%");
         contentRowLayout.setHeight("100%");
@@ -89,6 +145,8 @@ public class ReceipeView implements View{
         graf.setInitCollections(initReceipe.nodes, initReceipe.edges, proxy.getUserId(),
                 proxy.getReceipeId());
         ShortViewOfReceipeLayout.addComponent(graf,"panelWithGraf");
+        ShortViewOfReceipeLayout.addComponent(eingredientGrid,"panelreceipePartsTable");
+        ShortViewOfReceipeLayout.addComponent(resourceGrid,"panelreceipeResoursesTable");
         
         //Синхронизация ресурсов и ингредиентов
         for(int i=0; i<initReceipe.getIndredients().size(); i++){
@@ -187,6 +245,8 @@ public class ReceipeView implements View{
                                     view.updateCurrentRecipesInResourses(
                                             resource, true);
                                     //ДОБАВИТЬ СЮДА ВЫВОД В СООТВЕСТВУЮЩУЮ ТАБЛИЦУ
+                                    eingredientList.add(resource);
+                                    eingredientGrid.getDataProvider().refreshAll();
                                 }
                                 catch(Exception exception){
                                     ExceptionHandler.getInstance().
@@ -228,6 +288,8 @@ public class ReceipeView implements View{
                                     view.updateCurrentRecipesInResourses(
                                             resource, true);
                                     //ДОБАВИТЬ СЮДА ВЫВОД В СООТВЕСТВУЮЩУЮ ТАБЛИЦУ
+                                    resourceList.add(resource);
+                                    resourceGrid.getDataProvider().refreshAll();
                                 }
                                 catch(Exception exception){
                                     ExceptionHandler.getInstance().
