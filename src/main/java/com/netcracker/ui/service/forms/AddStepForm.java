@@ -10,6 +10,7 @@ import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.components.Properties;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.ImageReceiver;
+import com.netcracker.ui.service.content.handler.ImageReceiver2;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
@@ -101,10 +102,10 @@ public class AddStepForm  extends Window {
         mainCustomLayout.addComponent(cancelBtn,"addStepDoneBtn");
         
        // Button addStepBtn = new Button("Добавить фотографию");
-        ImageReceiver receiver = new ImageReceiver();
+        ImageReceiver2 receiver = new ImageReceiver2(image);
         Upload addStepBtn = new Upload("", receiver);
         addStepBtn.setImmediateMode(true);
-        addStepBtn.setButtonCaption("Добавить фотографию");
+        addStepBtn.setButtonCaption("Добавить ");
         addStepBtn.addSucceededListener(receiver); 
         addStepBtn.setHeight("100%");
         addStepBtn.setWidth("100%");
