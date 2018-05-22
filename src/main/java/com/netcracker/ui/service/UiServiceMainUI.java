@@ -503,50 +503,57 @@ public class UiServiceMainUI extends UI {
                 ShortViewOfReceipeLayout.addComponent(description, 
                         "PassagesDescription");
                 
-//                //<editor-fold defaultstate="collapsed" desc="Таблица ресурсов">
-//                Grid<UserStep> resourceGrid = new Grid<>();
-//                LinkedList<UserStep> resourceList = new LinkedList<>();
-//                resourceGrid.setSizeFull();
-//
-//                // Set the data provider (ListDataProvider<UserStep>)
-//                ListDataProvider<UserStep> dataProvider = new ListDataProvider<UserStep>(resourceList);
-//                resourceGrid.setDataProvider(dataProvider);
-//
-//                // Set the selection mode
-//                resourceGrid.setSelectionMode(Grid.SelectionMode.NONE);
-//
-//                resourceGrid.addColumn(UserStep::getResources)
-//                        .setId("ResourceName")
-//                        .setCaption("Название");
-//                resourceGrid.addColumn(UserStep::getResourceNumber)
-//                        .setId("ResourceNumber")
-//                        .setCaption("Количество");
-//                // Fire a data change event to initialize the summary footer
+                //<editor-fold defaultstate="collapsed" desc="Таблица ресурсов">
+                Grid<Resource> resourceGrid = new Grid<>();
+                LinkedList<Resource> resourceList = new LinkedList<>();
+                resourceGrid.setSizeFull();
+
+                // Set the data provider (ListDataProvider<UserStep>)
+                ListDataProvider<Resource> dataProvider = new ListDataProvider<Resource>(resourceList);
+                resourceGrid.setDataProvider(dataProvider);
+
+                // Set the selection mode
+                resourceGrid.setSelectionMode(Grid.SelectionMode.NONE);
+
+                resourceGrid.addColumn(Resource::getName)
+                        .setId("ResourceName")
+                        .setCaption("Название");
+                resourceGrid.addColumn(Resource::getResourceNumber)
+                        .setId("ResourceNumber")
+                        .setCaption("Количество");
+                // Fire a data change event to initialize the summary footer
 //                resourceGrid.getDataProvider().refreshAll();
-//                //</editor-fold>
-//        
-//                //<editor-fold defaultstate="collapsed" desc="Таблица входных ингредиентов">
-//                Grid<Resource> eingredientGrid = new Grid<>();
-//                LinkedList<Resource> eingredientList = new LinkedList<>();
-//                eingredientGrid.setSizeFull();
-//
-//                // Set the data provider (ListDataProvider<Resource>)
-//                ListDataProvider<Resource> dataProviderEIng = new ListDataProvider<Resource>(eingredientList);
-//                eingredientGrid.setDataProvider(dataProviderEIng);
-//
-//                // Set the selection mode
-//                eingredientGrid.setSelectionMode(Grid.SelectionMode.NONE);
-//
-//                eingredientGrid.addColumn(Resource::getName)
-//                        .setId("IngredientName")
-//                        .setCaption("Название");
-//
-//                eingredientGrid.addColumn(Resource::getResourceNumber)
-//                        .setId("ResourceNumber")
-//                        .setCaption("Количество");
-//                // Fire a data change event to initialize the summary footer
-//                eingredientGrid.getDataProvider().refreshAll();
-//                //</editor-fold>
+                for(int i=0;i<currentStep.getResources().size();i++)    
+                resourceList.add(currentStep.getResources().get(i));
+                resourceGrid.getDataProvider().refreshAll(); 
+                //</editor-fold>
+        
+                //<editor-fold defaultstate="collapsed" desc="Таблица входных ингредиентов">
+                Grid<Resource> eingredientGrid = new Grid<>();
+                LinkedList<Resource> eingredientList = new LinkedList<>();
+                eingredientGrid.setSizeFull();
+
+                // Set the data provider (ListDataProvider<Resource>)
+                ListDataProvider<Resource> dataProviderEIng = new ListDataProvider<Resource>(eingredientList);
+                eingredientGrid.setDataProvider(dataProviderEIng);
+
+                // Set the selection mode
+                eingredientGrid.setSelectionMode(Grid.SelectionMode.NONE);
+
+                eingredientGrid.addColumn(Resource::getName)
+                        .setId("IngredientName")
+                        .setCaption("Название");
+
+                eingredientGrid.addColumn(Resource::getResourceNumber)
+                        .setId("ResourceNumber")
+                        .setCaption("Количество");
+                // Fire a data change event to initialize the summary footer
+                for(int i=0;i<currentStep.getIndredients().size();i++)    
+                eingredientList.add(currentStep.getIndredients().get(i));
+                eingredientGrid.getDataProvider().refreshAll();
+                //</editor-fold>
+                
+                //ВЫВЕСТИ НАДО ЭТО: eingredientGrid и resourceGrid
                 
                 BeansFactory<ContentManagerController> bfCMC = 
                         BeansFactory.getInstance();
@@ -601,6 +608,15 @@ public class UiServiceMainUI extends UI {
                                 image.setWidth("100%");
                                 ShortViewOfReceipeLayout.addComponent(image, 
                                         "PassagesImage");
+                                
+                                for(int i=0;i<newStep.getIndredients().size();i++)    
+                                eingredientList.add(newStep.getIndredients().get(i));
+                                eingredientGrid.getDataProvider().refreshAll();
+                                
+                                for(int i=0;i<newStep.getResources().size();i++)    
+                                resourceList.add(newStep.getResources().get(i));
+                                resourceGrid.getDataProvider().refreshAll(); 
+                                
                                 if(!newStep.getNodeId().equals("defaultNodeId")){
                                     currentStep.setNodeId(newStep.getNodeId());
                                 }
