@@ -151,7 +151,7 @@ public class CreateInvitationForm  extends Window {
         mainCustomLayout.addComponent(sendNotifies, "CreateInvitationGoBtn");
         
         Button addUser = new Button("Добавить участника");
-        sendNotifies.addClickListener((event) -> {
+        addUser.addClickListener((event) -> {
             for(int i=0;i<allInfoOfAllUsers.size();i++)
             if(displayNamesCB.getValue().equals(allInfoOfAllUsers.get(i).getName())
             | displayNamesCB.getValue().equals(allInfoOfAllUsers.get(i).getDisplayname()) |
