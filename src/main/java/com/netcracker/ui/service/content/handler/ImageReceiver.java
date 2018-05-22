@@ -70,6 +70,7 @@ public class ImageReceiver implements Receiver, SucceededListener {
     
     
     public void uploadSucceeded(Upload.SucceededEvent event) {
+      
       String image;
       try {
         System.out.println("uploadSucceeded");

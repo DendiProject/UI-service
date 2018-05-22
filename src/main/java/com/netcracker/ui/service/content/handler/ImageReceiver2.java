@@ -80,6 +80,7 @@ public class ImageReceiver2 implements Receiver, SucceededListener {
     }
     
     
+
     public void uploadSucceeded(Upload.SucceededEvent event) {
       String image;
       try {
@@ -103,7 +104,7 @@ public class ImageReceiver2 implements Receiver, SucceededListener {
         
           String fullPath = "http://"+p.getUiURL()+"/images/"+ imageID;
           this.image.setSource(new ExternalResource(fullPath));
-        
+      
       } catch (Exception ex) {
          ExceptionHandler.getInstance().runExceptionhandling(ex);
       }
