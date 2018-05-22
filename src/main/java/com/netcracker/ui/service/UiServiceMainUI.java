@@ -585,11 +585,12 @@ public class UiServiceMainUI extends UI {
           
           ImageReceiver receiver = new ImageReceiver();
           Upload upload = new Upload("", receiver);
-          upload.addStyleName("upload-photo-btn");
+          //upload.addStyleName("upload-photo-btn");
           upload.setImmediateMode(true);
           upload.setButtonCaption("Загрузить фото");
           upload.addSucceededListener(receiver); 
-          
+          upload.setHeight("100%");
+          upload.setWidth("100%");
           ShortViewOfReceipeLayout.addComponent(upload, "userPageUploadPhotoBtn");
           
           info.getArea().setHeight("100%");
