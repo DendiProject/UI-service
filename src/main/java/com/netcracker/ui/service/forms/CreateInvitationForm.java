@@ -110,6 +110,7 @@ public class CreateInvitationForm  extends Window {
         Button sendNotifies = new Button("Начать");
         sendNotifies.addClickListener((event) -> {
             try{            
+                users = new ArrayList<String>();
                 int sessionLength = getSession().getAttribute(
                     "com.vaadin.spring.internal.UIScopeImpl$UIStore").
                     toString().split(",")[1].split("=")[1].length();
@@ -117,6 +118,7 @@ public class CreateInvitationForm  extends Window {
                     "com.vaadin.spring.internal.UIScopeImpl$UIStore").
                     toString().split(",")[1].split("=")[1].substring(0, 
                             sessionLength-1);
+                users.add(userid);
                 //ДОБАВИТЬ ВМЕСТО ЦИКЛА СЮДА ЧТЕНИЕ ИЗ ТАБЛИЦЫ В МАССИВ USERS
                 for(int i=0;i<tableList.size();i++){
                     users.add(tableList.get(i).getId());
@@ -153,7 +155,7 @@ public class CreateInvitationForm  extends Window {
         Button addUser = new Button("Добавить участника");
         addUser.addClickListener((event) -> {
             for(int i=0;i<allInfoOfAllUsers.size();i++)
-            if(displayNamesCB.getValue().equals(allInfoOfAllUsers.get(i).getName())
+            if(displayNamesCB.getValue().equals(allInfoOfAllUsers.get(i).getLastname()+" "+allInfoOfAllUsers.get(i).getName())
             | displayNamesCB.getValue().equals(allInfoOfAllUsers.get(i).getDisplayname()) |
             displayNamesCB.getValue().equals(allInfoOfAllUsers.get(i).getId()))
             {
