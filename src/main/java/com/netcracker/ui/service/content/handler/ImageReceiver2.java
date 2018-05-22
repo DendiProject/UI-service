@@ -5,14 +5,20 @@
  */
 package com.netcracker.ui.service.content.handler;
 
+/**
+ *
+ * @author ArtemShevelyukhin
+ */
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.buttonsClickListener.component.SessionStorageHelper;
+import com.netcracker.ui.service.components.Properties;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.forms.UserPageFields;
 import com.netcracker.ui.service.security.SecurityTokenHandler;
 import com.netcracker.ui.service.utilities.SaveUserImage;
 import com.vaadin.server.Extension;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Embedded;
@@ -46,16 +52,21 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  *
  * @author ArtemShevelyukhin
  */
-public class ImageReceiver implements Receiver, SucceededListener {
+public class ImageReceiver2 implements Receiver, SucceededListener {
     public File file;
-    public final Image image = new Image("Uploaded Image");
+    public  Image image = new Image();
     public ByteArrayOutputStream stream;
     public String filename;
     public String fileType;
     public String imageID;//ID загруженной картинки 
+   
     
     BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
     ContentManagerController controller;
+
+  public ImageReceiver2(Image image) {
+    this.image = image;
+  }
 
   
     
@@ -69,10 +80,12 @@ public class ImageReceiver implements Receiver, SucceededListener {
     }
     
     
+
     public void uploadSucceeded(Upload.SucceededEvent event) {
-      
       String image;
       try {
+         BeansFactory<Properties> bfP = BeansFactory.getInstance();
+        Properties p = bfP.getBean(Properties.class);
         System.out.println("uploadSucceeded");
         controller = bfCMC.getBean(ContentManagerController.class);
         // Show the uploaded file in the image viewer
@@ -81,12 +94,17 @@ public class ImageReceiver implements Receiver, SucceededListener {
         
         sendFile(this.stream); 
         
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        UserPageFields info = new SessionStorageHelper().getUserPageFields(attr);
-        info.setPicture_id(imageID);
-        new SaveUserImage(info);
-        Page.getCurrent().reload();
+//        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+//        UserPageFields info = new SessionStorageHelper().getUserPageFields(attr);
+//        
+
+//        info.setPicture_id(imageID);
+//        new SaveUserImage(info);     
+          this.image.setVisible(true);
         
+          String fullPath = "http://"+p.getUiURL()+"/images/"+ imageID;
+          this.image.setSource(new ExternalResource(fullPath));
+      
       } catch (Exception ex) {
          ExceptionHandler.getInstance().runExceptionhandling(ex);
       }
@@ -100,6 +118,7 @@ public class ImageReceiver implements Receiver, SucceededListener {
         byte[] image = stream.toByteArray();
         int length = image.length;
         
+        //ВОТ ТУТ
         this.imageID = controller.addImageFromByte(image, filename, fileType, length);
         System.out.println("-----sendFile---->" + this.imageID);
         
@@ -108,4 +127,7 @@ public class ImageReceiver implements Receiver, SucceededListener {
       }
     }
       
+    public String pictureID(){
+      return this.imageID;
+    }
 };

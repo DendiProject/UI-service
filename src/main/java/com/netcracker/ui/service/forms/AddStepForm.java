@@ -9,6 +9,8 @@ import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.components.Properties;
 import com.netcracker.ui.service.content.handler.CookieHandler;
+import com.netcracker.ui.service.content.handler.ImageReceiver;
+import com.netcracker.ui.service.content.handler.ImageReceiver2;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
 import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
@@ -32,6 +34,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.Cookie;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
+import com.vaadin.ui.Upload;
 
 
 /**
@@ -61,7 +64,7 @@ public class AddStepForm  extends Window {
         BeansFactory<Properties> bfP = BeansFactory.getInstance();
         Properties p = bfP.getBean(Properties.class);
         
-        String imageName = "http://"+p.getUiURL()+"/images/s3";
+        String imageName = "http://"+p.getUiURL()+"/images/imageForNode";
         Image image = new Image();
         image.setSource(new ExternalResource(imageName));
         image.setHeight("100%");
@@ -71,13 +74,20 @@ public class AddStepForm  extends Window {
         Button addImageBtn = new Button("Создать шаг");
         addImageBtn.setHeight("100%");
         addImageBtn.setWidth("100%");
+        ImageReceiver2 receiver = new ImageReceiver2(image);
         addImageBtn.addClickListener(e -> {
              BeansFactory<GMFacade> bf = BeansFactory.getInstance();
                     try {
+                      String pictureIDq = receiver.pictureID();
+                      String imagefullPath = "http://"+p.getUiURL()+"/images/"+pictureIDq;
+                      String imageNameID = imageName;
+                     if(pictureIDq != null){
+                       imageNameID = imagefullPath;
+                     }
                         if(stepDescription != null && imageName != null &&
                                 stepLable != null){
                             GMFacade gmFacade = bf.getBean(GMFacade.class);
-                            Node n = new Node("", stepDescription, imageName, stepLable);
+                            Node n = new Node("", stepDescription, imageNameID, stepLable);
                             //ДОБАВИТЬ СЮДА ЧТЕНИЕ ИСПОЛЬЗОВАННЫХ ИНГРЕДИЕНТОВ И 
                             //ЗАМЕНИТЬ В СТРОЧКЕ НИЖЕ ingredients
                             listener.onCreate(n, ingredients);
@@ -98,12 +108,15 @@ public class AddStepForm  extends Window {
         });
         mainCustomLayout.addComponent(cancelBtn,"addStepDoneBtn");
         
-        Button addStepBtn = new Button("Добавить фотографию");
+       // Button addStepBtn = new Button("Добавить фотографию");
+       
+        Upload addStepBtn = new Upload("", receiver);
+        addStepBtn.setImmediateMode(true);
+        addStepBtn.setButtonCaption("Добавить ");
+        addStepBtn.addSucceededListener(receiver); 
         addStepBtn.setHeight("100%");
         addStepBtn.setWidth("100%");
-        addStepBtn.addClickListener(e -> {
-
-        });
+      
         mainCustomLayout.addComponent(addStepBtn,"addStepButtonAddImage");
         
         mainCustomLayout.addComponent(new Label("Добавление шага"),"addStepCaption");
