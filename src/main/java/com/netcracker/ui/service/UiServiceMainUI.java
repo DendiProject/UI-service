@@ -43,10 +43,12 @@ import com.netcracker.ui.service.forms.NoReadyReceipeForm;
 import com.netcracker.ui.service.forms.UploadImageForm;
 import com.netcracker.ui.service.forms.UserPageFields;
 import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
+import com.netcracker.ui.service.forms.listeners.NewInvitationFormListener;
 import com.netcracker.ui.service.graf.component.Edge;
 import com.netcracker.ui.service.graf.component.Node;
 import com.netcracker.ui.service.graf.component.gmfacade.GMFacade;
 import com.netcracker.ui.service.graf.component.ipsFacade.IpsFacade;
+import com.netcracker.ui.service.graf.component.ipsFacade.stores.UserInfo;
 import com.netcracker.ui.service.menu.component.HandlerForClickingTheButton;
 import com.netcracker.ui.service.menu.component.MenusButton;
 import com.netcracker.ui.service.menu.component.MenusSearchBar;
@@ -212,6 +214,7 @@ public class UiServiceMainUI extends UI {
         int d=0;*/
 
       createMainLayout();
+      checkNewIvite();
     } catch (Exception exception) {
       ExceptionHandler.getInstance().runExceptionhandling(exception);
     }
@@ -497,6 +500,13 @@ public class UiServiceMainUI extends UI {
                                        + "аппетита", Notification.Type.
                                                ERROR_MESSAGE, true)
                                 .show(Page.getCurrent());
+                               try{
+                                   gmFacade.getGmReceipePassageFacade().
+                                           completeReceipe(sessionId,parameters.getFirst("receipeId") , userid);
+                               }
+                               catch(Exception ex){
+                                   
+                               }
                            }
                            else{
                                UserStep newStep = gmFacade.
@@ -768,8 +778,7 @@ public class UiServiceMainUI extends UI {
       @Override
       public void onEventClickDo() {
         try {
-            NewInvitationForm invite = new NewInvitationForm();
-            addWindow(invite);
+            checkNewIvite();
         } catch (Exception exception) {
           ExceptionHandler.getInstance().runExceptionhandling(exception);
         }
@@ -1019,7 +1028,8 @@ public class UiServiceMainUI extends UI {
                   String sessionId = getSession().getAttribute(
                       "com.vaadin.spring.internal.UIScopeImpl$UIStore").toString().
                       split(",")[1].split("=")[1].substring(0, sessionLength-1);
-                  setUrl("PassageReceipe?itsNewPassage=true&sessionId="+sessionId);
+                  setUrl("PassageReceipe?itsNewPassage=true&sessionId="+
+                          sessionId+"&receipeId="+"2");
             },"2");
             addWindow(create);
           }
@@ -1048,5 +1058,55 @@ public class UiServiceMainUI extends UI {
       return "";
     }
   }
+    
+    private void checkNewIvite() throws NotFoundBean{
+        CookieHandler ch2 = new CookieHandler();
+        JWTHandler jwth2 = new JWTHandler();
+        Cookie userCookie2 = ch2.getCookieByName("userInfo");
+        String userid = jwth2.readUserId(userCookie2.getValue(), "test");
+
+        BeansFactory<IpsFacade> bf = BeansFactory.getInstance();
+        IpsFacade ips = bf.getBean(IpsFacade.class);
+        UserInfo userInfo = ips.getUserByName(userid);
+
+        BeansFactory<GMFacade> bf2 = BeansFactory.getInstance();
+        GMFacade gmFacade = bf2.getBean(GMFacade.class);
+        List<InviteInformation> inviteInformation = gmFacade.getGmReceipePassageFacade().userStart(userid);
+        //Так как не удалось вставить таблицы, то имеется возможность только 
+        //выводить кого-то одного из массива, соответсвенно, на всякий
+        //случай буду завершать все рецепты, кроме последнего
+        if((inviteInformation != null && inviteInformation.size()>0) |
+                !inviteInformation.get(0).getInviterId().equals("-1") ){
+           if(inviteInformation.size()>1){
+               for(int i=0; i<(inviteInformation.size()-1); i++){
+                   InviteInformation newIn = inviteInformation.get(i);
+                   gmFacade.getGmReceipePassageFacade().completeReceipe(
+                           newIn.getSessionId(), 
+                           newIn.getReceipeInformation().getReceipeId(),
+                           newIn.getInviterId());
+               }
+               InviteInformation last = inviteInformation.get(inviteInformation.size()-1);
+               inviteInformation.clear();
+               inviteInformation.add(last);
+           }
+           if(!inviteInformation.get(0).getInviterId().equals("-1")){
+            NewInvitationForm invite = 
+                    new NewInvitationForm(inviteInformation.get(0), userInfo,
+                    new NewInvitationFormListener() {
+                @Override
+                public void onCreate(String sessionId) {
+                   setUrl("PassageReceipe?itsNewPassage=true&sessionId="+sessionId);
+                }
+            });
+                addWindow(invite); 
+           }
+        }
+        else{
+            new Notification("",
+                                "Новых приглашений нет",
+                                Notification.Type.ERROR_MESSAGE, true)
+                                .show(Page.getCurrent());
+        }
+    }
 }
 
