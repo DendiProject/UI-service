@@ -10,6 +10,7 @@ import com.netcracker.ui.service.beans.factory.BeansFactory;
 import com.netcracker.ui.service.buttonsClickListener.component.ButtonsClickListener;
 import com.netcracker.ui.service.buttonsClickListener.component.ClickListener;
 import com.netcracker.ui.service.buttonsClickListener.component.SessionStorageHelper;
+import com.netcracker.ui.service.components.Properties;
 import com.netcracker.ui.service.content.handler.CookieHandler;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.ExceptionHandler;
@@ -66,12 +67,21 @@ public class CreateRecipeView {
     }
     
     public CustomLayout create(){
+      
         ResponsiveLayout mainLayout = new ResponsiveLayout();
         CustomLayout mainCustomLayout = new CustomLayout("CreateReceipeView");
         mainLayout.setHeight("100%");
         mainCustomLayout.setHeight("100%");
         mainLayout.addComponent(mainCustomLayout);
-        String imageName = "http://localhost:8008/images/s3";
+        
+        BeansFactory<Properties> bfP = BeansFactory.getInstance();
+        Properties p = null;
+        try {
+          p = bfP.getBean(Properties.class);
+        } catch (Exception ex) {
+          Logger.getLogger(CreateRecipeView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String imageName = "http://"+p.getUiURL()+"/images/s3";
         Image image = new Image();
         image.setSource(new ExternalResource(imageName));
         image.setHeight("100%");

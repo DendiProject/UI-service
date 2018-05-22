@@ -16,8 +16,9 @@ public class UserDto
     private String name;
     private String lastname;
     private String password;
-    private String displayname;
     private String age;
+    private String info;
+    private String picture_id;
 
     public String getId() {
         return id;
@@ -59,14 +60,6 @@ public class UserDto
         this.password = password;
     }
 
-    public String getDisplayname() {
-        return displayname;
-    }
-
-    public void setDisplayname(String displayname) {
-        this.displayname = displayname;
-    }
-
     public String getAge() {
         return age;
     }
@@ -74,6 +67,25 @@ public class UserDto
     public void setAge(String age) {
         this.age = age;
     }
+
+  public String getInfo() {
+    return info;
+  }
+
+  public void setInfo(String info) {
+    this.info = info;
+  }
+
+  public String getPicture_id() {
+    return picture_id;
+  }
+
+  public void setPicture_id(String picture_id) {
+    this.picture_id = picture_id;
+  }
+  
+  
+    
     
 
     

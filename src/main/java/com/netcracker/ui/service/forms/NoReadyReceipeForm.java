@@ -7,7 +7,9 @@ package com.netcracker.ui.service.forms;
 
 import com.jarektoro.responsivelayout.ResponsiveLayout;
 import com.netcracker.ui.service.beans.factory.BeansFactory;
+import com.netcracker.ui.service.components.Properties;
 import com.netcracker.ui.service.exception.ExceptionHandler;
+import com.netcracker.ui.service.exception.beans.factory.NotFoundBean;
 import com.netcracker.ui.service.forms.listeners.AddStepListener;
 import com.netcracker.ui.service.forms.listeners.NoReadyReceipeListener;
 import com.netcracker.ui.service.graf.component.Node;
@@ -21,6 +23,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -34,66 +38,68 @@ public class NoReadyReceipeForm  extends Window {
     public NoReadyReceipeForm(NoReadyReceipeListener listener, String recipeId) 
     {         
         try{
+          try{
             BeansFactory<GMFacade> bfOM = BeansFactory.getInstance();
             GMFacade gmFacade = bfOM.getBean(GMFacade.class);
             ReceipeInformation receipeInformation = gmFacade.
                     getGmReceipeFacade().getReceipeInfo(recipeId);
             recipeName = receipeInformation.getName();
             recipeDescription = receipeInformation.getDescription();
-        }
-        catch(Exception exception){
+          }
+          catch(Exception exception){
             ExceptionHandler.getInstance().runExceptionhandling(exception);
-        }
-        this.recipeId = recipeId;
-        ResponsiveLayout mainLayout = new ResponsiveLayout();
-        CustomLayout mainCustomLayout = new CustomLayout("NoReadyReceipeForm");
-        mainLayout.setHeight("100%");
-        mainCustomLayout.setHeight("100%");
-        mainLayout.addComponent(mainCustomLayout);
-        
-        
-        String imageName = "http://localhost:8008/images/s3";
-        Image image = new Image();
-        image.setSource(new ExternalResource(imageName));
-        image.setHeight("100%");
-        image.setWidth("100%");
-        mainCustomLayout.addComponent(image,"noReadyReceipeViewPanelWithImage");
-        
-        Button okBtn = new Button("Да");
-        okBtn.setHeight("100%");
-        okBtn.setWidth("100%");
-        okBtn.addClickListener(e -> {
+          }
+          this.recipeId = recipeId;
+          ResponsiveLayout mainLayout = new ResponsiveLayout();
+          CustomLayout mainCustomLayout = new CustomLayout("NoReadyReceipeForm");
+          mainLayout.setHeight("100%");
+          mainCustomLayout.setHeight("100%");
+          mainLayout.addComponent(mainCustomLayout);
+          
+          BeansFactory<Properties> bfP = BeansFactory.getInstance();
+          Properties p = bfP.getBean(Properties.class);
+          String imageName = "http://"+p.getUiURL()+"/images/s3";
+          Image image = new Image();
+          image.setSource(new ExternalResource(imageName));
+          image.setHeight("100%");
+          image.setWidth("100%");
+          mainCustomLayout.addComponent(image,"noReadyReceipeViewPanelWithImage");
+          Button okBtn = new Button("Да");
+          okBtn.setHeight("100%");
+          okBtn.setWidth("100%");
+          okBtn.addClickListener(e -> {
             listener.onCreate(true, recipeId);
             this.close();
-        });
-        mainCustomLayout.addComponent(okBtn,"noReadyReceipeViewOkBtn");
-        
-        Button cancelBtn = new Button("Нет");
-        cancelBtn.setHeight("100%");
-        cancelBtn.setWidth("100%");
-        cancelBtn.addClickListener(e -> {
+          });
+          mainCustomLayout.addComponent(okBtn,"noReadyReceipeViewOkBtn");
+          Button cancelBtn = new Button("Нет");
+          cancelBtn.setHeight("100%");
+          cancelBtn.setWidth("100%");
+          cancelBtn.addClickListener(e -> {
             listener.onCreate(false, recipeId);
             this.close();
-        });
-        mainCustomLayout.addComponent(cancelBtn,"noReadyReceipeViewCancelBtn");
-       
-        mainCustomLayout.addComponent(new Label("У Вас есть незаконченный рецепт, хотите продолжить?"),"noReadyReceipeViewLable");
-        Label recipeNameLabel = new Label(recipeName);
-        //recipeNameLabel.setSizeFull();
-        mainCustomLayout.addComponent(recipeNameLabel,"noReadyReceipeViewReceipeNameIn2Col");
-        Label recipeDescriptionLabel = new Label(recipeDescription);
-        //recipeDescriptionLabel.setSizeFull();
-        mainCustomLayout.addComponent(recipeDescriptionLabel,"noReadyReceipeViewReceipeDescriptionIn2Col");
-        Label recipeNameLable = new Label("Название рецепта");
-        recipeNameLable.setHeight(String.valueOf(recipeNameLabel.getHeight()-5));
-        mainCustomLayout.addComponent(recipeNameLable,"noReadyReceipeViewReceipeNameIn1Col");
-        Label recipeDescriptionLable = new Label("Описание рецепта");
-        recipeDescriptionLable.setHeight(String.valueOf(recipeDescriptionLabel.getHeight()));
-        mainCustomLayout.addComponent(recipeDescriptionLable,"noReadyReceipeViewReceipeDescriptionIn1Col");
-        
-        setContent(mainLayout);
-        setPosition(20, 150);
-        setResizable(false);
-        setModal(true);
+          });
+          mainCustomLayout.addComponent(cancelBtn,"noReadyReceipeViewCancelBtn");
+          mainCustomLayout.addComponent(new Label("У Вас есть незаконченный рецепт, хотите продолжить?"),"noReadyReceipeViewLable");
+          Label recipeNameLabel = new Label(recipeName);
+          //recipeNameLabel.setSizeFull();
+          mainCustomLayout.addComponent(recipeNameLabel,"noReadyReceipeViewReceipeNameIn2Col");
+          Label recipeDescriptionLabel = new Label(recipeDescription);
+          //recipeDescriptionLabel.setSizeFull();
+          mainCustomLayout.addComponent(recipeDescriptionLabel,"noReadyReceipeViewReceipeDescriptionIn2Col");
+          Label recipeNameLable = new Label("Название рецепта");
+          recipeNameLable.setHeight(String.valueOf(recipeNameLabel.getHeight()-5));
+          mainCustomLayout.addComponent(recipeNameLable,"noReadyReceipeViewReceipeNameIn1Col");
+          Label recipeDescriptionLable = new Label("Описание рецепта");
+          recipeDescriptionLable.setHeight(String.valueOf(recipeDescriptionLabel.getHeight()));
+          mainCustomLayout.addComponent(recipeDescriptionLable,"noReadyReceipeViewReceipeDescriptionIn1Col");
+          setContent(mainLayout);
+          setPosition(20, 150);
+          setResizable(false);
+          setModal(true);
+        }
+        catch(Exception ex){
+            ExceptionHandler.getInstance().runExceptionhandling(ex);
+        }
     }
 }

@@ -18,9 +18,9 @@ import com.netcracker.ui.service.buttonsClickListener.component.SessionStorageHe
 import com.netcracker.ui.service.components.PostUserData;
 import com.netcracker.ui.service.components.Properties;
 import com.netcracker.ui.service.security.SecurityTokenHandler;
-
 import com.netcracker.ui.service.content.handler.ContentManagerController;
 import com.netcracker.ui.service.content.handler.CookieHandler;
+import com.netcracker.ui.service.content.handler.ImageReceiver;
 import com.netcracker.ui.service.content.handler.JWTHandler;
 import com.netcracker.ui.service.exception.ConcreteException;
 import com.netcracker.ui.service.exception.ConcreteExceptionHandler;
@@ -40,6 +40,8 @@ import com.netcracker.ui.service.forms.CreateInvitationForm;
 import com.netcracker.ui.service.forms.NewInvitationForm;
 
 import com.netcracker.ui.service.forms.NoReadyReceipeForm;
+import com.netcracker.ui.service.forms.UploadImageForm;
+import com.netcracker.ui.service.forms.UserPageFields;
 import com.netcracker.ui.service.forms.listeners.CreateReceipeListener;
 import com.netcracker.ui.service.forms.listeners.NewInvitationFormListener;
 import com.netcracker.ui.service.graf.component.Edge;
@@ -55,7 +57,6 @@ import com.netcracker.ui.service.navigator.View;
 import com.netcracker.ui.service.passageReceipe.storages.InviteInformation;
 import com.netcracker.ui.service.passageReceipe.storages.UserStep;
 
-
 import com.netcracker.ui.service.receipe.view.basic.objects.Catalog;
 
 import com.netcracker.ui.service.receipe.view.basic.objects.Receipe;
@@ -64,8 +65,10 @@ import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeProxy;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeStore;
 import com.netcracker.ui.service.receipe.view.basic.objects.ReceipeView;
 import com.netcracker.ui.service.receipe.view.basic.objects.Resource;
+import com.netcracker.ui.service.utilities.fillUserPageTextFields;
 import com.netcracker.ui.service.receipe.view.basic.objects.ShowReceipeView;
 import com.netcracker.ui.service.views.CreateRecipeView;
+import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
@@ -87,10 +90,24 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.Cookie;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Upload;
+import com.vaadin.ui.VerticalLayout;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+
 import java.util.List;
 import java.util.Map;
+
+
+import java.io.IOException;
+import java.util.logging.Logger;
+import org.apache.http.HttpStatus;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.client.RestTemplate;
 
 
 /**
@@ -103,7 +120,7 @@ public class UiServiceMainUI extends UI {
 
   BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
   ContentManagerController contentManadgerController;
-  
+
   @Override
   protected void init(VaadinRequest vaadinRequest) {
     try {
@@ -158,7 +175,7 @@ public class UiServiceMainUI extends UI {
         Node n2 = new Node("", "description2", "picture2");
         n.setLabel("label");
         n2.setLabel("label2");*/
-        /*List<Resource> resources = new ArrayList<>();
+ /*List<Resource> resources = new ArrayList<>();
         Resource resource1 = new Resource("id", "id", "name222", 2, "литры", "picture", "resource");
         Resource resource2 = new Resource("id2", "id", "name444", 4, "литры", "picture", "ingredient");
         Resource resource3 = new Resource("id2", "id", "name888", 4, "литры", "picture", "resource");
@@ -170,9 +187,9 @@ public class UiServiceMainUI extends UI {
         resource3.setResourceId(gm.getGmResourceFacade().addResource(resource3.getName(),resource3.getIngredientOrResource(),resource3.getMeasuring(), "user",resource3.getPictureId()));
         //List<ShortResource> loaddresource = gm.getGmResourceFacade().getResourcesByLetters("nam", "resource", 5);
         //List<Resource> testgetAllRes = gm.getGmResourceFacade().getResources(false);*/
-        //String catalogId = gm.getGmCatalogFacade().createCatalog("for receipe22222", "description");
-        //String receipeid = gm.getGmReceipeFacade().addReceipe("gjgjgjgjgjgj", "jdggdgdg", catalogId,userid, true).getReceipeId();
-        /*String receiperes = gm.getGmReceipeFacade().addReceipeResource(receipeid, userid, resource1.getResourceId(), 5);
+      //String catalogId = gm.getGmCatalogFacade().createCatalog("for receipe22222", "description");
+      //String receipeid = gm.getGmReceipeFacade().addReceipe("gjgjgjgjgjgj", "jdggdgdg", catalogId,userid, true).getReceipeId();
+      /*String receiperes = gm.getGmReceipeFacade().addReceipeResource(receipeid, userid, resource1.getResourceId(), 5);
         Node node = gm.getGmNodeFacade().addNode(n,receipeid, userid);
         Node node2 = gm.getGmNodeFacade().addNode(n2,receipeid, userid);
         gm.getGmNodeFacade().addInputResources(node, resources);
@@ -182,8 +199,8 @@ public class UiServiceMainUI extends UI {
         Edge edge = new Edge(node.getNodeId(), node2.getNodeId());
         gm.getGmEdgeFacade().addEdge(edge);
         gm.getGmReceipeFacade().setReceipeCompleted(receipeid);*/
-        //ReceipeInformation receipeInformation = gm.getGmReceipeFacade().getReceipeInfo("026de89d-c3de-4981-b198-900335dc550a");
-        /*List<ShortReceipe> loadingReceipe = gm.getGmReceipeFacade().getPublicAndCompletesReceipesByCatalogId(catalogId, 5);
+      //ReceipeInformation receipeInformation = gm.getGmReceipeFacade().getReceipeInfo("026de89d-c3de-4981-b198-900335dc550a");
+      /*List<ShortReceipe> loadingReceipe = gm.getGmReceipeFacade().getPublicAndCompletesReceipesByCatalogId(catalogId, 5);
         gm.getGmTagFacade().addTagToReceipe(receipeid, "name");
         //List<ShortReceipe> gdg = gm.getGmTagFacade().getReceipesByTag("name", 5);
         //List<Tag> gdggdgdg = gm.getGmTagFacade().getTagsByLetters("nam", 5);
@@ -196,28 +213,21 @@ public class UiServiceMainUI extends UI {
         //Catalog catalog = gm.getGmCatalogFacade().getCatalog("for receipe22222");
         int d=0;*/
 
-
       createMainLayout();
       checkNewIvite();
     } catch (Exception exception) {
       ExceptionHandler.getInstance().runExceptionhandling(exception);
     }
   }
-  
-  
-  
-  
-  
-  
-  
-   private String getUserID(){
-        CookieHandler ch2 = new CookieHandler();
-        JWTHandler jwth2 = new JWTHandler();
-        Cookie userCookie2 = ch2.getCookieByName("userInfo");
-        String userid = jwth2.readUserId(userCookie2.getValue(), "test");
-        return userid;
-    }
-  
+
+  private String getUserID() {
+    CookieHandler ch2 = new CookieHandler();
+    JWTHandler jwth2 = new JWTHandler();
+    Cookie userCookie2 = ch2.getCookieByName("userInfo");
+    String userid = jwth2.readUserId(userCookie2.getValue(), "test");
+    return userid;
+  }
+
   private void setUrl(String path) {
     getPage().setUriFragment(path);
   }
@@ -228,6 +238,7 @@ public class UiServiceMainUI extends UI {
   
   private ResponsiveLayout createMainLayout() throws MenuComponentException,
           NotFoundBean {
+  
     BasicLayoutCreator mainLayer;
     mainLayer = new BasicLayoutCreator();
     setSizeFull();//Пользовательский интерфейс на весь экран
@@ -236,9 +247,7 @@ public class UiServiceMainUI extends UI {
 
     mainLayout.setSizeFull();
     setContent(mainLayout);
-    TextField fName = new TextField();
-    TextField sName = new TextField();
-    TextField email = new TextField();
+
     //Создание и добавление видов в навигатор
     ArrayList<View> newViews = new ArrayList<>();
 
@@ -250,7 +259,7 @@ public class UiServiceMainUI extends UI {
         try {
           addTopRecepiesComponent(mainLayer.contentRowLayout);
         } catch (Exception ex) {
-          java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
+          ExceptionHandler.getInstance().runExceptionhandling(ex);
         }
       }
     });
@@ -410,45 +419,6 @@ public class UiServiceMainUI extends UI {
             }
         });
 
-        newViews.add(new View("Search") {
-            @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {
-                mainLayer.contentRowLayout.removeAllComponents();
-                mainLayer.contentRowLayout.addRow().addColumn().withDisplayRules(12, 12, 12, 12).withComponent(new Label("Рецепты, удовлетворяющие условию поиска:"));
-            }
-        });
-
-        newViews.add(new View("UserPage") {
-           @Override
-            public void draw(LinkedMultiValueMap<String, String> parameters) {
-                mainLayer.contentRowLayout.removeAllComponents();
-                CustomLayout ShortViewOfReceipeLayout = new CustomLayout("UserPageLayout");
-                ShortViewOfReceipeLayout.setHeight("100%");
-                mainLayer.contentRowLayout.setHeight("100%");
-                mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
-                ShortViewOfReceipeLayout.addComponent(fName, "userPageNameFieldAndLable");
-        ShortViewOfReceipeLayout.addComponent(sName, "userPageSecondNameFieldAndLable");
-        ShortViewOfReceipeLayout.addComponent(email, "userPageMailFieldAndLable");
-                //ShortViewOfReceipeLayout.addComponent(new Label("BirthDate"), "userPageBirthDateFieldAndLable");
-                TextArea area = new TextArea();
-                area.setValue("testt esttestte sttesttesttesttest testtesttest"
-                        + "testtestt esttesttesttesttesttesttesttesttest"
-                        + "testt esttesttesttesttest testtestt esttesttest"
-                        + "testtesttestte sttest testtest testtesttest"
-                        + "testtestt esttest testtesttesttesttest");
-                area.setHeight("100%");
-                area.setWidth("100%");
-                area.setWordWrap(true);
-                ShortViewOfReceipeLayout.addComponent(area, "userPageAboutOneselfFieldAndLable");
-                
-                Image topImage = new Image();
-                topImage.setSource(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/cake.png")));
-                topImage.setHeight("100%");
-                topImage.setWidth("100%");
-                ShortViewOfReceipeLayout.addComponent(topImage, "userPageImage");
-            }
-        });
-
     newViews.add(new View("Search") {
       @Override
       public void draw(LinkedMultiValueMap<String, String> parameters) {
@@ -602,24 +572,61 @@ public class UiServiceMainUI extends UI {
     newViews.add(new View("UserPage") {
       @Override
       public void draw(LinkedMultiValueMap<String, String> parameters) {
-        mainLayer.contentRowLayout.removeAllComponents();
-        CustomLayout ShortViewOfReceipeLayout = new CustomLayout("UserPageLayout");
-        ShortViewOfReceipeLayout.setHeight("100%");
-        mainLayer.contentRowLayout.setHeight("100%");
-        mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
 
-        ShortViewOfReceipeLayout.addComponent(fName, "userPageNameFieldAndLable");
-        ShortViewOfReceipeLayout.addComponent(sName, "userPageSecondNameFieldAndLable");
-        ShortViewOfReceipeLayout.addComponent(email, "userPageMailFieldAndLable");
-        ShortViewOfReceipeLayout.addComponent(new Label("BirthDate"), "userPageBirthDateFieldAndLable");
+        try {
+          BeansFactory<ContentManagerController> bfCMC = BeansFactory.getInstance();
+          ContentManagerController controller = bfCMC.getBean(ContentManagerController.class);
+    
+          mainLayer.contentRowLayout.removeAllComponents();
+          CustomLayout ShortViewOfReceipeLayout = new CustomLayout("UserPageLayout");
+          ShortViewOfReceipeLayout.setHeight("100%");
+          mainLayer.contentRowLayout.setHeight("100%");
+          mainLayer.contentRowLayout.addComponent(ShortViewOfReceipeLayout);
+         
+          BeansFactory<UserPageFields> bfSTH = BeansFactory.getInstance();
+          UserPageFields info = bfSTH.getBean(UserPageFields.class);
+          ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+          new SessionStorageHelper().setUserPageFields(info, attr);
+          
+          ShortViewOfReceipeLayout.addComponent(info.getName(), "userPageNameFieldAndLable");
+          ShortViewOfReceipeLayout.addComponent(info.getSecondName(), "userPageSecondNameFieldAndLable");
+          ShortViewOfReceipeLayout.addComponent(info.getMail(), "userPageMailFieldAndLable");
+          ShortViewOfReceipeLayout.addComponent(info.getBirthDate(), "userPageBirthDateFieldAndLable");
+          
+          ImageReceiver receiver = new ImageReceiver();
+          Upload upload = new Upload("", receiver);
+          //upload.addStyleName("upload-photo-btn");
+          upload.setImmediateMode(true);
+          upload.setButtonCaption("Загрузить фото");
+          upload.addSucceededListener(receiver); 
+          upload.setHeight("100%");
+          upload.setWidth("100%");
+          ShortViewOfReceipeLayout.addComponent(upload, "userPageUploadPhotoBtn");
+          
+          info.getArea().setHeight("100%");
+          info.getArea().setWidth("100%");
+          info.getArea().setWordWrap(true);
+          ShortViewOfReceipeLayout.addComponent(info.getArea(), "userPageAboutOneselfFieldAndLable");
+          
+          //Функция заполняет строки на странице пользовтеля
+          new fillUserPageTextFields(info);
 
-        TextArea area = new TextArea();
-        area.setValue("");
-        area.setHeight("100%");
-        area.setWidth("100%");
-        area.setWordWrap(true);
-        ShortViewOfReceipeLayout.addComponent(area, "userPageAboutOneselfFieldAndLable");
+          BeansFactory<Properties> bfP = BeansFactory.getInstance();
+          Properties p = bfP.getBean(Properties.class);
+          BeansFactory<SecurityTokenHandler> bfTK = BeansFactory.getInstance();
+          SecurityTokenHandler tokenHandler = bfTK.getBean(SecurityTokenHandler.class);
+          String q = info.getPicture_id();
+          
+          String imageURL = "http://"+p.getUiURL()+"/images/"+info.getPicture_id();
+          Image topImage = new Image();
+          topImage.setSource(new ExternalResource(imageURL));
+          topImage.setHeight("100%");
+          topImage.setWidth("100%");
 
+          ShortViewOfReceipeLayout.addComponent(topImage, "userPageImage");
+        } catch (Exception ex) {
+          ExceptionHandler.getInstance().runExceptionhandling(ex);
+        }
       }
     });
     
@@ -751,12 +758,8 @@ public class UiServiceMainUI extends UI {
       navigator.navigateTo(getUrl());
     } //Следующий набор catch исправлю, сделал так (временно), чтобы здесь не 
     //обрабатывалось исключение 500 ошибки
-    catch (NoViewAvailable exception) {
+    catch (Exception exception) {
       ExceptionHandler.getInstance().runExceptionhandling(exception);
-    } catch (InvalidQueryFormat ex) {
-      ExceptionHandler.getInstance().runExceptionhandling(ex);
-    } catch (NotFound ex) {
-      ExceptionHandler.getInstance().runExceptionhandling(ex);
     }
     //Создаем подпункты меню
     ArrayList<MenusButton> recSubMenus = new ArrayList<>();
@@ -858,24 +861,8 @@ public class UiServiceMainUI extends UI {
             public void onEventClickDo() {
               try {
                 getPage().setUriFragment("UserPage");
-//                BeansFactory<Properties> bfP = BeansFactory.getInstance();
-//                Properties p = bfP.getBean(Properties.class);
-//                BeansFactory<RestTemplate> bfOM = BeansFactory.getInstance();
-//                RestTemplate restTemplate = bfOM.getBean(RestTemplate.class);
-//                UserDto dto =  restTemplate.getForObject("http://"+p.getIdpURL()+"/idpsecure/getUserData", UserDto.class);
-//                System.out.println(dto);
-////                getPage().setUriFragment("UserPage");
-////                
-////                BeansFactory<SecurityTokenHandler> bfSTH = BeansFactory.getInstance();
-////                SecurityTokenHandler tokenStore = bfSTH.getBean(SecurityTokenHandler.class);
-////                UserDto userInfo = new UserDto();
-////                CookieHandler ch = new CookieHandler();
-////
-////                userInfo.setId(new JWTHandler().readUserId(ch.getCookieByName("userInfo").getValue(), "test"));
-////                PostUserData post = new PostUserData("http://"+p.getIdpURL()+"/idpsecure/getUserData", userInfo, tokenStore.getToken());
-////                int response = post.con.getResponseCode();
               } catch (Exception ex) {
-                java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
+                ExceptionHandler.getInstance().runExceptionhandling(ex);
               }
             }
           });
@@ -913,18 +900,20 @@ public class UiServiceMainUI extends UI {
       @Override
       public void onEventDo() {
         try {
-          System.out.println("Buuton");
           BeansFactory<Properties> bfP = BeansFactory.getInstance();
           Properties p = bfP.getBean(Properties.class);
           BeansFactory<SecurityTokenHandler> bfSTH = BeansFactory.getInstance();
           SecurityTokenHandler tokenStore = bfSTH.getBean(SecurityTokenHandler.class);
           UserDto userInfo = new UserDto();
           CookieHandler ch = new CookieHandler();
-
-
-          userInfo.setName(fName.getValue());
-          userInfo.setLastname(sName.getValue());
-          userInfo.setEmail(email.getValue());
+          ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+          UserPageFields info = new SessionStorageHelper().getUserPageFields(attr);
+          
+          userInfo.setName(info.getNameValue());
+          userInfo.setLastname(info.getSecondNameValue());
+          userInfo.setEmail(info.getEmailValue());
+          userInfo.setInfo(info.getUserInfoValue());
+          userInfo.setPicture_id(info.getPicture_id());
           userInfo.setId(new JWTHandler().readUserId(ch.getCookieByName("userInfo").getValue(), "test"));
           PostUserData post = new PostUserData("http://" + p.getIdpURL() + "/idpsecure/saveUserData", userInfo, tokenStore.getToken());
           int response = post.con.getResponseCode();
@@ -941,9 +930,8 @@ public class UiServiceMainUI extends UI {
               q.show(Page.getCurrent());
               break;
           }
-
         } catch (Exception ex) {
-          java.util.logging.Logger.getLogger(UiServiceMainUI.class.getName()).log(Level.SEVERE, null, ex);
+          ExceptionHandler.getInstance().runExceptionhandling(ex);
         }
       }
     });
@@ -955,7 +943,7 @@ public class UiServiceMainUI extends UI {
 
       @Override
       public void onEventDo() {
-        int i = 0;//Код писать сюда
+        
       }
     });
     clickListener.addButtonClickListener(new ClickListener() {
@@ -966,7 +954,19 @@ public class UiServiceMainUI extends UI {
 
       @Override
       public void onEventDo() {
-        
+//        final Image image = new Image("Uploaded Image");
+//        image.setVisible(false);
+//        MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+//        ImageReceiver receiver = new ImageReceiver(); 
+//
+//        // Create the upload with a caption and set receiver later
+//        final Upload upload = new Upload("Upload it here", receiver);
+//        upload.setButtonCaption("Start Upload");
+//        upload.addSucceededListener(receiver);
+//        
+//        // Put the components in a panel
+//        UploadImageForm imageForm = new UploadImageForm(upload, image);
+//        addWindow(imageForm);
       }
     });
     return mainLayer.contentRowLayout;
@@ -1048,18 +1048,16 @@ public class UiServiceMainUI extends UI {
 
   }
 
-    //Функция проверки наличия незавершенного рецепта пользователем
-    private String checkNonFinishRecipe(String userId){
-        try{
-            BeansFactory<GMFacade> bf = BeansFactory.getInstance();
-            GMFacade gmFacade = bf.getBean(GMFacade.class);
-            return gmFacade.getGmGrafFacade().getNotCompletedGraph(userId);
-        }
-        catch(Exception exception){
-            return "";
-        }
-
+  //Функция проверки наличия незавершенного рецепта пользователем
+  private String checkNonFinishRecipe(String userId) {
+    try {
+      BeansFactory<GMFacade> bf = BeansFactory.getInstance();
+      GMFacade gmFacade = bf.getBean(GMFacade.class);
+      return gmFacade.getGmGrafFacade().getNotCompletedGraph(userId);
+    } catch (Exception exception) {
+      return "";
     }
+  }
     
     private void checkNewIvite() throws NotFoundBean{
         CookieHandler ch2 = new CookieHandler();
@@ -1111,3 +1109,4 @@ public class UiServiceMainUI extends UI {
         }
     }
 }
+
